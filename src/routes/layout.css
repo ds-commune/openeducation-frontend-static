@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+@import "@skeletonlabs/skeleton";
+@import "@skeletonlabs/skeleton-svelte";
+
+@import "@skeletonlabs/skeleton/themes/rocket";
+
+
+:root {
+  --color-primary-50: oklch(95.11% 0.03 150deg);
+  --color-primary-100: oklch(89.65% 0.06 150deg);
+  --color-primary-200: oklch(84.27% 0.08 150deg);
+  --color-primary-300: oklch(79.6% 0.11 150deg);
+  --color-primary-400: oklch(75.13% 0.12 150deg);
+  --color-primary-500: oklch(71.48% 0.13 150deg);
+  --color-primary-600: oklch(64.97% 0.11 150deg);
+  --color-primary-700: oklch(58.04% 0.1 150deg);
+  --color-primary-800: oklch(51.15% 0.09 150deg);
+  --color-primary-900: oklch(43.76% 0.08 150deg);
+  --color-primary-950: oklch(38.278% 0.09659 150deg);
+}
+
+/* @import "@skeletonlabs/skeleton/themes/catppuccin"; */
+/* @import "@skeletonlabs/skeleton/themes/cerberus"; */
+/* @import "@skeletonlabs/skeleton/themes/concord"; */
+/* @import "@skeletonlabs/skeleton/themes/crimson"; */
+/* @import "@skeletonlabs/skeleton/themes/fennec"; */
+/* @import "@skeletonlabs/skeleton/themes/hamlindigo"; */
+/* @import "@skeletonlabs/skeleton/themes/legacy"; */
+/* @import "@skeletonlabs/skeleton/themes/mint"; */
+/* @import "@skeletonlabs/skeleton/themes/modern"; */
+/* @import "@skeletonlabs/skeleton/themes/mona"; */
+/* @import "@skeletonlabs/skeleton/themes/nosh"; */
+/* @import "@skeletonlabs/skeleton/themes/nouveau"; */
+/* @import "@skeletonlabs/skeleton/themes/pine"; */
+/* @import "@skeletonlabs/skeleton/themes/reign"; */
+/* @import "@skeletonlabs/skeleton/themes/rose"; */
+/* @import "@skeletonlabs/skeleton/themes/sahara"; */
+/* @import "@skeletonlabs/skeleton/themes/seafoam"; */
+/* @import "@skeletonlabs/skeleton/themes/terminus"; */
+/* @import "@skeletonlabs/skeleton/themes/vintage"; */
+/* @import "@skeletonlabs/skeleton/themes/vox"; */
+/* @import "@skeletonlabs/skeleton/themes/wintry"; */

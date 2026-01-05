@@ -1,0 +1,1171 @@
+<script lang="ts">
+  import { Crisis, QuizCard, Summary } from "../../components";
+
+  // Magician's puzzle - easy
+  let easyGuess = $state<number | null>(null);
+  const easyResult = $derived(easyGuess !== null ? easyGuess * 2 + 3 : null);
+  const easyCorrect = $derived(easyResult === 17);
+
+  // Magician's puzzle - hard (the crisis)
+  let hardGuess = $state<number | null>(null);
+  const hardResult = $derived(
+    hardGuess !== null ? (hardGuess * 37 - 115) / 4 : null
+  );
+  const hardCorrect = $derived(Math.abs((hardResult ?? 0) - 350) < 0.01);
+
+  // Balance scale simulation
+  type ScaleState = "balanced" | "unbalanced-left" | "unbalanced-right";
+  let leftWeight = $state(10); // x + 2 where x=8
+  let rightWeight = $state(10);
+  let scaleState = $derived<ScaleState>(
+    leftWeight === rightWeight
+      ? "balanced"
+      : leftWeight > rightWeight
+        ? "unbalanced-left"
+        : "unbalanced-right"
+  );
+  let showBoxContent = $state(false);
+
+  function removeFromLeft(amount: number) {
+    leftWeight = Math.max(0, leftWeight - amount);
+  }
+
+  function removeFromRight(amount: number) {
+    rightWeight = Math.max(0, rightWeight - amount);
+  }
+
+  function resetScale() {
+    leftWeight = 10;
+    rightWeight = 10;
+    showBoxContent = false;
+  }
+
+  // Equation solver demonstration
+  let solverStep = $state(0);
+  const solverSteps = [
+    { equation: "4 · x + 7 = 31", explanation: "исходное уравнение" },
+    {
+      equation: "4 · x + 7 − 7 = 31 − 7",
+      explanation: "убираем «+7» с обеих сторон",
+    },
+    { equation: "4 · x = 24", explanation: "результат после упрощения" },
+    { equation: "4 · x ÷ 4 = 24 ÷ 4", explanation: "делим обе стороны на 4" },
+    { equation: "x = 6", explanation: "🎉 герой найден!" },
+  ];
+
+  // Suitcase problem
+  const suitcaseTotalWeight = 25;
+  const suitcaseEmptyWeight = 3;
+  const souvenirWeight = 2;
+  const souvenirCount =
+    (suitcaseTotalWeight - suitcaseEmptyWeight) / souvenirWeight;
+</script>
+
+<svelte:head>
+  <meta
+    name="description"
+    content="Урок о решении уравнений методом обратного хода. Учимся находить неизвестное число, отматывая операции назад."
+  />
+</svelte:head>
+
+<!-- Крючок: Черный ящик фокусника -->
+<section id="magician-easy">
+  <Crisis icon="🎩" title="Чёрный ящик фокусника">
+    <p>
+      Фокусник говорит: «Я задумал число. Умножил его на 2, затем прибавил 3 и
+      получил 17. Какое число я задумал?»
+    </p>
+
+    <div class="guess-box">
+      <label for="easy-guess">Твой ответ:</label>
+      <input
+        id="easy-guess"
+        type="number"
+        bind:value={easyGuess}
+        placeholder="?"
+        aria-label="Введи число"
+      />
+      {#if easyGuess !== null}
+        <span class="result" class:correct={easyCorrect}>
+          {easyGuess} × 2 + 5 = {easyResult}
+          {easyCorrect ? "✓" : "✗"}
+        </span>
+      {/if}
+    </div>
+
+    <p class="note">
+      {#if easyCorrect}
+        Отлично! Это было несложно — можно перебрать в уме.
+      {:else}
+        Попробуй подобрать число. Подсказка: оно маленькое.
+      {/if}
+    </p>
+  </Crisis>
+</section>
+
+<!-- Кризис: Сложная задача -->
+<section id="magician-hard">
+  <Crisis icon="🤯" title="Кризис: когда подбор не работает">
+    <p>
+      Фокусник усмехается: «Теперь посложнее. Я задумал число, умножил его на
+      37, вычел 115, разделил на 4 и получил 350. Какое число?»
+    </p>
+
+    <div class="guess-box">
+      <label for="hard-guess">Попробуй угадать:</label>
+      <input
+        id="hard-guess"
+        type="number"
+        bind:value={hardGuess}
+        placeholder="?"
+        aria-label="Введи число"
+      />
+      {#if hardGuess !== null}
+        <span class="result" class:correct={hardCorrect}>
+          ({hardGuess} × 37 − 115) ÷ 4 = {hardResult?.toFixed(2)}
+          {hardCorrect ? "✓" : "✗"}
+        </span>
+      {/if}
+    </div>
+
+    {#snippet question()}
+      <p>
+        <strong>Проблема:</strong> угадывание занимает слишком много времени.
+        Нам нужен способ <strong>«отмотать время назад»</strong> — узнать, что было
+        в начале, зная только конец истории.
+      </p>
+    {/snippet}
+  </Crisis>
+</section>
+
+<!-- Метафора: Одевание и раздевание -->
+<section id="dressing-metaphor">
+  <h2>Одевание и раздевание</h2>
+  <p>Чтобы понять метод «обратного хода», вспомним обычное утро и вечер.</p>
+
+  <div class="grid">
+    <div class="card morning">
+      <div class="icon">🌅</div>
+      <h3>Утро (прямой процесс)</h3>
+      <div class="sequence">
+        <span class="item">🦶 Нога</span>
+        <span class="arrow">→</span>
+        <span class="item">🧦 Носки</span>
+        <span class="arrow">→</span>
+        <span class="item">👟 Ботинки</span>
+      </div>
+    </div>
+
+    <div class="card evening">
+      <div class="icon">🌙</div>
+      <h3>Вечер (обратный процесс)</h3>
+      <div class="sequence reverse">
+        <span class="item">👟 Ботинки</span>
+        <span class="arrow">→</span>
+        <span class="item">🧦 Носки</span>
+        <span class="arrow">→</span>
+        <span class="item">🦶 Нога</span>
+      </div>
+      <p class="note">
+        Нельзя снять носки, не сняв ботинки! Порядок <strong
+          >строго обратный</strong
+        >.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Схема: Слои луковицы -->
+<section id="onion-model">
+  <h2>Математическая «машина времени»</h2>
+  <p>
+    Уравнение — это история того, как неизвестное число (наш <strong
+      >Герой</strong
+    >) маскировалось. Чтобы его найти, нужно снять маскировку в обратном
+    порядке.
+  </p>
+
+  <div class="visual">
+    <div class="layer outer">
+      <span class="label">÷ 4</span>
+      <div class="layer middle">
+        <span class="label">− 115</span>
+        <div class="layer inner">
+          <span class="label">× 37</span>
+          <div class="core">
+            <span>x</span>
+            <span class="core-label">Герой</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="description">
+      <span>⟵</span>
+      <span class="text">снимаем слои снаружи внутрь</span>
+    </div>
+  </div>
+
+  <p class="insight">
+    Чтобы добраться до <strong>x</strong>, начинаем с внешнего слоя: сначала
+    отменяем деление, потом вычитание, потом умножение.
+  </p>
+</section>
+
+<!-- Симуляция: Весы -->
+<section id="balance-scale">
+  <h2>Лаборатория весов</h2>
+  <p>
+    Знак <strong>=</strong> означает равновесие. Любое действие с одной чашей требует
+    зеркального действия с другой.
+  </p>
+
+  <div class="demo">
+    <div class="visual" class:unbalanced={scaleState !== "balanced"}>
+      <div
+        class="beam"
+        class:tilt-left={scaleState === "unbalanced-left"}
+        class:tilt-right={scaleState === "unbalanced-right"}
+      >
+        <div class="pan left">
+          <div class="content">
+            <div class="box" class:revealed={showBoxContent}>
+              {showBoxContent ? "8" : "?"}
+            </div>
+            {#if leftWeight > 8}
+              <div class="weights">+{leftWeight - 8}</div>
+            {/if}
+          </div>
+          <span class="label">Левая чаша: {leftWeight}</span>
+        </div>
+        <div class="fulcrum">⚖️</div>
+        <div class="pan right">
+          <div class="content">
+            <div class="coins">{rightWeight} 🪙</div>
+          </div>
+          <span class="label">Правая чаша: {rightWeight}</span>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="status"
+      class:balanced={scaleState === "balanced"}
+      class:warning={scaleState !== "balanced"}
+    >
+      {#if scaleState === "balanced"}
+        ✓ Весы в равновесии
+      {:else}
+        ⚠️ Равновесие нарушено!
+      {/if}
+    </div>
+
+    <div class="controls">
+      <div class="group">
+        <span class="label">Левая чаша:</span>
+        <button
+          onclick={() => removeFromLeft(2)}
+          disabled={leftWeight <= 8}
+          aria-label="Убрать 2 с левой чаши">−2</button
+        >
+      </div>
+      <div class="group">
+        <span class="label">Правая чаша:</span>
+        <button
+          onclick={() => removeFromRight(2)}
+          disabled={rightWeight <= 0}
+          aria-label="Убрать 2 с правой чаши">−2</button
+        >
+      </div>
+      <button class="reset" onclick={resetScale} aria-label="Сбросить весы"
+        >🔄 Сброс</button
+      >
+      {#if leftWeight === 8 && rightWeight === 8 && scaleState === "balanced"}
+        <button
+          class="reveal"
+          onclick={() => (showBoxContent = true)}
+          aria-label="Открыть коробку">📦 Открыть коробку</button
+        >
+      {/if}
+    </div>
+
+    <p class="hint">
+      Попробуй убрать +2 с левой чаши. Что нужно сделать справа, чтобы сохранить
+      равновесие?
+    </p>
+  </div>
+</section>
+
+<!-- Формализация: Пошаговое решение -->
+<section id="equation-solver">
+  <h2>От коробки к символам</h2>
+  <p>
+    Вместо коробки математики используют букву <span class="variable">x</span> — это
+    маска, которую носит число, пока мы его не нашли.
+  </p>
+
+  <div class="demo">
+    <div class="steps">
+      {#each solverSteps as step, i}
+        <div
+          class="step"
+          class:active={i === solverStep}
+          class:done={i < solverStep}
+        >
+          <span class="number">{i + 1}</span>
+          <span class="equation">{step.equation}</span>
+          <span class="explanation">{step.explanation}</span>
+        </div>
+      {/each}
+    </div>
+
+    <div class="controls">
+      <button
+        onclick={() => (solverStep = Math.max(0, solverStep - 1))}
+        disabled={solverStep === 0}
+        aria-label="Предыдущий шаг">← Назад</button
+      >
+      <span class="indicator">Шаг {solverStep + 1} из {solverSteps.length}</span
+      >
+      <button
+        onclick={() =>
+          (solverStep = Math.min(solverSteps.length - 1, solverStep + 1))}
+        disabled={solverStep === solverSteps.length - 1}
+        aria-label="Следующий шаг">Далее →</button
+      >
+    </div>
+  </div>
+
+  <div class="insight">
+    <strong>Главное правило:</strong> мы не «переносим» числа. Мы
+    <strong>уничтожаем</strong> то, что мешает, делая одинаковые действия с обеих
+    сторон равенства.
+  </div>
+</section>
+
+<!-- Практика: Таможенный сканер -->
+<section id="suitcase-problem">
+  <h2>Мини-проект: таможенный сканер</h2>
+  <p>
+    Аэропорт. Есть чемодан, вес которого известен. Мы знаем вес пустого чемодана
+    и вес одного сувенира. Сколько сувениров внутри?
+  </p>
+
+  <div class="problem">
+    <div class="data">
+      <div class="item">
+        <span class="icon">🧳</span>
+        <span class="label">Общий вес:</span>
+        <span class="value">{suitcaseTotalWeight} кг</span>
+      </div>
+      <div class="item">
+        <span class="icon">📦</span>
+        <span class="label">Пустой чемодан:</span>
+        <span class="value">{suitcaseEmptyWeight} кг</span>
+      </div>
+      <div class="item">
+        <span class="icon">🎁</span>
+        <span class="label">Один сувенир:</span>
+        <span class="value">{souvenirWeight} кг</span>
+      </div>
+    </div>
+
+    <div class="equation">
+      <span class="label">Модель:</span>
+      <span class="formula"
+        >{souvenirWeight} · x + {suitcaseEmptyWeight} = {suitcaseTotalWeight}</span
+      >
+    </div>
+
+    <details class="solution">
+      <summary>Показать решение</summary>
+      <div class="steps">
+        <div class="step">
+          1. Убираем тару: {suitcaseTotalWeight} − {suitcaseEmptyWeight} =
+          {suitcaseTotalWeight - suitcaseEmptyWeight} кг
+        </div>
+        <div class="step">
+          2. Делим на вес сувенира: {suitcaseTotalWeight - suitcaseEmptyWeight} ÷
+          {souvenirWeight} = {souvenirCount}
+        </div>
+        <div class="answer">
+          Ответ: <strong>{souvenirCount} сувениров</strong> 🎁
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- Вопросы на понимание -->
+<section id="quiz">
+  <h2>Проверь понимание</h2>
+
+  <div class="cards">
+    <QuizCard icon="🧥">
+      <div class="question">
+        Если надеть на число «куртку» (× 4), а потом «шапку» (+ 9), что снять
+        первым, чтобы добраться до числа?
+      </div>
+      {#snippet answer()}
+        <p>
+          Сначала <strong>шапку</strong> (отменить +9), потом
+          <strong>куртку</strong> (отменить ×4). Обратный порядок!
+        </p>
+      {/snippet}
+    </QuizCard>
+
+    <QuizCard icon="⚖️">
+      <div class="question">
+        Почему нельзя просто вычесть 8 из левой части уравнения, ничего не делая
+        с правой?
+      </div>
+      {#snippet answer()}
+        <p>
+          Нарушится равновесие — правда перестанет быть правдой. Равенство
+          требует <strong>зеркальных действий</strong>.
+        </p>
+      {/snippet}
+    </QuizCard>
+
+    <QuizCard icon="🚫">
+      <div class="question">
+        Можно ли решить уравнение <span class="formula">x · 0 = 7</span>
+        методом обратного хода?
+      </div>
+      {#snippet answer()}
+        <p>
+          Нет! Умножение на 0 — <strong>необратимая операция</strong>. Любое
+          число, умноженное на 0, даёт 0, а не 7. У этого уравнения нет решения.
+        </p>
+      {/snippet}
+    </QuizCard>
+  </div>
+</section>
+
+<section id="summary">
+  <Summary title="Резюме">
+    <blockquote>
+      Решение уравнения — это не магия и не угадывание. Это
+      <strong>расследование</strong>, где мы просто прокручиваем «киноплёнку»
+      действий в обратном порядке, чтобы вернуться к началу. Главное правило:
+      сохраняй равновесие. Что сделал с одной стороной — обязан сделать и с
+      другой.
+    </blockquote>
+  </Summary>
+</section>
+
+<style>
+  /* Common button styles inside sections */
+  button {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-container);
+    background-color: var(--color-surface-50);
+    border: 1px solid var(--color-surface-300);
+    color: var(--color-surface-900);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  button:hover:not(:disabled) {
+    background-color: var(--color-surface-200);
+    border-color: var(--color-primary-500);
+  }
+
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Magician's Puzzle (Easy & Hard) */
+  #magician-easy,
+  #magician-hard {
+    .guess-box {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      padding: 1rem 1.5rem;
+      background: color-mix(in oklab, var(--color-surface-50) 80%, transparent);
+      border-radius: var(--radius-container);
+      flex-wrap: wrap;
+
+      label {
+        font-weight: 600;
+        color: var(--color-surface-700);
+      }
+
+      input {
+        width: 100px;
+        padding: 0.75rem;
+        font-size: 1.25rem;
+        text-align: center;
+        border: 1px solid var(--color-surface-300);
+        border-radius: var(--radius-container);
+        background: var(--color-surface-50);
+
+        &:focus {
+          outline: none;
+          border-color: var(--color-primary-500);
+          box-shadow: 0 0 0 2px var(--color-primary-200);
+        }
+      }
+
+      .result {
+        font-family: "Consolas", "Monaco", monospace;
+        font-size: 1.125rem;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-container);
+        background: var(--color-surface-200);
+
+        &.correct {
+          background: var(--color-success-100);
+          color: var(--color-success-700);
+        }
+      }
+    }
+
+    .note {
+      font-size: 1.125rem;
+      margin-bottom: 0;
+    }
+  }
+
+  #magician-hard :global(.card) {
+    background: linear-gradient(
+      135deg,
+      var(--color-error-100),
+      var(--color-warning-50)
+    );
+  }
+
+  /* Metaphor */
+  #dressing-metaphor {
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+
+      .card {
+        padding: 2rem;
+        border-radius: calc(var(--radius-container) * 2);
+        box-shadow: 0 4px 12px
+          color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
+
+        &.morning {
+          background: linear-gradient(
+            135deg,
+            var(--color-warning-50),
+            var(--color-surface-50)
+          );
+          border: 1px solid var(--color-warning-200);
+        }
+
+        &.evening {
+          background: linear-gradient(
+            135deg,
+            var(--color-primary-50),
+            var(--color-surface-50)
+          );
+          border: 1px solid var(--color-primary-200);
+        }
+
+        .icon {
+          font-size: 2.5rem;
+          margin-bottom: 0.75rem;
+        }
+
+        h3 {
+          margin-bottom: 1rem;
+        }
+
+        .sequence {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          flex-wrap: wrap;
+          font-size: 1.125rem;
+
+          &.reverse .arrow {
+            color: var(--color-primary-700);
+          }
+
+          .item {
+            padding: 0.5rem 1rem;
+            background: var(--color-surface-50);
+            border-radius: var(--radius-container);
+            box-shadow: 0 2px 4px
+              color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
+          }
+
+          .arrow {
+            color: var(--color-primary-500);
+            font-size: 1.25rem;
+          }
+        }
+
+        .note {
+          font-size: 1rem;
+          margin: 1rem 0 0;
+          padding: 0.75rem;
+          background: color-mix(
+            in oklab,
+            var(--color-surface-50) 80%,
+            transparent
+          );
+          border-radius: var(--radius-container);
+        }
+      }
+    }
+  }
+
+  /* Onion Model */
+  #onion-model {
+    .visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3rem;
+      margin: 2.5rem 0;
+      padding: 2rem;
+      background: var(--color-surface-100);
+      border-radius: calc(var(--radius-container) * 2);
+      flex-wrap: wrap;
+
+      .layer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        position: relative;
+
+        &.outer {
+          width: 380px;
+          height: 380px;
+          background: var(--color-error-100);
+          border: 3px solid var(--color-error-300);
+        }
+
+        &.middle {
+          width: 280px;
+          height: 280px;
+          background: var(--color-warning-100);
+          border: 3px solid var(--color-warning-300);
+        }
+
+        &.inner {
+          width: 180px;
+          height: 180px;
+          background: var(--color-primary-100);
+          border: 3px solid var(--color-primary-300);
+        }
+
+        .label {
+          position: absolute;
+          top: 0.5rem;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 1rem;
+          font-weight: 600;
+          font-family: "Consolas", "Monaco", monospace;
+          color: var(--color-surface-700);
+          background: var(--color-surface-50);
+          padding: 0.25rem 0.75rem;
+          border-radius: var(--radius-container);
+        }
+      }
+
+      .core {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        background: var(--color-surface-50);
+        border-radius: 50%;
+        box-shadow: 0 4px 12px
+          color-mix(in oklab, var(--color-surface-900) 0.1, transparent);
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--color-primary-700);
+
+        .core-label {
+          font-size: 0.7rem;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+      }
+
+      .description {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 2rem;
+        color: var(--color-primary-600);
+
+        .text {
+          font-size: 1rem;
+          text-align: center;
+          max-width: 120px;
+        }
+      }
+    }
+
+    .insight {
+      font-size: 1.25rem;
+      padding: 1.5rem;
+      background: var(--color-primary-50);
+      border-radius: var(--radius-container);
+      border-left: 4px solid var(--color-primary-500);
+    }
+  }
+
+  /* Balance Scale */
+  #balance-scale {
+    .demo {
+      background: var(--color-surface-100);
+      border-radius: calc(var(--radius-container) * 2);
+      padding: 2rem;
+
+      .visual {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+
+        .beam {
+          display: flex;
+          align-items: flex-start;
+          justify-content: center;
+          gap: 2rem;
+          padding: 1.5rem 2rem;
+          background: var(--color-surface-50);
+          border-radius: calc(var(--radius-container) * 2);
+          box-shadow: 0 4px 12px
+            color-mix(in oklab, var(--color-surface-900) 0.1, transparent);
+          transition: transform 0.3s ease;
+
+          &.tilt-left {
+            transform: rotate(-5deg);
+          }
+          &.tilt-right {
+            transform: rotate(5deg);
+          }
+
+          .pan {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 120px;
+
+            .content {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 0.5rem;
+              padding: 1rem;
+              background: var(--color-surface-100);
+              border-radius: var(--radius-container);
+              min-height: 80px;
+
+              .box {
+                font-size: 2rem;
+                font-weight: 700;
+                padding: 0.5rem 1rem;
+                background: var(--color-primary-100);
+                border: 3px dashed var(--color-primary-400);
+                border-radius: var(--radius-container);
+                color: var(--color-primary-700);
+
+                &.revealed {
+                  border-style: solid;
+                  background: var(--color-success-100);
+                  border-color: var(--color-success-500);
+                }
+              }
+
+              .weights {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: var(--color-warning-700);
+                background: var(--color-warning-100);
+                padding: 0.25rem 0.75rem;
+                border-radius: var(--radius-container);
+              }
+
+              .coins {
+                font-size: 1.5rem;
+              }
+            }
+
+            .label {
+              font-size: 0.9rem;
+              color: var(--color-surface-600);
+            }
+          }
+
+          .fulcrum {
+            font-size: 3rem;
+            align-self: center;
+          }
+        }
+      }
+
+      .status {
+        text-align: center;
+        font-size: 1.125rem;
+        font-weight: 600;
+        padding: 0.75rem;
+        border-radius: var(--radius-container);
+        margin-bottom: 1.5rem;
+
+        &.balanced {
+          background: var(--color-success-100);
+          color: var(--color-success-700);
+        }
+
+        &.warning {
+          background: var(--color-error-100);
+          color: var(--color-error-700);
+        }
+      }
+
+      .controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+
+        .group {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+
+          .label {
+            font-size: 0.95rem;
+            color: var(--color-surface-600);
+          }
+        }
+
+        .reset {
+          border-color: var(--color-surface-400) !important;
+        }
+
+        .reveal {
+          background: var(--color-success-600) !important;
+          color: var(--color-surface-50) !important;
+          border-color: var(--color-success-600) !important;
+        }
+      }
+
+      .hint {
+        font-size: 1rem;
+        text-align: center;
+        color: var(--color-surface-600);
+        margin: 0;
+      }
+    }
+  }
+
+  /* Equation Solver */
+  #equation-solver {
+    .variable {
+      font-family: "Consolas", "Monaco", monospace;
+      font-size: 1.1em;
+      color: var(--color-primary-600);
+      font-weight: 600;
+      background: var(--color-primary-50);
+      padding: 0.1em 0.3em;
+      border-radius: 0.25rem;
+    }
+
+    .demo {
+      background: var(--color-surface-50);
+      border-radius: calc(var(--radius-container) * 2);
+      padding: 2rem;
+      box-shadow: 0 4px 12px
+        color-mix(in oklab, var(--color-surface-900) 0.1, transparent);
+      margin: 2rem 0;
+
+      .steps {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+
+        .step {
+          display: grid;
+          grid-template-columns: 2rem 1fr auto;
+          gap: 1rem;
+          padding: 1rem 1.5rem;
+          background: var(--color-surface-100);
+          border-radius: var(--radius-container);
+          border: 2px solid transparent;
+          opacity: 0.6;
+          transition: all 0.3s;
+
+          &.active {
+            opacity: 1;
+            background: var(--color-primary-50);
+            border-color: var(--color-primary-400);
+
+            .number {
+              background: var(--color-primary-600);
+              color: var(--color-surface-50);
+            }
+          }
+
+          &.done {
+            opacity: 0.8;
+            background: var(--color-success-50);
+
+            .number {
+              background: var(--color-success-500);
+              color: var(--color-surface-50);
+            }
+          }
+
+          .number {
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-surface-200);
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 0.9rem;
+          }
+
+          .equation {
+            font-family: "Consolas", "Monaco", monospace;
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: var(--color-surface-800);
+          }
+
+          .explanation {
+            font-size: 1rem;
+            color: var(--color-surface-600);
+            align-self: center;
+          }
+        }
+      }
+
+      .controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+
+        button:hover:not(:disabled) {
+          background: var(--color-primary-100);
+        }
+
+        .indicator {
+          font-size: 1rem;
+          color: var(--color-surface-600);
+        }
+      }
+    }
+
+    .insight {
+      font-size: 1.25rem;
+      padding: 1.5rem;
+      background: var(--color-warning-50);
+      border: 2px solid var(--color-warning-300);
+      border-radius: calc(var(--radius-container) * 2);
+      margin-top: 2rem;
+    }
+  }
+
+  /* Suitcase Problem */
+  #suitcase-problem {
+    .problem {
+      background: var(--color-surface-50);
+      border-radius: calc(var(--radius-container) * 2);
+      padding: 2rem;
+      box-shadow: 0 4px 12px
+        color-mix(in oklab, var(--color-surface-900) 0.1, transparent);
+
+      .data {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        margin-bottom: 1.5rem;
+
+        .item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.75rem 1.25rem;
+          background: var(--color-surface-100);
+          border-radius: var(--radius-container);
+          flex: 1;
+          min-width: 180px;
+
+          .icon {
+            font-size: 1.5rem;
+          }
+
+          .label {
+            color: var(--color-surface-600);
+            font-size: 0.95rem;
+          }
+
+          .value {
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: var(--color-surface-800);
+            margin-left: auto;
+          }
+        }
+      }
+
+      .equation {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem;
+        background: var(--color-primary-50);
+        border-radius: var(--radius-container);
+        margin-bottom: 1.5rem;
+
+        .label {
+          font-weight: 600;
+          color: var(--color-surface-600);
+        }
+
+        .formula {
+          font-family: "Consolas", "Monaco", monospace;
+          font-size: 1.5rem;
+          font-weight: 600;
+          color: var(--color-primary-700);
+        }
+      }
+
+      .solution {
+        summary {
+          cursor: pointer;
+          color: var(--color-primary-600);
+          font-weight: 600;
+          font-size: 1rem;
+          padding: 0.5rem 0;
+        }
+
+        .steps {
+          margin-top: 1rem;
+          padding: 1.5rem;
+          background: var(--color-success-50);
+          border-radius: var(--radius-container);
+
+          .step {
+            font-size: 1.125rem;
+            margin-bottom: 0.75rem;
+            font-family: "Consolas", "Monaco", monospace;
+          }
+
+          .answer {
+            font-size: 1.25rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--color-success-300);
+          }
+        }
+      }
+    }
+  }
+
+  /* Quiz */
+  #quiz {
+    .cards {
+      display: grid;
+      gap: 1.5rem;
+
+      .question {
+        font-size: 1.25rem;
+        line-height: 1.6;
+        color: var(--color-surface-800);
+      }
+
+      .formula {
+        font-family: "Consolas", "Monaco", monospace;
+        font-weight: 600;
+        color: var(--color-primary-700);
+      }
+    }
+  }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    #dressing-metaphor .grid {
+      grid-template-columns: 1fr;
+    }
+
+    #onion-model .visual {
+      flex-direction: column;
+
+      .layer.outer {
+        width: 320px;
+        height: 320px;
+      }
+
+      .layer.middle {
+        width: 240px;
+        height: 240px;
+      }
+
+      .layer.inner {
+        width: 160px;
+        height: 160px;
+      }
+    }
+
+    #balance-scale {
+      .beam {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .fulcrum {
+        order: -1;
+      }
+    }
+
+    #equation-solver .step {
+      grid-template-columns: 2rem 1fr;
+
+      .explanation {
+        grid-column: 1 / -1;
+        padding-left: 3rem;
+      }
+    }
+
+    #suitcase-problem {
+      .data {
+        flex-direction: column;
+
+        .item {
+          min-width: unset;
+        }
+      }
+
+      .equation {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    #magician-easy .guess-box,
+    #magician-hard .guess-box {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>
