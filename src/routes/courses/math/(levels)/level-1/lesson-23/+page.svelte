@@ -1,43 +1,69 @@
 <script lang="ts">
-  import { Crisis, DefinitionCard, QuizCard, Summary } from "../../components";
+  import {
+    Crisis,
+    DefinitionCard,
+    QuizCard,
+    Section,
+    Summary,
+  } from "../../components";
 
   // Coin flip simulation state
-  let flipHistory = $state<("heads" | "tails")[]>([]);
   let isFlipping = $state(false);
-  let flipCount = $state(0);
+  let headsCount = $state(0);
+  let tailsCount = $state(0);
+  let lastResult = $state<"heads" | "tails" | null>(null);
 
-  const headsCount = $derived(flipHistory.filter((f) => f === "heads").length);
-  const tailsCount = $derived(flipHistory.filter((f) => f === "tails").length);
+  const flipCount = $derived(headsCount + tailsCount);
   const headsPercentage = $derived(
-    flipHistory.length > 0
-      ? Math.round((headsCount / flipHistory.length) * 100)
-      : 50
+    flipCount > 0 ? Math.round((headsCount / flipCount) * 100) : 50
   );
 
   async function flipCoin() {
     if (isFlipping) return;
     isFlipping = true;
-    const result = Math.random() < 0.5 ? "heads" : "tails";
-    await new Promise((r) => setTimeout(r, 300));
-    flipHistory = [...flipHistory, result];
-    flipCount++;
+    const isHeads = Math.random() < 0.5;
+
+    // Animate for single flip
+    await new Promise((r) => setTimeout(r, 150));
+
+    if (isHeads) {
+      headsCount++;
+      lastResult = "heads";
+    } else {
+      tailsCount++;
+      lastResult = "tails";
+    }
+
+    await new Promise((r) => setTimeout(r, 150));
+
     isFlipping = false;
   }
 
   async function flipMultiple(count: number) {
+    // Instant calculation for multiple flips
+    let newHeads = 0;
+    let newTails = 0;
+    let finalFlip: "heads" | "tails" = "heads"; // default
+
     for (let i = 0; i < count; i++) {
-      const result = Math.random() < 0.5 ? "heads" : "tails";
-      flipHistory = [...flipHistory, result];
-      flipCount++;
-      if (count <= 10) {
-        await new Promise((r) => setTimeout(r, 100));
+      if (Math.random() < 0.5) {
+        newHeads++;
+        finalFlip = "heads";
+      } else {
+        newTails++;
+        finalFlip = "tails";
       }
     }
+
+    headsCount += newHeads;
+    tailsCount += newTails;
+    lastResult = finalFlip;
   }
 
   function resetFlips() {
-    flipHistory = [];
-    flipCount = 0;
+    headsCount = 0;
+    tailsCount = 0;
+    lastResult = null;
   }
 
   // Probability slider (ball bag) state
@@ -56,7 +82,7 @@
 </svelte:head>
 
 <!-- Крючок: Капитан команды -->
-<section id="dilemma">
+<Section id="crisis">
   <Crisis icon="⚽" title="Дилемма капитана">
     <p>
       Ты — капитан школьной футбольной команды. Завтра решающий матч на открытом
@@ -84,17 +110,14 @@
       слишком туманны для командирского решения.
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
 <!-- Шаг 1: Границы реальности -->
-<section id="limits">
-  <h2>Границы реальности</h2>
-  <p>
-    Прежде чем разбираться с «может быть», нарисуем границы мира. Есть две
-    крайние точки: <strong>невозможное</strong> и
-    <strong>неизбежное</strong>.
-  </p>
-
+<Section
+  id="limits"
+  title="Границы реальности"
+  description="Прежде чем разбираться с «может быть», нарисуем границы мира. Есть две крайние точки: невозможное и неизбежное."
+>
   <div class="scale-demo">
     <div class="line">
       <div class="point left">
@@ -116,23 +139,21 @@
     </div>
   </div>
 
-  <DefinitionCard title="Принцип">
+  <DefinitionCard label="Принцип">
     <p>
       Все события в мире живут на шкале от <strong>0</strong> (точно не
       случится) до <strong>1</strong> (точно случится). Это шкала
       <strong>уверенности</strong>.
     </p>
   </DefinitionCard>
-</section>
+</Section>
 
 <!-- Шаг 2: Равновесие 50/50 -->
-<section id="equilibrium">
-  <h2>Равновесие: 50 на 50</h2>
-  <p>
-    Самая середина шкалы — ситуация полной неопределённости. Монетка, застывшая
-    на ребре. Орлов и решек одинаковое количество.
-  </p>
-
+<Section
+  id="equilibrium"
+  title="Равновесие: 50 на 50"
+  description="Самая середина шкалы — ситуация полной неопределённости. Монетка, застывшая на ребре. Орлов и решек одинаковое количество."
+>
   <div class="interactive-demo">
     <h3>Генератор миров</h3>
     <p class="instruction">
@@ -143,9 +164,9 @@
     <div class="coin-demo">
       <div class="visual">
         <div class="coin" class:flipping={isFlipping}>
-          {#if flipHistory.length === 0}
+          {#if lastResult === null}
             <span class="face">🪙</span>
-          {:else if flipHistory[flipHistory.length - 1] === "heads"}
+          {:else if lastResult === "heads"}
             <span class="face heads">🦅</span>
           {:else}
             <span class="face tails">🌸</span>
@@ -204,17 +225,14 @@
       </div>
     {/if}
   </div>
-</section>
+</Section>
 
 <!-- Шаг 3: Взвешивание шансов -->
-<section id="weighing">
-  <h2>Взвешивание шансов</h2>
-  <p>
-    Как понять, где находится событие на нашей шкале? Представьте непрозрачный
-    <strong>мешок с шариками</strong>. Если там много красных и мало синих —
-    вытащить красный очень вероятно.
-  </p>
-
+<Section
+  id="weighing"
+  title="Взвешивание шансов"
+  description="Как понять, где находится событие на нашей шкале? Представьте непрозрачный мешок с шариками. Если там много красных и мало синих — вытащить красный очень вероятно."
+>
   <div class="interactive-demo">
     <h3>Слайдер вероятности</h3>
     <p class="instruction">
@@ -282,7 +300,7 @@
     </div>
   </div>
 
-  <DefinitionCard title="Связь">
+  <DefinitionCard label="Связь">
     <p>
       Вероятность вытащить красный шар = <strong>количество красных</strong>
       ÷
@@ -290,15 +308,13 @@
       выше шанс.
     </p>
   </DefinitionCard>
-</section>
+</Section>
 
-<section id="language">
-  <h2>Язык чисел</h2>
-  <p>
-    Переводим интуицию в строгий язык. Мы не говорим «ну, скорее всего». Мы
-    используем <strong>числа</strong>.
-  </p>
-
+<Section
+  id="language"
+  title="Язык чисел"
+  description="Переводим интуицию в строгий язык. Мы не говорим «ну, скорее всего». Мы используем числа."
+>
   <div class="formula-cards">
     <div class="card">
       <div class="symbol">P</div>
@@ -334,12 +350,10 @@
       <span class="text">Играем на улице. Шансы на нашей стороне.</span>
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Проверка понимания -->
-<section id="quiz">
-  <h2>Проверь себя</h2>
-
+<Section id="practice" title="Проверь себя">
   <div class="quiz-cards">
     <QuizCard icon="🌅">
       <div class="question">
@@ -382,21 +396,21 @@
       {/snippet}
     </QuizCard>
   </div>
-</section>
+</Section>
 
-<section id="summary">
+<Section id="summary">
   <Summary title="Резюме">
-    <blockquote>
+    <p>
       Будущее нельзя предсказать точно, но его можно <strong>«взвесить»</strong
       >. Вероятность — это не гадание, а способ превратить страх перед
       неизвестностью в <strong>расчёт риска</strong>. Знание шансов помогает
       принимать умные решения, даже когда ты не знаешь итога наверняка.
-    </blockquote>
+    </p>
   </Summary>
-</section>
+</Section>
 
 <style>
-  #dilemma {
+  :global(#crisis) {
     .weather-display {
       display: flex;
       align-items: center;
@@ -434,7 +448,7 @@
     }
   }
 
-  #limits {
+  :global(#limits) {
     .scale-demo {
       margin: 2.5rem 0;
       padding: 2rem;
@@ -514,7 +528,7 @@
     }
   }
 
-  #equilibrium {
+  :global(#equilibrium) {
     .interactive-demo {
       margin: 2.5rem 0;
       padding: 2rem;
@@ -668,7 +682,7 @@
     }
   }
 
-  #weighing {
+  :global(#weighing) {
     .interactive-demo {
       margin: 2.5rem 0;
       padding: 2rem;
@@ -830,7 +844,7 @@
     }
   }
 
-  #language {
+  :global(#language) {
     .formula-cards {
       display: grid;
       gap: 1.5rem;
@@ -923,7 +937,7 @@
     }
   }
 
-  #quiz {
+  :global(#practice) {
     .quiz-cards {
       display: grid;
       gap: 1.5rem;
@@ -961,7 +975,7 @@
 
   /* Responsive */
   @media (max-width: 1100px) {
-    #limits .scale-demo {
+    :global(#limits) .scale-demo {
       .bar {
         padding: 0 40px;
       }
@@ -971,12 +985,12 @@
       }
     }
 
-    #language .formula-cards .card {
+    :global(#language) .formula-cards .card {
       flex-direction: column;
       text-align: center;
     }
 
-    #weighing .probability-demo .controls {
+    :global(#weighing) .probability-demo .controls {
       .control {
         flex-wrap: wrap;
 

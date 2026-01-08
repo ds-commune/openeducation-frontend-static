@@ -3,6 +3,7 @@
     Crisis,
     DefinitionCard,
     QuizCard,
+    Section,
     Summary,
     TakeawayCard,
   } from "../../components";
@@ -117,7 +118,7 @@
 </svelte:head>
 
 <!-- Crisis Section -->
-<section id="intro">
+<Section id="crisis">
   <Crisis icon="📜" title="Бухгалтер Императора">
     <p>
       Ты — главный счетовод Древнего Рима. Император требует срочно посчитать,
@@ -142,26 +143,24 @@
       невозможно без перевода в другую систему.
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
 <!-- Key Question -->
-<section id="key-question">
+<Section id="key-question">
   <div class="container">
-    <strong>Загадка:</strong> почему с одними значками математика лёгкая и быстрая,
-    а с другими — мучительная и долгая? Неужели форма закорючки влияет на мышление?
+    <p>
+      <strong>Загадка:</strong> почему с одними значками математика лёгкая и быстрая,
+      а с другими — мучительная и долгая? Неужели форма закорючки влияет на мышление?
+    </p>
   </div>
-</section>
+</Section>
 
 <!-- Evolution -->
-<section id="evolution">
-  <h2>Эволюция лени</h2>
-
-  <p>
-    Цифры — это не священные символы, а <strong
-      >технология сжатия информации</strong
-    >. Человечество веками искало способ записывать количество короче и удобнее.
-  </p>
-
+<Section
+  id="evolution"
+  title="Эволюция лени"
+  description="Цифры — это не священные символы, а технология сжатия информации. Человечество веками искало способ записывать количество короче и удобнее."
+>
   <div class="demo">
     <div class="row unary">
       <div class="label-group">
@@ -205,17 +204,14 @@
       цифры экономят место, но не экономят мозг.
     </p>
   </TakeawayCard>
-</section>
+</Section>
 
 <!-- Position cups -->
-<section id="cups">
-  <h2>Стаканчики ценности</h2>
-
-  <p>
-    Главный секрет арабских цифр — не в их форме, а в <strong>месте</strong>,
-    где они стоят. Представь три стаканчика для монет:
-  </p>
-
+<Section
+  id="cups"
+  title="Стаканчики ценности"
+  description="Главный секрет арабских цифр — не в их форме, а в месте, где они стоят. Представь три стаканчика для монет:"
+>
   <div class="simulation">
     <div class="cups-row">
       {#each cupLabels as label, i}
@@ -281,17 +277,14 @@
       </p>
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Calculator Battle -->
-<section id="battle">
-  <h2>Битва калькуляторов</h2>
-
-  <p>
-    Сравним, как происходит сложение 9 + 2 в разных системах. Посмотри,
-    насколько проще работает позиционная система.
-  </p>
-
+<Section
+  id="battle"
+  title="Битва калькуляторов"
+  description="Сравним, как происходит сложение 9 + 2 в разных системах. Посмотри, насколько проще работает позиционная система."
+>
   <div class="simulation">
     <div class="grid">
       <div class="side additive">
@@ -381,17 +374,14 @@
       {/if}
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Formalization -->
-<section id="formal">
-  <h2>Формальный язык</h2>
-
-  <p>
-    Переходим от метафоры стаканчиков к математической записи. Любое трёхзначное
-    число можно разложить так:
-  </p>
-
+<Section
+  id="formal"
+  title="Формальный язык"
+  description="Переходим от метафоры стаканчиков к математической записи. Любое трёхзначное число можно разложить так:"
+>
   <div class="formula-card">
     <div class="formula">Число = (a × 100) + (b × 10) + (c × 1)</div>
     <p class="explain">
@@ -427,14 +417,12 @@
       нас есть). Арабские — это инструкция по сборке числа (координаты).
     </p>
   </TakeawayCard>
-</section>
+</Section>
 
 <!-- Quiz -->
-<section id="quiz">
-  <h2>Проверь понимание</h2>
-
+<Section id="quiz" title="Проверь понимание">
   <div class="cards">
-    <QuizCard icon="🧾">
+    <QuizCard icon="🧾" title="Чеки в магазине">
       <p>
         Если бы мы использовали римские цифры сегодня, почему чеки в магазинах
         были бы длиной в метр?
@@ -448,7 +436,7 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="🕳️">
+    <QuizCard icon="🕳️" title="Изобретение нуля">
       <p>
         Почему изобретение цифры «0» было важнее, чем изобретение цифры «9»?
       </p>
@@ -460,7 +448,7 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="🖐️">
+    <QuizCard icon="🖐️" title="Восьмеричная система">
       <p>
         Представь, что мы договорились считать не десятками, а восьмёрками (как
         пальцев у мультяшек). Изменится ли смысл числа или только его запись?
@@ -474,12 +462,10 @@
       {/snippet}
     </QuizCard>
   </div>
-</section>
+</Section>
 
 <!-- Alien Cipher -->
-<section id="alien">
-  <h2>Инопланетный шифр</h2>
-
+<Section id="alien" title="Инопланетный шифр">
   <div class="scenario">
     <div class="icon">🛸</div>
     <p>
@@ -536,19 +522,19 @@
       </div>
     {/if}
   </div>
-</section>
+</Section>
 
-<section id="summary">
+<Section id="summary">
   <Summary title="Главная мысль">
-    <blockquote>
+    <p>
       Мы пишем цифры именно так не потому, что так решили боги, а потому что это
       самый эффективный инструмент. Римские цифры были «архивом» (записью
       факта), а арабские цифры стали «процессором» (инструментом для
       вычислений). Главная магия — это позиция цифры, которая делает вычисления
       лёгкими.
-    </blockquote>
+    </p>
   </Summary>
-</section>
+</Section>
 
 <style>
   /* System color classes */
@@ -563,19 +549,21 @@
   }
 
   /* Intro / Crisis */
-  #intro {
+  :global(#crisis) {
     p {
       margin-bottom: 1rem;
+      font-size: 1.125rem;
     }
 
     .comparison {
       display: flex;
+      flex-direction: column;
       gap: 1.5rem;
       margin: 1.5rem 0;
 
       .item {
         flex: 1;
-        padding: 1.25rem;
+        padding: 1.5rem;
         border-radius: var(--radius-container);
         text-align: center;
 
@@ -589,7 +577,7 @@
 
         .label {
           display: block;
-          font-size: 0.875rem;
+          font-size: 1rem;
           color: var(--color-surface-600);
           margin-bottom: 0.5rem;
         }
@@ -604,54 +592,77 @@
 
         .verdict {
           display: block;
-          font-size: 1rem;
+          font-size: 1.125rem;
           font-weight: 600;
+        }
+      }
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+
+        .item {
+          padding: 1.25rem;
+          .label {
+            font-size: 0.875rem;
+          }
         }
       }
     }
   }
 
   /* Key Question */
-  #key-question {
+  :global(#key-question) {
     .container {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       text-align: center;
-      padding: 1.5rem 2rem;
+      padding: 1.5rem;
       background: var(--color-surface-100);
       border-radius: calc(var(--radius-container) * 2);
-      margin: 2rem 0 3rem;
+      margin: 2rem 0;
+      border: 1px solid var(--color-surface-200);
+
+      p {
+        margin: 0;
+      }
+
+      @media (min-width: 768px) {
+        font-size: 1.5rem;
+        padding: 1.5rem 2rem;
+        margin: 2rem 0 3rem;
+      }
     }
   }
 
   /* Evolution */
-  #evolution {
+  :global(#evolution) {
     .demo {
       background: var(--color-surface-50);
       border: 1px solid var(--color-surface-200);
       border-radius: calc(var(--radius-container) * 2);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
 
       .row {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 2rem;
+        gap: 1rem;
         padding: 1.5rem;
         background: var(--color-surface-50);
         border-radius: var(--radius-container);
         margin-bottom: 0.5rem;
         box-shadow: 0 2px 4px
           color-mix(in oklab, var(--color-surface-950) 0.05, transparent);
+        text-align: center;
 
         .label-group {
-          min-width: 160px;
+          min-width: auto;
           flex-shrink: 0;
 
           .era {
             display: block;
             font-size: 1.25rem;
             font-weight: 600;
-            /* color: var(--color-primary-700); */
           }
 
           .type {
@@ -665,12 +676,13 @@
           flex: 1;
           font-family: "Consolas", monospace;
           font-size: 1.25rem;
-          overflow-x: auto;
+          white-space: nowrap;
+          text-align: center;
         }
 
         .verdict {
-          min-width: 200px;
-          text-align: right;
+          min-width: auto;
+          text-align: center;
           font-size: 1.125rem;
           font-weight: 600;
         }
@@ -682,24 +694,51 @@
         color: var(--color-surface-400);
         padding: 0.5rem 0;
       }
+
+      @media (min-width: 768px) {
+        padding: 2rem;
+
+        .row {
+          flex-direction: row;
+          text-align: left;
+          gap: 2rem;
+
+          .label-group {
+            min-width: 160px;
+            text-align: left;
+          }
+
+          .example {
+            width: auto;
+            text-align: left;
+          }
+
+          .verdict {
+            min-width: 200px;
+            text-align: right;
+          }
+        }
+      }
     }
   }
 
   /* Cups */
-  #cups {
+  :global(#cups) {
     .simulation {
       background: var(--color-surface-50);
       border: 1px solid var(--color-surface-200);
       border-radius: calc(var(--radius-container) * 2);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
       text-align: center;
 
       .cups-row {
         display: flex;
+        flex-direction: row; /* Force row on mobile per request */
         justify-content: center;
-        gap: 2rem;
+        gap: 1rem; /* Reduced gap for mobile */
         margin-bottom: 2rem;
+        flex-wrap: wrap; /* Safety for very small screens */
 
         .wrapper {
           display: flex;
@@ -708,13 +747,13 @@
           gap: 0.5rem;
 
           .label {
-            font-size: 1.125rem;
+            font-size: 1rem; /* Slightly smaller */
             font-weight: 600;
             color: var(--color-primary-700);
           }
 
           .multiplier {
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             color: var(--color-surface-500);
           }
 
@@ -729,9 +768,9 @@
             gap: 0.5rem;
 
             .btn {
-              width: 48px;
-              height: 36px;
-              font-size: 1.5rem;
+              width: 36px; /* Smaller buttons */
+              height: 32px;
+              font-size: 1.25rem;
               font-weight: 600;
               border: none;
               border-radius: calc(var(--radius-container) / 2);
@@ -746,9 +785,9 @@
             }
 
             .value {
-              font-size: 2.5rem;
+              font-size: 2rem;
               font-weight: 700;
-              min-width: 48px;
+              min-width: 40px;
               color: var(--color-surface-800);
             }
           }
@@ -804,16 +843,40 @@
           background: var(--color-surface-300);
         }
       }
+
+      @media (min-width: 768px) {
+        padding: 2rem;
+
+        .cups-row {
+          gap: 2rem;
+          flex-wrap: nowrap;
+
+          .wrapper {
+            .label {
+              font-size: 1.125rem;
+            }
+            .cup {
+              .btn {
+                width: 48px;
+                height: 36px;
+                font-size: 1.5rem;
+              }
+            }
+          }
+        }
+      }
     }
 
     .zero-insight {
       display: flex;
-      gap: 2rem;
+      flex-direction: column;
+      gap: 1.5rem;
       align-items: center;
       background: var(--color-primary-50);
       border-radius: calc(var(--radius-container) * 2);
       padding: 2rem;
       margin: 2rem 0;
+      text-align: center;
 
       .icon {
         font-size: 4rem;
@@ -826,27 +889,35 @@
         h3 {
           color: var(--color-primary-800);
           margin-bottom: 0.5rem;
+          font-size: 1.25rem;
         }
 
         p {
           margin: 0;
-          font-size: 1.25rem;
+          font-size: 1.125rem;
         }
+      }
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+        gap: 2rem;
+        text-align: left;
       }
     }
   }
 
   /* Battle */
-  #battle {
+  :global(#battle) {
     .simulation {
       background: var(--color-surface-50);
       border: 1px solid var(--color-surface-200);
       border-radius: calc(var(--radius-container) * 2);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
 
       .grid {
         display: flex;
+        flex-direction: column;
         gap: 1.5rem;
         margin-bottom: 1.5rem;
 
@@ -888,16 +959,17 @@
 
           &.positional .calc {
             display: flex;
+            justify-content: center;
             gap: 1rem;
 
             .slot {
               display: flex;
               flex-direction: column;
               align-items: center;
-              padding: 1rem;
+              padding: 0.75rem;
               border: 2px solid var(--color-surface-300);
               border-radius: var(--radius-container);
-              min-width: 100px;
+              min-width: 80px;
 
               &.active {
                 border-color: var(--color-success-500);
@@ -927,7 +999,7 @@
               background: var(--color-success-100);
 
               .value {
-                font-size: 2rem;
+                font-size: 1.5rem;
               }
             }
           }
@@ -950,6 +1022,7 @@
         .divider {
           display: flex;
           align-items: center;
+          justify-content: center;
           font-size: 1.5rem;
           font-weight: 700;
           color: var(--color-surface-400);
@@ -989,21 +1062,42 @@
           }
         }
       }
+
+      @media (min-width: 768px) {
+        padding: 2rem;
+
+        .grid {
+          flex-direction: row;
+
+          .side {
+            &.positional .calc {
+              .slot {
+                padding: 1rem;
+                min-width: 100px;
+              }
+
+              &.done .slot .value {
+                font-size: 2rem;
+              }
+            }
+          }
+        }
+      }
     }
   }
 
   /* Formal */
-  #formal {
+  :global(#formal) {
     .formula-card {
       background: var(--color-surface-100);
       border-radius: calc(var(--radius-container) * 2);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
       text-align: center;
 
       .formula {
         font-family: "Consolas", monospace;
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         color: var(--color-primary-800);
         margin-bottom: 1rem;
       }
@@ -1012,6 +1106,14 @@
         font-size: 1.125rem;
         color: var(--color-surface-600);
         margin: 0;
+      }
+
+      @media (min-width: 768px) {
+        padding: 2rem;
+
+        .formula {
+          font-size: 1.5rem;
+        }
       }
     }
 
@@ -1023,16 +1125,13 @@
 
       .row {
         display: grid;
-        grid-template-columns: 120px 200px 1fr;
-        gap: 1rem;
-        padding: 1rem 1.5rem;
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 1rem;
         background: var(--color-surface-50);
 
         &.header {
-          background: var(--color-surface-100);
-          font-weight: 600;
-          font-size: 1rem;
-          color: var(--color-surface-600);
+          display: none;
         }
 
         &:not(.header):not(:last-child) {
@@ -1053,12 +1152,26 @@
           font-size: 1rem;
           color: var(--color-surface-600);
         }
+
+        @media (min-width: 768px) {
+          grid-template-columns: 120px 200px 1fr;
+          gap: 1rem;
+          padding: 1rem 1.5rem;
+
+          &.header {
+            display: grid;
+            background: var(--color-surface-100);
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--color-surface-600);
+          }
+        }
       }
     }
   }
 
   /* Quiz */
-  #quiz {
+  :global(#quiz) {
     .cards {
       display: flex;
       flex-direction: column;
@@ -1068,15 +1181,17 @@
   }
 
   /* Alien */
-  #alien {
+  :global(#alien) {
     .scenario {
       display: flex;
+      flex-direction: column;
       gap: 1.5rem;
       align-items: center;
       background: var(--color-tertiary-100);
       border-radius: calc(var(--radius-container) * 2);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
+      text-align: center;
 
       .icon {
         font-size: 3.5rem;
@@ -1086,6 +1201,12 @@
       p {
         margin: 0;
         font-size: 1.25rem;
+      }
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+        padding: 2rem;
+        text-align: left;
       }
     }
 
@@ -1104,7 +1225,7 @@
     .game {
       background: var(--color-surface-100);
       border-radius: calc(var(--radius-container) * 2);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
       text-align: center;
 
@@ -1116,7 +1237,7 @@
         flex-wrap: wrap;
 
         .example-btn {
-          font-size: 1.25rem;
+          font-size: 1.125rem;
           padding: 0.75rem 1.5rem;
           border: 2px solid var(--color-tertiary-300);
           border-radius: var(--radius-container);
@@ -1133,8 +1254,9 @@
 
       .input-row {
         display: flex;
+        flex-direction: column;
         justify-content: center;
-        align-items: flex-end;
+        align-items: center;
         gap: 1rem;
         margin-bottom: 1.5rem;
         flex-wrap: wrap;
@@ -1174,6 +1296,11 @@
             background: var(--color-tertiary-700);
           }
         }
+
+        @media (min-width: 768px) {
+          flex-direction: row;
+          align-items: flex-end;
+        }
       }
 
       .result {
@@ -1208,6 +1335,16 @@
           color: var(--color-surface-800);
         }
       }
+
+      @media (min-width: 768px) {
+        padding: 2rem;
+
+        .examples {
+          .example-btn {
+            font-size: 1.25rem;
+          }
+        }
+      }
     }
   }
 
@@ -1217,65 +1354,6 @@
     }
     to {
       opacity: 1;
-    }
-  }
-
-  /* Media Queries */
-  @media (max-width: 1100px) {
-    #intro .comparison {
-      flex-direction: column;
-    }
-
-    #evolution .demo {
-      .row {
-        flex-direction: column;
-        text-align: center;
-        gap: 1rem;
-
-        .label-group,
-        .verdict {
-          min-width: auto;
-          text-align: center;
-        }
-      }
-    }
-
-    #cups .simulation .cups-row {
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    #battle .simulation {
-      .grid {
-        flex-direction: column;
-      }
-
-      .divider {
-        transform: rotate(90deg);
-        padding: 0.5rem 0;
-      }
-    }
-
-    #formal .table-container {
-      .row {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-
-        &.header {
-          display: none;
-        }
-      }
-    }
-
-    #cups .zero-insight,
-    #alien .scenario {
-      flex-direction: column;
-      text-align: center;
-    }
-
-    #alien .game .input-row {
-      flex-direction: column;
-      align-items: center;
     }
   }
 </style>

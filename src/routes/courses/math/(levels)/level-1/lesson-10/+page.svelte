@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Crisis, DefinitionCard, Summary } from "../../components";
+  import { Crisis, DefinitionCard, Section, Summary } from "../../components";
 
   // 8x8 Pixel Grid State
   const GRID_SIZE = 8;
@@ -53,7 +53,7 @@
   />
 </svelte:head>
 
-<section id="introduction">
+<Section id="crisis">
   <Crisis icon="🏝️" title="Проблема двух островов">
     <p>
       Ты и твой друг оказались на разных островах. Между вами нет мостов,
@@ -80,17 +80,14 @@
       в одну мигающую лампочку?
     </p>
   </div>
-</section>
+</Section>
 
 <!-- Part 1: Pixels -->
-<section id="pixels" aria-labelledby="pixels-title">
-  <h2 id="pixels-title">От атомов к пикселям</h2>
-
-  <p>
-    Любое изображение можно разбить на маленькие кусочки. Если кусочки
-    достаточно маленькие, глаз не заметит подвоха.
-  </p>
-
+<Section
+  id="pixels"
+  title="От атомов к пикселям"
+  description="Любое изображение можно разбить на маленькие кусочки. Если кусочки достаточно маленькие, глаз не заметит подвоха."
+>
   <div class="metaphor">
     <div class="icon">🧩</div>
     <div class="content">
@@ -103,7 +100,7 @@
   </div>
 
   <!-- Interactive 8x8 Grid -->
-  <div class="simulation" aria-labelledby="grid-sim-title">
+  <div class="simulation">
     <h3 id="grid-sim-title">🎨 Сетка реальности (8×8)</h3>
     <p class="instruction">
       Кликай по клеткам, чтобы закрасить их. Справа увидишь двоичный код твоего
@@ -147,17 +144,14 @@
       = 0, чёрная = 1.
     </p>
   </div>
-</section>
+</Section>
 
 <!-- Part 2: Color as Number -->
-<section id="color" aria-labelledby="color-title">
-  <h2 id="color-title">Цвет как число</h2>
-
-  <p>
-    Что делать, если мир не чёрно-белый? Нам нужно больше вариантов, чем 0 и 1.
-    Но у нас по-прежнему только 0 и 1.
-  </p>
-
+<Section
+  id="color"
+  title="Цвет как число"
+  description="Что делать, если мир не чёрно-белый? Нам нужно больше вариантов, чем 0 и 1. Но у нас по-прежнему только 0 и 1."
+>
   <p>
     Решение — использовать <strong>комбинации</strong>. Если 1 бит даёт 2
     состояния (чёрный/белый), то 8 бит дают 2<sup>8</sup> = 256 состояний (уровней
@@ -166,7 +160,7 @@
   </p>
 
   <!-- RGB Color Mixer -->
-  <div class="simulation" aria-labelledby="rgb-sim-title">
+  <div class="simulation">
     <h3 id="rgb-sim-title">🌈 Смеситель света (RGB)</h3>
     <p class="instruction">
       Двигай ползунки и смотри, как из трёх чисел рождается любой цвет.
@@ -229,17 +223,14 @@
       (255, 255, 0). Попробуй!
     </p>
   </div>
-</section>
+</Section>
 
 <!-- Part 3: Sound -->
-<section id="sound" aria-labelledby="sound-title">
-  <h2 id="sound-title">Звук как лестница</h2>
-
-  <p>
-    Звук — это волна. Она плавная. Но компьютер не понимает плавности — он
-    понимает только ступеньки.
-  </p>
-
+<Section
+  id="sound"
+  title="Звук как лестница"
+  description="Звук — это волна. Она плавная. Но компьютер не понимает плавности — он понимает только ступеньки."
+>
   <div class="metaphor">
     <div class="icon">🎬</div>
     <div class="content">
@@ -298,14 +289,14 @@
       Чем чаще мы измеряем высоту волны, тем точнее цифровая копия.
     </p>
   </div>
-</section>
+</Section>
 
 <!-- Formalization -->
-<section id="formalization" aria-labelledby="formalization-title">
-  <h2 id="formalization-title">Формализация</h2>
-
-  <p>Переходим от интуиции к строгим определениям.</p>
-
+<Section
+  id="formalization"
+  title="Формализация"
+  description="Переходим от интуиции к строгим определениям."
+>
   <DefinitionCard title="Бит (Bit)">
     <p>
       Минимальная единица информации. То самое состояние прожектора: включен (1)
@@ -339,67 +330,79 @@
       «весит» файл.
     </p>
   </div>
-</section>
+</Section>
 
-<section id="summary">
+<Section id="summary">
   <Summary title="Резюме">
-    <blockquote>
+    <p>
       Цифровой мир — это иллюзия непрерывности. Любую картинку, песню или видео
       можно разрезать на крошечные кусочки и превратить в огромный, но простой
       список чисел.
-    </blockquote>
+    </p>
     <p>
       Компьютер — это не волшебный ящик, а сверхбыстрый калькулятор, который
       просто читает этот список и зажигает нужные точки на экране.
     </p>
   </Summary>
-</section>
+</Section>
 
 <style>
-  /* Introduction */
-  #introduction {
+  /* Crisis */
+  :global(#crisis) {
     .key-question {
-      font-size: 1.25rem;
+      font-size: 1.125rem;
       text-align: center;
-      padding: 2rem;
-      padding-bottom: 0;
+      padding: 1.5rem;
       background: var(--color-surface-100);
       border-radius: var(--radius-container);
-      margin-top: 2.5rem;
-      margin-bottom: 2.5rem;
+      margin-top: 2rem;
       border: 1px solid var(--color-surface-200);
+
+      @media (min-width: 768px) {
+        padding: 2rem;
+        font-size: 1.25rem;
+      }
     }
   }
 
   /* Pixels */
-  #pixels {
+  :global(#pixels) {
     .metaphor {
       display: flex;
-      gap: 1.5rem;
+      flex-direction: column;
+      gap: 1rem;
       background: var(--color-surface-50);
       border-radius: var(--radius-container);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
       border: 1px solid var(--color-surface-200);
 
       .icon {
-        font-size: 3rem;
-        flex-shrink: 0;
+        font-size: 2.5rem;
+        align-self: center;
       }
 
       .content {
         h3 {
           color: var(--color-surface-900);
           margin-bottom: 0.5rem;
+          font-size: 1.25rem;
         }
 
         p {
           font-size: 1.125rem;
-          margin-bottom: 1rem;
+          margin-bottom: 0;
+          line-height: 1.5;
+        }
+      }
 
-          &:last-child {
-            margin-bottom: 0;
-          }
+      @media (min-width: 768px) {
+        flex-direction: row;
+        padding: 2rem;
+
+        .icon {
+          font-size: 3rem;
+          align-self: flex-start;
         }
       }
     }
@@ -407,30 +410,30 @@
     .simulation {
       background: var(--color-surface-100);
       border-radius: var(--radius-container);
-      padding: 2.5rem;
+      padding: 1.5rem;
       margin: 2rem 0;
       box-shadow: 0 4px 12px
         color-mix(in oklab, var(--color-surface-900) 0.08, transparent);
 
       h3 {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         text-align: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
       }
 
       .instruction {
         text-align: center;
-        font-size: 1.125rem;
+        font-size: 1rem;
         color: var(--color-surface-600);
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
       }
 
       .grid-wrapper {
         display: flex;
-        gap: 3rem;
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: center;
         justify-content: center;
-        align-items: flex-start;
-        flex-wrap: wrap;
         margin-bottom: 1.5rem;
 
         .editor {
@@ -447,8 +450,8 @@
           }
 
           .cell {
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             border: none;
             background: var(--color-surface-50);
             cursor: pointer;
@@ -467,36 +470,38 @@
         .output {
           background: var(--color-surface-100);
           border: 2px solid var(--color-surface-300);
-          border-radius: calc(var(--radius-container) * 2);
-          padding: 1.5rem;
-          min-width: 220px;
+          border-radius: var(--radius-container);
+          padding: 1.25rem;
+          width: 100%;
+          max-width: 300px;
 
           .label {
             color: var(--color-surface-700);
-            font-size: 1rem;
+            font-size: 0.875rem;
             font-weight: 600;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
           }
 
           .code {
             font-family: monospace;
-            font-size: 1.125rem;
+            font-size: 1rem;
             color: var(--color-surface-900);
             background: white;
-            padding: 1rem;
+            padding: 0.75rem;
             border-radius: var(--radius-base);
             margin: 0;
             line-height: 1.6;
             white-space: pre;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.1em;
+            overflow-x: auto;
           }
 
           .stats {
-            margin-top: 1rem;
-            padding-top: 1rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
             border-top: 1px solid var(--color-surface-300);
             color: var(--color-surface-600);
-            font-size: 1rem;
+            font-size: 0.875rem;
           }
         }
       }
@@ -520,49 +525,105 @@
 
       .insight {
         text-align: center;
-        font-size: 1.125rem;
+        font-size: 1rem;
         margin: 1.5rem 0 0;
         padding: 1rem;
         background: var(--color-surface-50);
         border-radius: var(--radius-base);
       }
+
+      @media (min-width: 768px) {
+        padding: 2.5rem;
+
+        h3 {
+          font-size: 1.5rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .instruction {
+          font-size: 1.125rem;
+          margin-bottom: 2rem;
+        }
+
+        .grid-wrapper {
+          flex-direction: row;
+          gap: 3rem;
+          align-items: flex-start;
+
+          .editor {
+            .cell {
+              width: 40px;
+              height: 40px;
+            }
+          }
+
+          .output {
+            padding: 1.5rem;
+            min-width: 220px;
+
+            .label {
+              font-size: 1rem;
+              margin-bottom: 0.75rem;
+            }
+
+            .code {
+              font-size: 1.125rem;
+              padding: 1rem;
+              letter-spacing: 0.15em;
+            }
+
+            .stats {
+              margin-top: 1rem;
+              padding-top: 1rem;
+              font-size: 1rem;
+            }
+          }
+        }
+
+        .insight {
+          font-size: 1.125rem;
+        }
+      }
     }
   }
 
   /* Color */
-  #color {
+  :global(#color) {
+    p {
+      font-size: 1.125rem;
+    }
+
     .simulation {
       background: var(--color-surface-100);
       border-radius: var(--radius-container);
-      padding: 2.5rem;
+      padding: 1.5rem;
       margin: 2rem 0;
       box-shadow: 0 4px 12px
         color-mix(in oklab, var(--color-surface-900) 0.08, transparent);
 
       h3 {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         text-align: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
       }
 
       .instruction {
         text-align: center;
-        font-size: 1.125rem;
+        font-size: 1rem;
         color: var(--color-surface-600);
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
       }
 
       .mixer {
         display: flex;
-        gap: 3rem;
+        flex-direction: column;
+        gap: 1.5rem;
         align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
         margin-bottom: 1.5rem;
 
         .preview {
-          width: 150px;
-          height: 150px;
+          width: 120px;
+          height: 120px;
           border-radius: 50%;
           box-shadow: 0 4px 12px
             color-mix(in oklab, var(--color-surface-900) 0.1, transparent);
@@ -573,17 +634,17 @@
           display: flex;
           flex-direction: column;
           gap: 1rem;
-          min-width: 300px;
+          width: 100%;
 
           .slider-row {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.5rem;
 
             .label {
-              font-size: 1.25rem;
+              font-size: 1rem;
               font-weight: 700;
-              width: 30px;
+              width: 20px;
               text-align: center;
 
               &.red {
@@ -599,7 +660,7 @@
 
             .range {
               flex: 1;
-              height: 8px;
+              height: 6px;
               appearance: none;
               border-radius: 4px;
               cursor: pointer;
@@ -616,8 +677,8 @@
 
               &::-webkit-slider-thumb {
                 appearance: none;
-                width: 20px;
-                height: 20px;
+                width: 18px;
+                height: 18px;
                 border-radius: 50%;
                 background: white;
                 border: 2px solid var(--color-surface-400);
@@ -629,8 +690,8 @@
 
             .value {
               font-family: monospace;
-              font-size: 1rem;
-              min-width: 40px;
+              font-size: 0.875rem;
+              min-width: 30px;
               text-align: right;
             }
 
@@ -638,7 +699,8 @@
               font-family: monospace;
               font-size: 0.75rem;
               color: var(--color-surface-500);
-              min-width: 80px;
+              min-width: 70px;
+              display: none;
             }
           }
         }
@@ -647,8 +709,8 @@
       .display {
         text-align: center;
         font-family: monospace;
-        font-size: 1.25rem;
-        padding: 1rem;
+        font-size: 1rem;
+        padding: 0.75rem;
         background: var(--color-surface-200);
         border-radius: var(--radius-base);
         margin-bottom: 1rem;
@@ -656,44 +718,119 @@
 
       .insight {
         text-align: center;
-        font-size: 1.125rem;
+        font-size: 1rem;
         margin: 1.5rem 0 0;
         padding: 1rem;
         background: var(--color-surface-50);
         border-radius: var(--radius-base);
       }
+
+      @media (min-width: 768px) {
+        padding: 2.5rem;
+
+        h3 {
+          font-size: 1.5rem;
+          margin-bottom: 1.5rem;
+        }
+
+        .instruction {
+          font-size: 1.125rem;
+          margin-bottom: 2rem;
+        }
+
+        .mixer {
+          flex-direction: row;
+          gap: 3rem;
+          justify-content: center;
+
+          .preview {
+            width: 150px;
+            height: 150px;
+          }
+
+          .sliders {
+            min-width: 300px;
+            width: auto;
+
+            .slider-row {
+              gap: 1rem;
+
+              .label {
+                font-size: 1.25rem;
+                width: 30px;
+              }
+
+              .range {
+                height: 8px;
+                &::-webkit-slider-thumb {
+                  width: 20px;
+                  height: 20px;
+                }
+              }
+
+              .value {
+                font-size: 1rem;
+                min-width: 40px;
+              }
+
+              .binary {
+                display: inline-block;
+                min-width: 80px;
+              }
+            }
+          }
+        }
+
+        .display {
+          font-size: 1.25rem;
+          padding: 1rem;
+        }
+
+        .insight {
+          font-size: 1.125rem;
+        }
+      }
     }
   }
 
   /* Sound */
-  #sound {
+  :global(#sound) {
     .metaphor {
       display: flex;
-      gap: 1.5rem;
+      flex-direction: column;
+      gap: 1rem;
       background: var(--color-surface-50);
       border-radius: var(--radius-container);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
       border: 1px solid var(--color-surface-200);
 
       .icon {
-        font-size: 3rem;
-        flex-shrink: 0;
+        font-size: 2.5rem;
+        align-self: center;
       }
 
       .content {
         h3 {
           color: var(--color-surface-900);
           margin-bottom: 0.5rem;
+          font-size: 1.25rem;
         }
 
         p {
           font-size: 1.125rem;
-          margin-bottom: 1rem;
+          margin-bottom: 0;
+          line-height: 1.5;
+        }
+      }
 
-          &:last-child {
-            margin-bottom: 0;
-          }
+      @media (min-width: 768px) {
+        flex-direction: row;
+        padding: 2rem;
+
+        .icon {
+          font-size: 3rem;
+          align-self: flex-start;
         }
       }
     }
@@ -701,35 +838,37 @@
     .wave-demo {
       background: var(--color-surface-100);
       border-radius: var(--radius-container);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
       text-align: center;
       border: 2px solid var(--color-surface-200);
 
       h3 {
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
       }
 
       .visual {
         background: var(--color-surface-50);
         border-radius: var(--radius-base);
-        padding: 1.5rem;
+        padding: 1rem;
         margin-bottom: 1rem;
 
         .svg {
           width: 100%;
           max-width: 500px;
+          margin: 0 auto;
           height: auto;
         }
       }
 
       .legend {
         display: flex;
-        justify-content: center;
-        gap: 2rem;
-        flex-wrap: wrap;
+        flex-direction: column;
+        gap: 0.5rem;
         font-size: 0.875rem;
         margin-bottom: 1rem;
+        align-items: center;
 
         .analog {
           color: var(--color-primary-600);
@@ -741,31 +880,46 @@
       }
 
       .caption {
-        font-size: 1.125rem;
+        font-size: 1rem;
         color: var(--color-surface-600);
         margin: 0;
+      }
+
+      @media (min-width: 768px) {
+        padding: 2rem;
+
+        .legend {
+          flex-direction: row;
+          justify-content: center;
+          gap: 2rem;
+        }
+
+        .caption {
+          font-size: 1.125rem;
+        }
       }
     }
   }
 
   /* Formalization */
-  #formalization {
+  :global(#formalization) {
     .formula {
       background: var(--color-surface-100);
       border-radius: var(--radius-container);
-      padding: 2rem 2.5rem;
+      padding: 1.5rem;
       margin: 2rem 0;
       text-align: center;
 
       h3 {
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
+        font-size: 1.25rem;
       }
 
       .display {
-        font-size: 2rem;
+        font-size: 1.5rem;
         font-weight: 600;
         color: var(--color-primary-700);
-        padding: 1.5rem;
+        padding: 1rem;
         background: var(--color-surface-50);
         border-radius: var(--radius-base);
         display: inline-block;
@@ -776,73 +930,15 @@
         font-size: 1.125rem;
         margin: 0;
         color: var(--color-surface-600);
-      }
-    }
-  }
-
-  /* Summary */
-  #summary {
-    blockquote {
-      border-left: 4px solid var(--color-success-500);
-      padding-left: 1rem;
-      margin: 1.5rem 0;
-    }
-
-    p {
-      font-size: 1.25rem;
-      margin: 0;
-      color: var(--color-surface-700);
-    }
-  }
-
-  /* Responsive */
-  @media (max-width: 1100px) {
-    #pixels {
-      .metaphor {
-        flex-direction: column;
+        line-height: 1.5;
       }
 
-      .simulation {
-        .grid-wrapper {
-          flex-direction: column;
-          align-items: center;
-        }
+      @media (min-width: 768px) {
+        padding: 2rem 2.5rem;
 
-        .editor {
-          .cell {
-            width: 32px;
-            height: 32px;
-          }
-        }
-      }
-    }
-
-    #color {
-      .simulation {
-        .mixer {
-          flex-direction: column;
-        }
-
-        .sliders {
-          width: 100%;
-          min-width: unset;
-
-          .binary {
-            display: none;
-          }
-        }
-      }
-    }
-
-    #sound {
-      .metaphor {
-        flex-direction: column;
-      }
-
-      .wave-demo {
-        .legend {
-          flex-direction: column;
-          gap: 0.5rem;
+        .display {
+          font-size: 2rem;
+          padding: 1.5rem;
         }
       }
     }

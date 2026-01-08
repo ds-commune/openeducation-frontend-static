@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Crisis, QuizCard, Summary } from "../../components";
+  import { Crisis, QuizCard, Section, Summary } from "../../components";
 
   // Collider state - simple merge demo
   let isMerged = $state(false);
@@ -23,8 +23,8 @@
   />
 </svelte:head>
 
-<!-- Крючок: Проблема двух карманов -->
-<section id="two-pockets">
+<!-- Crisis Section -->
+<Section id="crisis">
   <Crisis icon="🔮" title="Проблема двух карманов">
     <p>
       Представьте: вы — исследователь космоса. На планете А вы нашли
@@ -38,12 +38,12 @@
         <span class="label">Планета А</span>
         <div class="crystals blue">💎💎💎</div>
       </div>
-      <div class="arrow">➡️</div>
+      <div class="arrow arrow-from-a">➡️</div>
       <div class="container">
         <span class="label">Контейнер</span>
         <div class="box">❓</div>
       </div>
-      <div class="arrow">⬅️</div>
+      <div class="arrow arrow-from-b">⬅️</div>
       <div class="planet planet-b">
         <span class="label">Планета Б</span>
         <div class="crystals red">🔺🔺</div>
@@ -56,16 +56,14 @@
       состояние закрытого контейнера, не пересчитывая объекты заново?
     </blockquote>
   </Crisis>
-</section>
+</Section>
 
-<!-- Метафора слияния -->
-<section id="merging-worlds">
-  <h2>Слияние миров</h2>
-  <p>
-    Мы вводим понятие <strong>сложения</strong> не как «счёт пальцев», а как
-    физический процесс <strong>уничтожения границ</strong> между двумя мирами.
-  </p>
-
+<!-- Merging Worlds -->
+<Section
+  id="merging-worlds"
+  title="Слияние миров"
+  description="Мы вводим понятие сложения не как «счёт пальцев», а как физический процесс уничтожения границ между двумя мирами."
+>
   <div class="visual">
     <div class="description">
       Представьте два мыльных пузыря, летящих навстречу друг другу. Когда они
@@ -74,21 +72,19 @@
     </div>
   </div>
 
-  <p>
+  <div class="insight">
     Знак <strong>«+»</strong> — это не команда «считай». Это
     <strong>клей</strong> или <strong>мост</strong>, который говорит: «Разрушь
     стены между этими комнатами и сделай один большой зал».
-  </p>
-</section>
+  </div>
+</Section>
 
-<!-- Интерактив: Коллайдер множеств -->
-<section id="collider">
-  <h2>Коллайдер множеств</h2>
-  <p>
-    Нажмите кнопку, чтобы объединить две группы в одну. Посмотрите: количество
-    элементов не меняется — меняется только их расположение.
-  </p>
-
+<!-- Collider -->
+<Section
+  id="collider"
+  title="Коллайдер множеств"
+  description="Нажмите кнопку, чтобы объединить две группы в одну. Посмотрите: количество элементов не меняется — меняется только их расположение."
+>
   <div class="demo">
     {#if !isMerged}
       <!-- Раздельные группы -->
@@ -148,41 +144,43 @@
     <span class="sign">=</span>
     <span class="total">{total}</span>
   </div>
-</section>
+</Section>
 
-<!-- Числовая прямая -->
-<section id="number-line">
-  <h2>Линия жизни</h2>
-  <p>
-    Сложение — это <strong>продолжение пути</strong>. Второй отрезок не
-    начинается с нуля — он пристыковывается к концу первого.
-  </p>
-
+<!-- Number Line -->
+<Section
+  id="number-line"
+  title="Линия жизни"
+  description="Сложение — это продолжение пути. Второй отрезок не начинается с нуля — он пристыковывается к концу первого."
+>
   <div class="demo">
     <div class="controls">
       <div class="input-group">
         <label for="segment-a">Первый отрезок:</label>
-        <input
-          id="segment-a"
-          type="range"
-          bind:value={segmentA}
-          min="1"
-          max="5"
-          aria-label="Длина первого отрезка"
-        />
-        <span class="value">{segmentA}</span>
+        <div class="range-wrapper">
+          <input
+            id="segment-a"
+            type="range"
+            bind:value={segmentA}
+            min="1"
+            max="5"
+            aria-label="Длина первого отрезка"
+          />
+          <span class="value">{segmentA}</span>
+        </div>
       </div>
       <div class="input-group">
         <label for="segment-b">Второй отрезок:</label>
-        <input
-          id="segment-b"
-          type="range"
-          bind:value={segmentB}
-          min="1"
-          max="5"
-          aria-label="Длина второго отрезка"
-        />
-        <span class="value">{segmentB}</span>
+        <div class="range-wrapper">
+          <input
+            id="segment-b"
+            type="range"
+            bind:value={segmentB}
+            min="1"
+            max="5"
+            aria-label="Длина второго отрезка"
+          />
+          <span class="value">{segmentB}</span>
+        </div>
       </div>
     </div>
 
@@ -209,10 +207,10 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
-<section id="math-language">
-  <h2>Язык математики</h2>
+<!-- Math Language -->
+<Section id="math-language" title="Язык математики">
   <p>То, что мы видели в симуляции, записывается так:</p>
 
   <div class="breakdown">
@@ -240,18 +238,16 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
-<!-- Проверка понимания -->
-<section id="practice">
-  <h2>Проверь понимание</h2>
-
-  <div class="quiz-grid">
-    <QuizCard icon="🏖️">
-      <div class="question">
+<!-- Practice -->
+<Section id="practice" title="Проверь понимание">
+  <div class="cards">
+    <QuizCard icon="🏖️" title="Песок и кучи">
+      <p>
         Если мы слили две кучи песка в одну, количество песчинок изменилось? А
         количество куч?
-      </div>
+      </p>
       {#snippet answer()}
         <p>
           Количество песчинок <strong>не изменилось</strong> — они все на месте. А
@@ -260,11 +256,11 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="🍎">
-      <div class="question">
+    <QuizCard icon="🍎" title="Яблоки">
+      <p>
         Даны три картинки: два отдельных яблока, яблочное пюре, два яблока в
         одной корзине. Какая лучше иллюстрирует математическое сложение?
-      </div>
+      </p>
       {#snippet answer()}
         <p>
           <strong>Корзина с яблоками</strong>. Сложение сохраняет
@@ -274,8 +270,8 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="⏰">
-      <div class="question">Можно ли сложить 2 яблока и 3 часа времени?</div>
+    <QuizCard icon="⏰" title="Совместимость">
+      <p>Можно ли сложить 2 яблока и 3 часа времени?</p>
       {#snippet answer()}
         <p>
           <strong>Нет</strong>. Для слияния миры должны быть совместимы. Яблоки
@@ -284,49 +280,74 @@
       {/snippet}
     </QuizCard>
   </div>
-</section>
+</Section>
 
-<section id="summary">
+<Section id="summary">
   <Summary title="Резюме">
-    <blockquote>
+    <p>
       Сложение (+) — это не просто увеличение числа. Это
       <strong>объединение двух разных историй в одну</strong>. Когда мы пишем 2
       + 3, мы строим мост между двумя отдельными группами, превращая их в единое
       целое, равное 5.
-    </blockquote>
+    </p>
   </Summary>
-</section>
+</Section>
 
 <style>
-  #two-pockets {
+  /* Crisis */
+  :global(#crisis) {
+    p {
+      margin-bottom: 1rem;
+    }
+
     .scenario {
-      display: flex;
+      display: grid;
+      /* Desktop: Planet A | Arrow | Container | Arrow | Planet B */
+      grid-template-columns: 1fr auto minmax(180px, 0.6fr) auto 1fr;
       align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      margin: 2rem 0;
-      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin: 3rem 0;
+      width: 100%;
 
       .planet {
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 1.25rem 1.5rem;
-        background: var(--color-surface-50);
+        padding: 1.5rem 1rem;
+        background: var(--color-surface-0);
+        border: 1px solid var(--color-surface-200);
         border-radius: var(--radius-container);
-        box-shadow: 0 4px 12px
-          color-mix(in oklab, var(--color-surface-950) 0.08, transparent);
+        box-shadow:
+          0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        &.planet-a {
+          border-top: 4px solid var(--color-primary-400);
+        }
+        &.planet-b {
+          border-top: 4px solid var(--color-error-400);
+        }
 
         .label {
-          font-size: 0.875rem;
-          font-weight: 600;
-          color: var(--color-surface-600);
-          margin-bottom: 0.5rem;
+          font-size: 0.75rem;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          font-weight: 700;
+          color: var(--color-surface-500);
+          margin-bottom: 0.75rem;
         }
 
         .crystals {
-          font-size: 1.5rem;
-          letter-spacing: 0.25rem;
+          font-size: 1.75rem;
+          letter-spacing: 0.1em;
         }
       }
 
@@ -334,31 +355,45 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 1.5rem 2rem;
-        background: var(--color-surface-200);
+        padding: 1.5rem;
+        background: var(--color-surface-100);
         border-radius: var(--radius-container);
-        border: 3px dashed var(--color-surface-400);
+        border: 2px dashed var(--color-surface-400);
+        position: relative;
+        z-index: 10;
 
         .label {
-          font-size: 0.875rem;
-          font-weight: 600;
-          color: var(--color-surface-600);
-          margin-bottom: 0.5rem;
+          font-size: 0.75rem;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          font-weight: 700;
+          color: var(--color-surface-500);
+          margin-bottom: 0.75rem;
         }
 
         .box {
-          font-size: 2rem;
+          font-size: 2.25rem;
+          filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
         }
       }
 
       .arrow {
-        font-size: 1.5rem;
-        color: var(--color-surface-400);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 3rem;
+        height: 3rem;
+        background: var(--color-surface-100);
+        border-radius: 50%;
+        font-size: 1.25rem;
+        color: var(--color-surface-600);
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
       }
     }
   }
 
-  #merging-worlds {
+  /* Merging Worlds */
+  :global(#merging-worlds) {
     .visual {
       margin: 2rem 0;
       padding: 2rem;
@@ -373,9 +408,18 @@
         text-align: center;
       }
     }
+
+    .insight {
+      font-size: 1.25rem;
+      padding: 1.5rem;
+      background: var(--color-surface-100);
+      border-radius: var(--radius-container);
+      color: var(--color-surface-800);
+    }
   }
 
-  #collider {
+  /* Collider */
+  :global(#collider) {
     .demo {
       display: flex;
       flex-direction: column;
@@ -536,7 +580,8 @@
     }
   }
 
-  #number-line {
+  /* Number Line */
+  :global(#number-line) {
     .demo {
       margin: 2rem 0;
       padding: 2rem;
@@ -555,6 +600,7 @@
           display: flex;
           align-items: center;
           gap: 1rem;
+          box-shadow: none;
 
           label {
             font-size: 1rem;
@@ -562,17 +608,30 @@
             color: var(--color-surface-600);
           }
 
-          input[type="range"] {
-            width: 120px;
-            accent-color: var(--color-primary-500);
-          }
+          .range-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 150px;
+            border: none;
 
-          .value {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--color-primary-700);
-            min-width: 24px;
-            text-align: center;
+            input[type="range"] {
+              flex: 1;
+              height: 8px;
+              border-radius: 4px;
+              background: var(--color-surface-300);
+              accent-color: var(--color-primary-600);
+              cursor: pointer;
+            }
+
+            .value {
+              font-size: 1.25rem;
+              font-weight: 700;
+              color: var(--color-primary-700);
+              min-width: 24px;
+              text-align: center;
+            }
           }
         }
       }
@@ -686,7 +745,8 @@
     }
   }
 
-  #math-language {
+  /* Math Language */
+  :global(#math-language) {
     .breakdown {
       margin: 2rem 0;
       padding: 2rem;
@@ -735,41 +795,70 @@
     }
   }
 
-  #practice {
-    .quiz-grid {
+  /* Practice */
+  :global(#practice) {
+    .cards {
       display: grid;
       gap: 1.5rem;
-
-      .question {
-        font-size: 1.25rem;
-        line-height: 1.6;
-        color: var(--color-surface-800);
-        margin-bottom: 1rem;
-      }
     }
   }
 
   /* Responsive */
   @media (max-width: 1100px) {
-    #two-pockets {
-      .scenario {
+    :global(#crisis) .scenario {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "planet-a planet-b"
+        "arrow-a  arrow-b"
+        "container container";
+      gap: 1rem;
+
+      .planet-a {
+        grid-area: planet-a;
+      }
+      .planet-b {
+        grid-area: planet-b;
+      }
+
+      .container {
+        grid-area: container;
+        width: 100%;
+        max-width: 300px;
+        justify-self: center;
+        margin-top: 1rem;
+      }
+
+      .arrow-from-a {
+        grid-area: arrow-a;
+        transform: rotate(90deg);
+        justify-self: center;
+        margin-bottom: -1rem;
+        z-index: 1;
+      }
+
+      .arrow-from-b {
+        grid-area: arrow-b;
+        transform: rotate(-90deg);
+        justify-self: center;
+        margin-bottom: -1rem;
+        z-index: 1;
+      }
+    }
+
+    :global(#collider) .demo .row {
+      flex-direction: column;
+    }
+
+    :global(#number-line) .demo .controls {
+      flex-direction: column;
+      align-items: stretch;
+
+      .input-group {
         flex-direction: column;
-      }
-    }
+        align-items: stretch;
 
-    #collider {
-      .demo {
-        .row {
-          flex-direction: column;
-        }
-      }
-    }
-
-    #number-line {
-      .demo {
-        .controls {
-          flex-direction: column;
-          gap: 1rem;
+        .range-wrapper {
+          width: 100%;
         }
       }
     }

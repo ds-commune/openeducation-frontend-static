@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { Crisis, DefinitionCard, QuizCard, Summary } from "../../components";
+  import {
+    Crisis,
+    DefinitionCard,
+    QuizCard,
+    Section,
+    Summary,
+  } from "../../components";
 
   // Saw simulation state
   let beamLength = $state(10);
@@ -70,7 +76,7 @@
 </svelte:head>
 
 <!-- Крючок: Ошибка портного -->
-<section id="tailor-error">
+<Section id="crisis">
   <Crisis icon="🪚" title="Ошибка портного">
     <p>
       Представьте: вы — инженер, строящий мост. Для конструкции нужны две
@@ -156,18 +162,14 @@
       состояние целого?
     </blockquote>
   </Crisis>
-</section>
+</Section>
 
 <!-- Шаг 1: Мир до разделения -->
-<section id="world-before">
-  <h2>Мир до разделения</h2>
-  <p>
-    Начнём с понятия <strong>целого</strong>. Это наш исходный ресурс — длина
-    доски, заряд батареи, количество денег. В математике это число, из которого
-    мы будем вычитать. Его называют
-    <strong>уменьшаемым</strong>.
-  </p>
-
+<Section
+  id="world-before"
+  title="Мир до разделения"
+  description="Начнём с понятия целого. Это наш исходный ресурс — длина доски, заряд батареи, количество денег. В математике это число, из которого мы будем вычитать. Его называют уменьшаемым."
+>
   <div class="visual">
     <div class="block">
       <span class="label">Целое</span>
@@ -179,17 +181,14 @@
       как одна сущность.
     </p>
   </div>
-</section>
+</Section>
 
 <!-- Шаг 2: Ножницы реальности -->
-<section id="reality-knife">
-  <h2>Ножницы реальности</h2>
-  <p>
-    Знак <strong>«−»</strong> — это не абстракция. Это
-    <strong>инструмент действия</strong>. Минус — это нож, ножницы или пила. Он
-    рассекает целое на части.
-  </p>
-
+<Section
+  id="reality-knife"
+  title="Ножницы реальности"
+  description="Знак «−» — это не абстракция. Это инструмент действия. Минус — это нож, ножницы или пила. Он рассекает целое на части."
+>
   <div class="visual">
     <div class="symbol">−</div>
     <div class="description">
@@ -199,18 +198,14 @@
       </p>
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Шаг 3: Весы сохранения -->
-<section id="conservation-scales">
-  <h2>Весы сохранения</h2>
-  <p>
-    Когда мы применяем «минус», целое распадается на две части:
-    <strong>уходящую</strong> (которую забираем) и
-    <strong>остаток</strong>
-    (который остаётся нам).
-  </p>
-
+<Section
+  id="conservation-scales"
+  title="Весы сохранения"
+  description="Когда мы применяем «минус», целое распадается на две части: уходящую (которую забираем) и остаток (который остаётся нам)."
+>
   <div class="demo">
     <div class="equation">
       <span class="part removed">{removedPart}</span>
@@ -253,12 +248,13 @@
       >. Вычитание — это обратная сторона сложения.
     </p>
   </div>
-</section>
+</Section>
 
-<section id="math-language">
-  <h2>Язык математики</h2>
-  <p>Переводим опыт на формальный язык:</p>
-
+<Section
+  id="math-language"
+  title="Язык математики"
+  description="Переводим опыт на формальный язык:"
+>
   <div class="breakdown">
     <div class="main-formula">A − B = C</div>
     <div class="parts">
@@ -291,16 +287,14 @@
       исходное целое. Вычитание и сложение — зеркальные операции.
     </p>
   </DefinitionCard>
-</section>
+</Section>
 
 <!-- Мини-проект: Логист экспедиции -->
-<section id="expedition-logistics">
-  <h2>Логист экспедиции</h2>
-  <p>
-    У вас есть канистра с водой на <strong>{waterTotal} литров</strong>. Нужно
-    пройти 3 отрезка пути с разным потреблением воды.
-  </p>
-
+<Section
+  id="expedition-logistics"
+  title="Логист экспедиции"
+  description="У вас есть канистра с водой на {waterTotal} литров. Нужно пройти 3 отрезка пути с разным потреблением воды."
+>
   <div class="demo">
     <div class="gauge">
       <div class="label">Запас воды:</div>
@@ -393,12 +387,10 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Проверка понимания -->
-<section id="practice">
-  <h2>Проверь понимание</h2>
-
+<Section id="practice" title="Проверь понимание">
   <div class="quiz-grid">
     <QuizCard icon="✂️">
       <div class="question">
@@ -436,258 +428,250 @@
       {/snippet}
     </QuizCard>
   </div>
-</section>
+</Section>
 
-<section id="lesson-summary">
+<Section id="summary">
   <Summary title="Резюме">
-    <blockquote>
+    <p>
       Вычитание — это способ <strong>предсказать, что останется</strong>, если
       часть целого будет удалена. Знак «минус» — это ножницы, которые делят одно
       большое число на две части: ту, что мы забираем, и ту, что остаётся нам.
-    </blockquote>
+    </p>
   </Summary>
-</section>
+</Section>
 
 <style>
-  /* Section 1: Tailor Error (Saw Demo) */
-  #tailor-error {
+  /* Section 1: Crisis (Saw Demo) */
+  :global(#crisis) {
     .saw-demo {
       margin: 2rem 0;
       padding: 2rem;
       background: var(--color-surface-50);
       border-radius: var(--radius-container);
       border: 1px solid var(--color-surface-200);
-    }
 
-    .beam-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
+      .beam-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
 
-    .beam {
-      position: relative;
-      height: 60px;
-      background: var(--color-surface-200);
-      border-radius: var(--radius-container);
-      overflow: hidden;
+        .beam {
+          position: relative;
+          height: 60px;
+          background: var(--color-surface-200);
+          border-radius: var(--radius-container);
+          overflow: hidden;
 
-      &.cut {
-        background: transparent;
-      }
-    }
+          &.cut {
+            background: transparent;
+          }
 
-    .beam-full {
-      height: 100%;
-      background: linear-gradient(180deg, #8b7355, #6b5344);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--radius-container);
-    }
+          .beam-full {
+            height: 100%;
+            background: linear-gradient(180deg, #8b7355, #6b5344);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-container);
 
-    .beam-label {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: white;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    }
+            .beam-label {
+              font-size: 1.5rem;
+              font-weight: 700;
+              color: white;
+              text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            }
+          }
 
-    .cut-pieces {
-      display: flex;
-      height: 100%;
-      gap: 1rem;
-      align-items: center;
-    }
+          .cut-pieces {
+            display: flex;
+            height: 100%;
+            gap: 1rem;
+            align-items: center;
 
-    .piece {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--radius-container);
-      transition: all 0.3s;
+            .piece {
+              height: 100%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border-radius: var(--radius-container);
+              transition: all 0.3s;
 
-      &.left {
-        background: linear-gradient(
-          180deg,
-          var(--color-error-400),
-          var(--color-error-500)
-        );
-      }
+              &.left {
+                background: linear-gradient(
+                  180deg,
+                  var(--color-error-400),
+                  var(--color-error-500)
+                );
+              }
 
-      &.right {
-        background: linear-gradient(
-          180deg,
-          var(--color-success-400),
-          var(--color-success-500)
-        );
+              &.right {
+                background: linear-gradient(
+                  180deg,
+                  var(--color-success-400),
+                  var(--color-success-500)
+                );
 
-        &.error {
-          background: linear-gradient(
-            180deg,
-            var(--color-error-300),
-            var(--color-error-400)
-          );
-          animation: shake 0.5s;
+                &.error {
+                  background: linear-gradient(
+                    180deg,
+                    var(--color-error-300),
+                    var(--color-error-400)
+                  );
+                  animation: shake 0.5s;
+                }
+              }
+
+              .label {
+                font-size: 1.1rem;
+                font-weight: 600;
+                color: white;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+              }
+            }
+
+            .mark {
+              font-size: 1.5rem;
+            }
+          }
+        }
+
+        .controls {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          flex-wrap: wrap;
+
+          label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-surface-600);
+          }
+
+          input[type="range"] {
+            flex: 1;
+            min-width: 150px;
+            accent-color: var(--color-primary-500);
+          }
+
+          .value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-primary-700);
+            min-width: 50px;
+          }
+        }
+
+        .action-btn {
+          padding: 0.75rem 1.5rem;
+          font-size: 1.125rem;
+          font-weight: 600;
+          background: var(--color-error-500);
+          color: var(--color-surface-50);
+          border: none;
+          border-radius: var(--radius-container);
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &:hover {
+            background: var(--color-error-600);
+            transform: translateY(-2px);
+          }
+        }
+
+        .result {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          align-items: center;
+
+          .message {
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-container);
+            font-size: 1.125rem;
+            font-weight: 600;
+            text-align: center;
+
+            &.error {
+              background: var(--color-error-100);
+              color: var(--color-error-700);
+            }
+
+            &.success {
+              background: var(--color-success-100);
+              color: var(--color-success-700);
+            }
+          }
+
+          .reset-btn {
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            background: var(--color-surface-200);
+            color: var(--color-surface-700);
+            border: none;
+            border-radius: var(--radius-container);
+            cursor: pointer;
+            transition: all 0.2s;
+
+            &:hover {
+              background: var(--color-surface-300);
+            }
+          }
         }
       }
     }
 
-    .label {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: white;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    }
-
-    .mark {
-      font-size: 1.5rem;
-    }
-
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-
-      label {
-        font-size: 1rem;
-        font-weight: 600;
-        color: var(--color-surface-600);
-      }
-
-      input[type="range"] {
-        flex: 1;
-        min-width: 150px;
-        accent-color: var(--color-primary-500);
-      }
-    }
-
-    .value {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--color-primary-700);
-      min-width: 50px;
-    }
-
-    .action-btn {
-      padding: 0.75rem 1.5rem;
-      font-size: 1.125rem;
-      font-weight: 600;
-      background: var(--color-error-500);
-      color: var(--color-surface-50);
-      border: none;
-      border-radius: var(--radius-container);
-      cursor: pointer;
-      transition: all 0.2s;
-
-      &:hover {
-        background: var(--color-error-600);
-        transform: translateY(-2px);
-      }
-    }
-
-    .result {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .message {
-      padding: 1rem 1.5rem;
-      border-radius: var(--radius-container);
-      font-size: 1.125rem;
-      font-weight: 600;
-      text-align: center;
-
-      &.error {
-        background: var(--color-error-100);
-        color: var(--color-error-700);
-      }
-
-      &.success {
-        background: var(--color-success-100);
-        color: var(--color-success-700);
-      }
-    }
-
-    .reset-btn {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      background: var(--color-surface-200);
+    blockquote {
+      margin: 1.5rem 0;
       color: var(--color-surface-700);
-      border: none;
-      border-radius: var(--radius-container);
-      cursor: pointer;
-      transition: all 0.2s;
-
-      &:hover {
-        background: var(--color-surface-300);
-      }
-    }
-
-    @keyframes shake {
-      0%,
-      100% {
-        transform: translateX(0);
-      }
-      25% {
-        transform: translateX(-5px);
-      }
-      75% {
-        transform: translateX(5px);
-      }
     }
   }
 
   /* Section 2: World Before Division */
-  #world-before {
+  :global(#world-before) {
     .visual {
       margin: 2rem 0;
       text-align: center;
-    }
 
-    .block {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem 4rem;
-      background: linear-gradient(135deg, #8b7355, #6b5344);
-      border-radius: calc(var(--radius-container) * 2);
-      box-shadow: 0 12px 32px
-        color-mix(in oklab, var(--color-surface-900) 0.12, transparent);
-    }
+      .block {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem 4rem;
+        background: linear-gradient(135deg, #8b7355, #6b5344);
+        border-radius: calc(var(--radius-container) * 2);
+        box-shadow: 0 12px 32px
+          color-mix(in oklab, var(--color-surface-900) 0.12, transparent);
 
-    .label {
-      font-size: 0.875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: rgba(255, 255, 255, 0.8);
-    }
+        .label {
+          font-size: 0.875rem;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          color: rgba(255, 255, 255, 0.8);
+        }
 
-    .value {
-      font-size: 4rem;
-      font-weight: 700;
-      color: white;
-    }
+        .value {
+          font-size: 4rem;
+          font-weight: 700;
+          color: white;
+        }
 
-    .unit {
-      font-size: 1rem;
-      color: rgba(255, 255, 255, 0.8);
-    }
+        .unit {
+          font-size: 1rem;
+          color: rgba(255, 255, 255, 0.8);
+        }
+      }
 
-    .caption {
-      font-size: 1.125rem;
-      color: var(--color-surface-600);
-      margin-top: 1rem;
-      font-style: italic;
+      .caption {
+        font-size: 1.125rem;
+        color: var(--color-surface-600);
+        margin-top: 1rem;
+        font-style: italic;
+      }
     }
   }
 
   /* Section 3: Reality Knife */
-  #reality-knife {
+  :global(#reality-knife) {
     .visual {
       display: flex;
       align-items: center;
@@ -696,23 +680,23 @@
       padding: 2rem;
       background: var(--color-surface-100);
       border-radius: calc(var(--radius-container) * 2);
-    }
 
-    .symbol {
-      font-size: 6rem;
-      font-weight: 700;
-      color: var(--color-error-500);
-      line-height: 1;
-    }
+      .symbol {
+        font-size: 6rem;
+        font-weight: 700;
+        color: var(--color-error-500);
+        line-height: 1;
+      }
 
-    .description p {
-      margin: 0;
-      font-size: 1.25rem;
+      .description p {
+        margin: 0;
+        font-size: 1.25rem;
+      }
     }
   }
 
   /* Section 4: Conservation Scales */
-  #conservation-scales {
+  :global(#conservation-scales) {
     .demo {
       margin: 2rem 0;
       padding: 2rem;
@@ -721,112 +705,113 @@
       box-shadow: 0 12px 32px
         color-mix(in oklab, var(--color-surface-900) 0.12, transparent);
       border: 1px solid var(--color-surface-200);
-    }
 
-    .equation {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      font-size: 2rem;
-      font-weight: 700;
-      font-family: "Consolas", "Monaco", monospace;
-      margin-bottom: 2rem;
-    }
-
-    .part {
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius-container);
-
-      &.removed {
-        background: var(--color-error-100);
-        color: var(--color-error-700);
-      }
-
-      &.remaining {
-        background: var(--color-success-100);
-        color: var(--color-success-700);
-      }
-    }
-
-    .operator {
-      color: var(--color-surface-500);
-    }
-
-    .total {
-      color: var(--color-primary-700);
-    }
-
-    .bar {
-      display: flex;
-      height: 48px;
-      border-radius: var(--radius-container);
-      overflow: hidden;
-      margin-bottom: 1.5rem;
-    }
-
-    .segment {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: width 0.3s ease;
-      overflow: hidden;
-
-      &.removed {
-        background: linear-gradient(
-          180deg,
-          var(--color-error-400),
-          var(--color-error-500)
-        );
-      }
-
-      &.remaining {
-        background: linear-gradient(
-          180deg,
-          var(--color-success-400),
-          var(--color-success-500)
-        );
-      }
-
-      .label {
-        font-size: 1.25rem;
+      .equation {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        font-size: 2rem;
         font-weight: 700;
-        color: white;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        font-family: "Consolas", "Monaco", monospace;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+
+        .part {
+          padding: 0.5rem 1rem;
+          border-radius: var(--radius-container);
+
+          &.removed {
+            background: var(--color-error-100);
+            color: var(--color-error-700);
+          }
+
+          &.remaining {
+            background: var(--color-success-100);
+            color: var(--color-success-700);
+          }
+        }
+
+        .operator {
+          color: var(--color-surface-500);
+        }
+
+        .total {
+          color: var(--color-primary-700);
+        }
+      }
+
+      .bar {
+        display: flex;
+        height: 48px;
+        border-radius: var(--radius-container);
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+
+        .segment {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: width 0.3s ease;
+          overflow: hidden;
+
+          &.removed {
+            background: linear-gradient(
+              180deg,
+              var(--color-error-400),
+              var(--color-error-500)
+            );
+          }
+
+          &.remaining {
+            background: linear-gradient(
+              180deg,
+              var(--color-success-400),
+              var(--color-success-500)
+            );
+          }
+
+          .label {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            white-space: nowrap;
+          }
+        }
+      }
+
+      .controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+
+        label {
+          font-size: 1rem;
+          font-weight: 600;
+          color: var(--color-surface-600);
+        }
+
+        input[type="range"] {
+          flex: 1;
+          accent-color: var(--color-primary-500);
+        }
+      }
+
+      .insight {
         text-align: center;
-        white-space: nowrap;
+        padding: 1rem;
+        background: var(--color-primary-50);
+        border-radius: var(--radius-container);
+        margin: 0;
       }
-    }
-
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-
-      label {
-        font-size: 1rem;
-        font-weight: 600;
-        color: var(--color-surface-600);
-      }
-
-      input[type="range"] {
-        flex: 1;
-        accent-color: var(--color-primary-500);
-      }
-    }
-
-    .insight {
-      text-align: center;
-      padding: 1rem;
-      background: var(--color-primary-50);
-      border-radius: var(--radius-container);
-      margin: 0;
     }
   }
 
   /* Section 5: Math Language */
-  #math-language {
+  :global(#math-language) {
     .breakdown {
       margin: 2rem 0;
       padding: 2rem;
@@ -835,271 +820,306 @@
       box-shadow: 0 12px 32px
         color-mix(in oklab, var(--color-surface-900) 0.12, transparent);
       border: 1px solid var(--color-surface-200);
-    }
 
-    .main-formula {
-      font-size: 2.5rem;
-      font-weight: 700;
-      font-family: "Consolas", "Monaco", monospace;
-      text-align: center;
-      color: var(--color-primary-700);
-      margin-bottom: 2rem;
-      padding-bottom: 1.5rem;
-      border-bottom: 2px solid var(--color-surface-200);
-    }
+      .main-formula {
+        font-size: 2.5rem;
+        font-weight: 700;
+        font-family: "Consolas", "Monaco", monospace;
+        text-align: center;
+        color: var(--color-primary-700);
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid var(--color-surface-200);
+      }
 
-    .parts {
-      display: grid;
-      gap: 1rem;
-    }
+      .parts {
+        display: grid;
+        gap: 1rem;
 
-    .part {
-      display: flex;
-      align-items: baseline;
-      gap: 0.5rem;
-      padding: 0.75rem 1rem;
-      background: var(--color-surface-50);
-      border-radius: var(--radius-container);
-      flex-wrap: wrap;
-    }
+        .part {
+          display: flex;
+          align-items: baseline;
+          gap: 0.5rem;
+          padding: 0.75rem 1rem;
+          background: var(--color-surface-50);
+          border-radius: var(--radius-container);
+          flex-wrap: wrap;
 
-    .symbol {
-      font-size: 1.5rem;
-      font-weight: 700;
-      font-family: "Consolas", "Monaco", monospace;
-      color: var(--color-primary-600);
-    }
+          .symbol {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: "Consolas", "Monaco", monospace;
+            color: var(--color-primary-600);
+          }
 
-    .desc {
-      font-size: 1.125rem;
-      color: var(--color-surface-700);
+          .desc {
+            font-size: 1.125rem;
+            color: var(--color-surface-700);
+          }
+        }
+      }
     }
   }
 
   /* Section 6: Expedition Logistics */
-  #expedition-logistics {
+  :global(#expedition-logistics) {
     .demo {
       margin: 2rem 0;
       padding: 2rem;
       background: var(--color-surface-100);
       border-radius: calc(var(--radius-container) * 2);
-    }
 
-    .gauge {
-      margin-bottom: 2rem;
-    }
+      .gauge {
+        margin-bottom: 2rem;
 
-    .label {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--color-surface-600);
-      margin-bottom: 0.5rem;
-    }
-
-    .track {
-      height: 40px;
-      background: var(--color-surface-200);
-      border-radius: var(--radius-container);
-      overflow: hidden;
-    }
-
-    .fill {
-      height: 100%;
-      background: linear-gradient(
-        180deg,
-        var(--color-primary-400),
-        var(--color-primary-500)
-      );
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: width 0.5s ease;
-
-      &.danger {
-        background: linear-gradient(
-          180deg,
-          var(--color-error-400),
-          var(--color-error-500)
-        );
-      }
-    }
-
-    .value {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: white;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    }
-
-    .stages {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .card {
-      flex: 1;
-      min-width: 120px;
-      padding: 1rem;
-      background: white;
-      border-radius: var(--radius-container);
-      text-align: center;
-      border: 2px solid var(--color-surface-200);
-      transition: all 0.3s;
-
-      &.current {
-        border-color: var(--color-primary-400);
-        box-shadow: 0 4px 12px
-          color-mix(in oklab, var(--color-primary-500) 0.1, transparent);
-      }
-
-      &.completed {
-        background: var(--color-success-100);
-        border-color: var(--color-success-300);
-      }
-
-      &.crisis {
-        background: var(--color-error-100);
-        border-color: var(--color-error-300);
-      }
-    }
-
-    .number {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--color-surface-600);
-      margin-bottom: 0.5rem;
-    }
-
-    .consumption {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--color-error-600);
-    }
-
-    .result {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--color-success-700);
-      margin-top: 0.5rem;
-
-      &.negative {
-        color: var(--color-error-700);
-      }
-    }
-
-    .controls {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .action-btn {
-      padding: 0.75rem 2rem;
-      font-size: 1.125rem;
-      font-weight: 600;
-      background: var(--color-primary-500);
-      color: var(--color-surface-50);
-      border: none;
-      border-radius: var(--radius-container);
-      cursor: pointer;
-      transition: all 0.2s;
-
-      &:hover {
-        background: var(--color-primary-600);
-        transform: translateY(-2px);
-      }
-    }
-
-    .result-message {
-      text-align: center;
-      padding: 1rem;
-      font-size: 1.125rem;
-      font-weight: 600;
-
-      .text {
-        &.crisis {
-          color: var(--color-error-700);
+        .label {
+          font-size: 1rem;
+          font-weight: 600;
+          color: var(--color-surface-600);
+          margin-bottom: 0.5rem;
         }
-        &.success {
-          color: var(--color-success-700);
+
+        .track {
+          height: 40px;
+          background: var(--color-surface-200);
+          border-radius: var(--radius-container);
+          overflow: hidden;
+
+          .fill {
+            height: 100%;
+            background: linear-gradient(
+              180deg,
+              var(--color-primary-400),
+              var(--color-primary-500)
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: width 0.5s ease;
+
+            &.danger {
+              background: linear-gradient(
+                180deg,
+                var(--color-error-400),
+                var(--color-error-500)
+              );
+            }
+
+            .value {
+              font-size: 1.25rem;
+              font-weight: 700;
+              color: white;
+              text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            }
+          }
         }
       }
-    }
 
-    .reset-btn {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      background: var(--color-surface-200);
-      color: var(--color-surface-700);
-      border: none;
-      border-radius: var(--radius-container);
-      cursor: pointer;
-      transition: all 0.2s;
+      .stages {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
 
-      &:hover {
-        background: var(--color-surface-300);
+        .card {
+          flex: 1;
+          min-width: 120px;
+          padding: 1rem;
+          background: white;
+          border-radius: var(--radius-container);
+          text-align: center;
+          border: 2px solid var(--color-surface-200);
+          transition: all 0.3s;
+
+          &.current {
+            border-color: var(--color-primary-400);
+            box-shadow: 0 4px 12px
+              color-mix(in oklab, var(--color-primary-500) 0.1, transparent);
+          }
+
+          &.completed {
+            background: var(--color-success-100);
+            border-color: var(--color-success-300);
+          }
+
+          &.crisis {
+            background: var(--color-error-100);
+            border-color: var(--color-error-300);
+          }
+
+          .number {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--color-surface-600);
+            margin-bottom: 0.5rem;
+          }
+
+          .consumption {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-error-600);
+          }
+
+          .result {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--color-success-700);
+            margin-top: 0.5rem;
+
+            &.negative {
+              color: var(--color-error-700);
+            }
+          }
+        }
       }
-    }
 
-    .math {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      padding: 1rem;
-      background: white;
-      border-radius: var(--radius-container);
-    }
+      .controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
 
-    .step {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 1rem;
-      font-family: "Consolas", "Monaco", monospace;
-      font-size: 1.125rem;
+        .action-btn {
+          padding: 0.75rem 2rem;
+          font-size: 1.125rem;
+          font-weight: 600;
+          background: var(--color-primary-500);
+          color: var(--color-surface-50);
+          border: none;
+          border-radius: var(--radius-container);
+          cursor: pointer;
+          transition: all 0.2s;
 
-      &.crisis .operation {
-        color: var(--color-error-600);
+          &:hover {
+            background: var(--color-primary-600);
+            transform: translateY(-2px);
+          }
+        }
+
+        .result-message {
+          text-align: center;
+          padding: 1rem;
+          font-size: 1.125rem;
+          font-weight: 600;
+
+          .text {
+            &.crisis {
+              color: var(--color-error-700);
+            }
+            &.success {
+              color: var(--color-success-700);
+            }
+          }
+        }
+
+        .reset-btn {
+          padding: 0.5rem 1rem;
+          font-size: 1rem;
+          background: var(--color-surface-200);
+          color: var(--color-surface-700);
+          border: none;
+          border-radius: var(--radius-container);
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &:hover {
+            background: var(--color-surface-300);
+          }
+        }
       }
-    }
 
-    .status {
-      font-size: 1.25rem;
+      .math {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+        background: white;
+        border-radius: var(--radius-container);
+
+        .step {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.5rem 1rem;
+          font-family: "Consolas", "Monaco", monospace;
+          font-size: 1.125rem;
+
+          &.crisis .operation {
+            color: var(--color-error-600);
+          }
+
+          .status {
+            font-size: 1.25rem;
+          }
+        }
+      }
     }
   }
 
   /* Section 7: Practice */
-  #practice {
+  :global(#practice) {
     .quiz-grid {
       display: grid;
       gap: 1.5rem;
-    }
 
-    .question {
-      font-size: 1.25rem;
-      line-height: 1.6;
-      color: var(--color-surface-800);
-      margin-bottom: 1rem;
+      .question {
+        font-size: 1.25rem;
+        line-height: 1.6;
+        color: var(--color-surface-800);
+        margin-bottom: 1rem;
+      }
     }
   }
 
   /* Responsive */
   @media (max-width: 1100px) {
-    #reality-knife {
+    :global(#world-before) {
+      .visual {
+        .block {
+          padding: 2rem;
+          width: 100%;
+
+          .value {
+            font-size: 3rem;
+          }
+        }
+      }
+    }
+
+    :global(#reality-knife) {
       .visual {
         flex-direction: column;
         text-align: center;
       }
     }
 
-    #expedition-logistics {
+    :global(#expedition-logistics) {
       .stages {
         flex-direction: column;
       }
+    }
+
+    :global(#conservation-scales) {
+      .demo {
+        .equation {
+          font-size: 1.5rem;
+          flex-wrap: wrap;
+        }
+      }
+    }
+  }
+
+  @keyframes shake {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-5px);
+    }
+    75% {
+      transform: translateX(5px);
     }
   }
 </style>

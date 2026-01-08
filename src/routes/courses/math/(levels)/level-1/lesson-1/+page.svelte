@@ -1,5 +1,6 @@
 <script>
   import {
+    Section,
     Crisis,
     DefinitionCard,
     Summary,
@@ -15,7 +16,7 @@
 </svelte:head>
 
 <!-- Крючок: история с роботом -->
-<section id="crisis">
+<Section id="crisis">
   <Crisis icon="🤖" title="Катастрофа на кухне">
     <p>
       Представьте, что вы купили новейшего домашнего робота. Он идеально знает
@@ -38,16 +39,15 @@
       <p><strong>Нам нужен язык, в котором не бывает споров.</strong></p>
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
 <!-- Основной концептуальный блок -->
-<section id="reality-filter">
-  <h2>Фильтр реальности</h2>
-  <p>
+<Section id="reality-filter" title="Фильтр реальности">
+  {#snippet description()}
     Математика начинается не с чисел, а с умения отсекать лишнее. Чтобы
     превратить хаос жизни в порядок, мы используем <strong>высказывания</strong>
     (утверждения).
-  </p>
+  {/snippet}
 
   <DefinitionCard>
     <p>
@@ -86,14 +86,13 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
-<section id="unambiguity-test">
-  <h2>Тест на однозначность</h2>
-  <p>
+<Section id="unambiguity-test" title="Тест на однозначность">
+  {#snippet description()}
     Как проверить, является ли фраза математическим утверждением? Попробуйте
     представить, что вы — судья, который должен вынести вердикт прямо сейчас.
-  </p>
+  {/snippet}
 
   <div class="example-cards">
     <div class="card opinion">
@@ -114,14 +113,13 @@
       <div class="label">Это утверждение</div>
     </div>
   </div>
-</section>
+</Section>
 
-<section id="binary-world">
-  <h2>Бинарный мир</h2>
-  <p>
+<Section id="binary-world" title="Бинарный мир">
+  {#snippet description()}
     В математике утверждение похоже на выключатель света. Он либо включён, либо
     выключен. Нет состояния «немножко горит».
-  </p>
+  {/snippet}
 
   <div
     class="visual"
@@ -137,14 +135,13 @@
       <div class="label">Истина</div>
     </div>
   </div>
-</section>
+</Section>
 
-<section id="formalization">
-  <h2>Формализация</h2>
-  <p>
+<Section id="formalization" title="Формализация">
+  {#snippet description()}
     Переходим от слов к символам. Математики ленивы и не любят писать длинные
     слова «Истина» или «Ложь».
-  </p>
+  {/snippet}
 
   <ol class="formal-steps">
     <li>
@@ -176,9 +173,9 @@
       цифровая вселенная.
     </p>
   </TakeawayCard>
-</section>
+</Section>
 
-<section id="summary">
+<Section id="summary">
   <Summary title="Главная мысль">
     <p>
       Математика начинается там, где исчезает двусмысленность. Мир состоит не из
@@ -186,11 +183,11 @@
       >), либо ложными (<strong>0</strong>). Всё остальное — это просто шум.
     </p>
   </Summary>
-</section>
+</Section>
 
 <style>
   /* фильтр реальности: определение + туман/лазер */
-  #reality-filter {
+  :global(#reality-filter) {
     .true-label {
       color: var(--color-success-600);
       font-weight: 600;
@@ -202,9 +199,8 @@
     }
 
     .visual-break {
-      margin: 3rem -2.5rem;
       padding: 2.5rem;
-      background: var(--color-surface-50);
+      /* background: var(--color-surface-300); */
       border-radius: calc(var(--radius-container, 0.25rem) * 4);
     }
 
@@ -282,7 +278,7 @@
   }
 
   /* карточки примеров */
-  #unambiguity-test {
+  :global(#unambiguity-test) {
     .example-cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -343,7 +339,7 @@
   }
 
   /* бинарная визуализация */
-  #binary-world {
+  :global(#binary-world) {
     .visual {
       display: flex;
       justify-content: center;
@@ -389,7 +385,7 @@
   }
 
   /* значения истинности и формализация */
-  #formalization {
+  :global(#formalization) {
     .truth-value {
       display: inline-flex;
       align-items: center;
@@ -411,7 +407,6 @@
     }
 
     .formal-steps {
-      padding-left: 2rem;
       font-size: 1.375rem;
 
       li {
@@ -430,7 +425,7 @@
   }
 
   @media (max-width: 1100px) {
-    #unambiguity-test {
+    :global(#unambiguity-test) {
       .example-cards {
         grid-template-columns: 1fr;
       }

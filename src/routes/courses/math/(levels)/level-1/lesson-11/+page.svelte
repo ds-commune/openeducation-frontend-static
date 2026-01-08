@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { Crisis, DefinitionCard, Summary } from "../../components";
+  import {
+    Crisis,
+    DefinitionCard,
+    QuizCard,
+    Section,
+    Summary,
+  } from "../../components";
 
   // Sheep-to-pebble simulation state
   let sheepInPen = $state<number[]>([]);
@@ -37,7 +43,7 @@
   />
 </svelte:head>
 
-<section id="crisis">
+<Section id="crisis">
   <Crisis icon="🐑" title="Проблема богатого пастуха">
     <p>
       Перенесёмся в доисторическую эпоху. Ты — староста племени. У тебя огромное
@@ -55,27 +61,23 @@
       Камешки в мешке? Мешок становится слишком тяжёлым для тысячи овец.
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
-<section id="intro">
+<Section id="intro">
   <div class="key-question">
     <p>
       <strong>Главный вопрос:</strong> как передать <em>суть</em> количества, избавившись
       от веса физических объектов? Как «забрать» число у овец, не забирая самих овец?
     </p>
   </div>
-</section>
+</Section>
 
 <!-- Section 1: One-to-one correspondence -->
-<section id="correspondence">
-  <h2>Пары существования</h2>
-
-  <p>
-    Первый шаг к числу — понять, что неважно, <em>что</em> мы считаем. Важен сам факт
-    наличия пары «объект — метка». Каждая овца получает свой камешек. Камни разные,
-    овцы разные — но связь между ними одинакова.
-  </p>
-
+<Section
+  id="correspondence"
+  title="Пары существования"
+  description="Первый шаг к числу — понять, что неважно, что мы считаем. Важен сам факт наличия пары «объект — метка». Каждая овца получает свой камешек. Камни разные, овцы разные — но связь между ними одинакова."
+>
   <div class="simulation" aria-label="Симуляция пар овца-камень">
     <div class="panel pasture">
       <h3>🌿 Пастбище</h3>
@@ -128,18 +130,14 @@
     появляется камень. Куча камней <strong>эквивалентна</strong> стаду овец по свойству
     «количество», хотя физически это разные вещи.
   </p>
-</section>
+</Section>
 
 <!-- Section 2: Abstraction -->
-<section id="abstraction">
-  <h2>Рентген реальности</h2>
-
-  <p>
-    Решаем проблему тяжёлого мешка. Мы понимаем, что 5 овец, 5 камней и 5 звёзд
-    имеют что-то общее. Это «что-то» — невидимое свойство, которое остаётся,
-    если мы уберём всю материю.
-  </p>
-
+<Section
+  id="abstraction"
+  title="Рентген реальности"
+  description="Решаем проблему тяжёлого мешка. Мы понимаем, что 5 овец, 5 камней и 5 звёзд имеют что-то общее. Это «что-то» — невидимое свойство, которое остаётся, если мы уберём всю материю."
+>
   <div class="demo">
     <div class="layers">
       <div class="display">
@@ -194,18 +192,14 @@
       если убрать всё вещественное.
     </p>
   </div>
-</section>
+</Section>
 
 <!-- Section 3: Fiveness -->
-<section id="fiveness">
-  <h2>«Пятёрочность»</h2>
-
-  <p>
-    Вводим имена для этих «душ». Вместо того чтобы носить с собой эталон
-    (камни), мы договариваемся о звуке или значке, который вызывает в голове
-    образ нужного количества.
-  </p>
-
+<Section
+  id="fiveness"
+  title="«Пятёрочность»"
+  description="Вводим имена для этих «душ». Вместо того чтобы носить с собой эталон (камни), мы договариваемся о звуке или значке, который вызывает в голове образ нужного количества."
+>
   <div class="demo">
     <div class="switcher">
       {#each objectTypes as obj, i}
@@ -244,12 +238,10 @@
       (fiveness) не зависит от того, что именно мы считаем.
     </p>
   </div>
-</section>
+</Section>
 
 <!-- Section 4: Formalization -->
-<section id="formal">
-  <h2>Формальный язык</h2>
-
+<Section id="formal" title="Формальный язык">
   <DefinitionCard title="Множество">
     <p>Любая совокупность различимых объектов. Обозначаем буквами: A, B, C…</p>
   </DefinitionCard>
@@ -281,57 +273,101 @@
     </div>
   </div>
 
-  <p>
+  <p class="distinction-note">
     Разница — как между человеком и его фотографией. Фото может быть цветным,
     чёрно-белым, большим или маленьким — но человек один и тот же.
   </p>
-</section>
+</Section>
 
-<section id="summary">
+<!-- Section 5: Checkpoints -->
+<Section id="checkpoints" title="Проверка понимания">
+  <QuizCard title="Яблоки и апельсины">
+    <p>
+      Если заменить все яблоки в куче на апельсины, изменится ли число?
+      Изменится ли множество?
+    </p>
+    {#snippet answer()}
+      <p>
+        Число не изменится (количество то же). Множество изменится (объекты
+        другие).
+      </p>
+    {/snippet}
+  </QuizCard>
+
+  <QuizCard title="Можно ли потрогать число?">
+    <p>Можно ли потрогать число «5»?</p>
+    {#snippet answer()}
+      <p>
+        Нет. Можно потрогать 5 предметов (яблок, камней), но само число «5» —
+        это идея в голове.
+      </p>
+    {/snippet}
+  </QuizCard>
+
+  <QuizCard title="V и 5">
+    <p>Чем отличается число V (римское) от числа 5 (арабского)?</p>
+    {#snippet answer()}
+      <p>
+        Ничем. Это разные «костюмы» (цифры) для одной и той же идеи (числа).
+      </p>
+    {/snippet}
+  </QuizCard>
+</Section>
+
+<Section id="summary">
   <Summary title="Главная мысль">
-    <blockquote>
+    <p>
       Число — это не предмет. Число — это общее свойство множества предметов,
       такое же, как цвет или температура, но отвечающее на вопрос «Сколько?». Мы
       изобрели числа, чтобы управлять реальностью, не таская её за собой в
       мешках.
-    </blockquote>
+    </p>
   </Summary>
-</section>
+</Section>
 
 <style>
-  #crisis {
+  /* Crisis */
+  :global(#crisis) {
     p {
       margin-bottom: 1rem;
+      font-size: 1.125rem;
     }
   }
 
-  #intro {
+  /* Intro */
+  :global(#intro) {
     .key-question {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
       text-align: center;
-      padding: 1.5rem 2rem;
+      padding: 1.5rem;
       background: var(--color-surface-100);
       border-radius: var(--radius-container);
-      margin: 2rem 0 3rem;
+      margin: 2rem 0;
+      border: 1px solid var(--color-surface-200);
+
+      @media (min-width: 768px) {
+        font-size: 1.5rem;
+        padding: 2rem;
+      }
     }
   }
 
-  #correspondence {
+  /* Correspondence */
+  :global(#correspondence) {
     .simulation {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 1rem;
+      gap: 1.5rem;
       background: var(--color-surface-50);
       border: 2px solid var(--color-surface-200);
       border-radius: var(--radius-container);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
-      flex-wrap: wrap;
       justify-content: center;
 
       .panel {
-        flex: 1;
-        min-width: 140px;
+        width: 100%;
         text-align: center;
 
         h3 {
@@ -344,6 +380,7 @@
       .arrow {
         font-size: 2rem;
         color: var(--color-surface-400);
+        transform: rotate(90deg);
       }
 
       .grid {
@@ -352,6 +389,9 @@
         gap: 0.5rem;
         justify-content: center;
         min-height: 60px;
+        background: var(--color-surface-100);
+        padding: 1rem;
+        border-radius: var(--radius-base);
       }
 
       .item {
@@ -375,39 +415,50 @@
         font-size: 1.5rem;
         color: var(--color-surface-600);
       }
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+        gap: 1rem;
+        padding: 2rem;
+        flex-wrap: wrap;
+
+        .panel {
+          flex: 1;
+          min-width: 140px;
+          width: auto;
+        }
+
+        .arrow {
+          transform: none;
+        }
+      }
     }
 
     .hint {
-      font-size: 1.125rem;
+      font-size: 1rem;
       color: var(--color-surface-600);
       text-align: center;
       margin-top: 1rem;
-    }
 
-    @media (max-width: 1100px) {
-      .simulation {
-        flex-direction: column;
-        gap: 1.5rem;
-      }
-
-      .arrow {
-        transform: rotate(90deg);
+      @media (min-width: 768px) {
+        font-size: 1.125rem;
       }
     }
   }
 
-  #abstraction {
+  /* Abstraction */
+  :global(#abstraction) {
     .demo {
       background: var(--color-surface-50);
       border: 2px solid var(--color-surface-200);
       border-radius: var(--radius-container);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
       text-align: center;
 
       .layers {
         .display {
-          height: 120px;
+          height: 100px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -415,21 +466,21 @@
 
           .row {
             display: flex;
-            gap: 1.5rem;
-            font-size: 3rem;
+            gap: 0.5rem;
+            font-size: 2rem;
 
             &.silhouette span {
               filter: brightness(0) saturate(100%) opacity(0.6);
             }
 
             &.dots span {
-              font-size: 2rem;
+              font-size: 1.5rem;
               color: var(--color-surface-700);
             }
           }
 
           .reveal {
-            font-size: 4.5rem;
+            font-size: 3.5rem;
             font-weight: 700;
             color: var(--color-primary-600);
             animation: pulse 1s ease-in-out infinite alternate;
@@ -449,8 +500,13 @@
           .labels {
             display: flex;
             justify-content: space-between;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
             color: var(--color-surface-500);
+            flex-wrap: wrap;
+
+            span {
+              margin: 0 0.25rem;
+            }
 
             span.active {
               font-weight: 600;
@@ -461,58 +517,66 @@
       }
 
       .caption {
-        font-size: 1.125rem;
+        font-size: 1rem;
         color: var(--color-surface-600);
         margin: 1.5rem 0 0;
       }
-    }
 
-    @keyframes pulse {
-      from {
-        transform: scale(1);
-      }
-      to {
-        transform: scale(1.1);
-      }
-    }
+      @media (min-width: 768px) {
+        padding: 2rem;
 
-    @media (max-width: 1100px) {
-      .demo {
         .layers {
           .display {
-            height: 90px;
+            height: 120px;
 
             .row {
-              font-size: 2rem;
-              gap: 0.75rem;
+              gap: 1.5rem;
+              font-size: 3rem;
+
+              &.dots span {
+                font-size: 2rem;
+              }
             }
+
             .reveal {
-              font-size: 3.5rem;
+              font-size: 4.5rem;
             }
           }
+
+          .controls {
+            .labels {
+              font-size: 0.875rem;
+            }
+          }
+        }
+
+        .caption {
+          font-size: 1.125rem;
         }
       }
     }
   }
 
-  #fiveness {
+  /* Fiveness */
+  :global(#fiveness) {
     .demo {
       background: var(--color-surface-50);
       border: 2px solid var(--color-surface-200);
       border-radius: var(--radius-container);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
       text-align: center;
 
       .switcher {
         display: flex;
-        gap: 1rem;
+        gap: 0.5rem;
         justify-content: center;
         margin-bottom: 2rem;
+        flex-wrap: wrap;
 
         .btn {
-          font-size: 2rem;
-          padding: 0.75rem 1rem;
+          font-size: 1.5rem;
+          padding: 0.5rem 0.75rem;
           border: 2px solid var(--color-surface-300);
           border-radius: calc(var(--radius-container) * 0.5);
           background: white;
@@ -544,19 +608,21 @@
 
           .row {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
           }
 
           .item {
-            font-size: 2.5rem;
+            font-size: 2rem;
           }
         }
 
         .label {
           display: flex;
           align-items: center;
-          gap: 1rem;
-          font-size: 1.5rem;
+          gap: 0.5rem;
+          font-size: 1.25rem;
+          flex-wrap: wrap;
+          justify-content: center;
 
           .name {
             color: var(--color-surface-600);
@@ -567,7 +633,7 @@
           }
 
           .number {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
             color: var(--color-primary-600);
           }
@@ -575,59 +641,106 @@
       }
 
       .insight {
-        font-size: 1.125rem;
+        font-size: 1rem;
         color: var(--color-surface-600);
         margin: 1.5rem 0 0;
       }
-    }
 
-    @media (max-width: 1100px) {
-      .demo .display .dice .item {
-        font-size: 2rem;
+      @media (min-width: 768px) {
+        padding: 2rem;
+
+        .switcher {
+          gap: 1rem;
+
+          .btn {
+            font-size: 2rem;
+            padding: 0.75rem 1rem;
+          }
+        }
+
+        .display {
+          .dice {
+            .row {
+              gap: 2rem;
+            }
+
+            .item {
+              font-size: 2.5rem;
+            }
+          }
+
+          .label {
+            gap: 1rem;
+            font-size: 1.5rem;
+
+            .number {
+              font-size: 2.5rem;
+            }
+          }
+        }
+
+        .insight {
+          font-size: 1.125rem;
+        }
       }
     }
   }
 
-  #formal {
+  /* Formal */
+  :global(#formal) {
     .formula-container {
       background: white;
-      padding: 1rem 1.5rem;
+      padding: 0.75rem 1rem;
       border-radius: calc(var(--radius-container) * 0.5);
       display: inline-block;
       margin: 0.5rem 0;
 
       .formula {
         font-family: "Consolas", "Monaco", monospace;
-        font-size: 1.375rem;
+        font-size: 1.125rem;
         color: var(--color-primary-700);
+      }
+
+      @media (min-width: 768px) {
+        padding: 1rem 1.5rem;
+
+        .formula {
+          font-size: 1.375rem;
+        }
       }
     }
 
     .example {
-      font-size: 1.125rem;
+      font-size: 1rem;
       color: var(--color-surface-600);
       margin-top: 0.5rem;
+
+      @media (min-width: 768px) {
+        font-size: 1.125rem;
+      }
     }
 
     .distinction {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 2rem;
+      gap: 1.5rem;
       background: var(--color-surface-50);
       border: 2px solid var(--color-surface-200);
       border-radius: var(--radius-container);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
       justify-content: center;
 
       .item {
         display: flex;
         align-items: center;
-        gap: 1rem;
-        font-size: 1.25rem;
+        gap: 0.75rem;
+        font-size: 1.125rem;
+        text-align: left;
 
         .icon {
-          font-size: 2rem;
+          font-size: 1.5rem;
         }
       }
 
@@ -636,13 +749,35 @@
         color: var(--color-surface-400);
         font-weight: 600;
       }
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+        gap: 2rem;
+        padding: 2rem;
+
+        .item {
+          gap: 1rem;
+          font-size: 1.25rem;
+
+          .icon {
+            font-size: 2rem;
+          }
+        }
+      }
     }
 
-    @media (max-width: 1100px) {
-      .distinction {
-        flex-direction: column;
-        gap: 1rem;
-      }
+    .distinction-note {
+      font-size: 1.125rem;
+      margin-top: 1rem;
+    }
+  }
+
+  @keyframes pulse {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.1);
     }
   }
 </style>

@@ -62,6 +62,7 @@
       margin: 0;
       flex: 1;
       min-width: 0;
+      font-size: 1.75rem;
     }
   }
 
@@ -85,15 +86,12 @@
 
   .crisis :global {
     blockquote {
-      margin: 1.25rem 0;
-      padding: 1.25rem 1.5rem;
+      margin-top: 0;
       background: color-mix(
         in oklab,
         var(--color-warning-200) 0.7,
         var(--color-warning-50)
       );
-      border-radius: calc(var(--radius-container, 0.25rem) * 4);
-      border-left: 4px solid var(--color-warning-500);
 
       p:first-child {
         margin-top: 0;
@@ -108,10 +106,6 @@
   @media (max-width: 1100px) {
     .crisis {
       padding: 2.25rem 2rem;
-    }
-
-    .header {
-      align-items: flex-start;
     }
   }
 

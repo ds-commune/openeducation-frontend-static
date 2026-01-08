@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { Crisis, DefinitionCard, QuizCard, Summary } from "../../components";
+  import {
+    Crisis,
+    DefinitionCard,
+    QuizCard,
+    Section,
+    Summary,
+  } from "../../components";
 
   // Grid constructor state
   type CellType = "empty" | "wall" | "start" | "finish" | "danger";
@@ -7,7 +13,7 @@
   type Algorithm = "right-hand" | "random";
 
   const GRID_SIZE = 8;
-  const MAX_STEPS = 200;
+  const MAX_STEPS = 500;
   const DANGER_SURVIVE_CHANCE = 0.5;
 
   function createInitialGrid(): CellType[][] {
@@ -174,8 +180,9 @@
     let x = 0,
       y = 0;
     let dir: Direction = "right";
-    const visited = new Set<string>();
 
+    // Loop detection removed to match animated sim parity.
+    // We rely on MAX_STEPS to detect loops/stuck states.
     for (let step = 0; step < MAX_STEPS; step++) {
       // Check win
       if (x === GRID_SIZE - 1 && y === GRID_SIZE - 1) {
@@ -188,14 +195,6 @@
           return "lost";
         }
       }
-
-      // Track visited for stuck detection
-      const key = `${x},${y},${dir}`;
-      if (visited.has(key)) {
-        // Been here with same direction = likely looping
-        return "stuck";
-      }
-      visited.add(key);
 
       // Move
       let result;
@@ -356,7 +355,7 @@
   />
 </svelte:head>
 
-<section id="crisis">
+<Section id="crisis">
   <Crisis icon="🗺️" title="Живая пещера">
     <p>
       Представь себе <strong>Искателя</strong> — робота, который стоит перед входом
@@ -385,16 +384,13 @@
       план, который работает в изменяющемся мире?
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
-<section id="grid-model">
-  <h2>Мир как сетка</h2>
-  <p>
-    Мы не можем предсказать будущее, но можем <strong>описать карту</strong>.
-    Лабиринт — это не хаотичный рисунок, а набор клеток с адресами. У каждой
-    клетки есть координаты <strong>(x, y)</strong> и свойство: пусто, стена, опасность.
-  </p>
-
+<Section
+  id="grid-model"
+  title="Мир как сетка"
+  description="Мы не можем предсказать будущее, но можем описать карту. Лабиринт — это не хаотичный рисунок, а набор клеток с адресами. У каждой клетки есть координаты (x, y) и свойство: пусто, стена, опасность."
+>
   <div class="builder">
     <div class="header">
       <h3>Конструктор поля</h3>
@@ -470,16 +466,13 @@
       > означает, что в клетке (3, 4) находится стена.
     </p>
   </DefinitionCard>
-</section>
+</Section>
 
-<section id="logic-navigator">
-  <h2>Логика как навигатор</h2>
-  <p>
-    Вместо жёсткого «иди вперёд» мы вводим правило <strong>«ощупывания»</strong
-    >. Если впереди стена — поверни. Если свободно — иди. Это называется
-    <strong>алгоритм ветвления</strong>.
-  </p>
-
+<Section
+  id="logic-navigator"
+  title="Логика как навигатор"
+  description="Вместо жёсткого «иди вперёд» мы вводим правило «ощупывания». Если впереди стена — поверни. Если свободно — иди. Это называется алгоритм ветвления."
+>
   <div class="flowchart">
     <div class="header">
       <span class="icon">🤖</span>
@@ -518,16 +511,13 @@
       путь заблокирован — поверни. Это основа адаптивного поведения.
     </p>
   </DefinitionCard>
-</section>
+</Section>
 
-<section id="simulator">
-  <h2>Симулятор лабиринта</h2>
-  <p>
-    Выбери алгоритм поведения робота, расставь стены и опасности на поле выше,
-    затем запусти симуляцию. <strong>Опасные клетки</strong> имеют 50% шанс уничтожить
-    робота. Цель — добраться до 💎.
-  </p>
-
+<Section
+  id="simulator"
+  title="Симулятор лабиринта"
+  description="Выбери алгоритм поведения робота, расставь стены и опасности на поле выше, затем запусти симуляцию. Опасные клетки имеют 50% шанс уничтожить робота. Цель — добраться до 💎."
+>
   <div class="simulator-panel">
     <div class="algorithm-select">
       <h3>Алгоритм поведения</h3>
@@ -655,10 +645,9 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
-<section id="project">
-  <h2>Мини-проект: архитектор подземелья</h2>
+<Section id="project" title="Мини-проект: архитектор подземелья">
   <p>
     Твоя задача — создать лабиринт, который Искатель сможет пройти, но не
     слишком легко. Это баланс между сложностью и проходимостью.
@@ -708,108 +697,112 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
-<section id="quiz">
-  <h2>Проверь понимание</h2>
-
+<Section id="quiz" title="Проверь понимание">
   <div class="list">
-    <QuizCard icon="🤖">
-      <p class="question">
-        <strong>1.</strong> Почему жёсткий список команд («3 шага прямо») хуже, чем
+    <QuizCard icon="🤖" title="Команды vs Логика">
+      <div class="question">
+        Почему жёсткий список команд («3 шага прямо») хуже, чем
         логическое правило («иди, пока свободно»)?
-      </p>
+      </div>
       {#snippet answer()}
         <p>
           Подумай: что произойдёт, если на пути появится неожиданное
-          препятствие?
+          препятствие? Жёсткий алгоритм сломается, а логическое правило
+          адаптируется.
         </p>
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="⚠️">
-      <p class="question">
-        <strong>2.</strong> Если шанс пройти ловушку 50%, а таких ловушек подряд две,
+    <QuizCard icon="⚠️" title="Вероятность успеха">
+      <div class="question">
+        Если шанс пройти ловушку 50%, а таких ловушек подряд две,
         каковы шансы пройти обе?
-      </p>
+      </div>
       {#snippet answer()}
         <p>
           Интуитивный ответ: шансы уменьшаются. Каждая ловушка «отсеивает» часть
-          попыток.
+          попыток. Математически: 0.5 * 0.5 = 0.25 (или 25%).
         </p>
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="📍">
-      <p class="question">
-        <strong>3.</strong> Как координаты (x, y) помогают роботу понять, что он ходит
+    <QuizCard icon="📍" title="Память робота">
+      <div class="question">
+        Как координаты (x, y) помогают роботу понять, что он ходит
         кругами?
-      </p>
+      </div>
       {#snippet answer()}
         <p>
-          Робот может запомнить, где он уже был, и сравнить с текущей позицией.
+          Робот может запомнить список координат, где он уже был. Если текущая
+          координата уже есть в списке — значит, он вернулся назад.
         </p>
       {/snippet}
     </QuizCard>
   </div>
-</section>
+</Section>
 
-<section id="summary">
+<Section id="summary">
   <Summary title="Резюме">
-    <blockquote>
+    <p>
       Мир непредсказуем, но управляем. Мы используем <strong>координаты</strong
       >, чтобы знать, где мы, <strong>логику</strong>, чтобы принимать решения,
       и понимание <strong>вероятности</strong>, чтобы оценивать риски.
       Математика превращает хаос лабиринта в карту победы.
-    </blockquote>
+    </p>
   </Summary>
-</section>
+</Section>
 
 <style>
   code {
     font-family: "Consolas", "Monaco", monospace;
-    font-size: 1.125rem;
+    font-size: 1rem;
     background: var(--color-surface-100);
-    padding: 0.25rem 0.5rem;
+    padding: 0.2rem 0.4rem;
     border-radius: var(--radius-base);
+    color: var(--color-primary-700);
   }
 
   /* Crisis Scenario Visual */
-  #crisis {
+  :global(#crisis) {
     .scenarios {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      margin: 1.5rem 0;
+      margin: 2rem 0;
 
       .item {
+        flex: 1;
+        min-width: 240px;
         display: flex;
         align-items: center;
-        gap: 0.75rem;
+        gap: 1rem;
         background: var(--color-surface-50);
-        padding: 1rem 1.5rem;
+        padding: 1.5rem;
         border-radius: calc(var(--radius-container) * 2);
         box-shadow: 0 2px 8px
           color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
 
         .icon {
-          font-size: 1.75rem;
+          font-size: 2rem;
         }
 
         .text {
           font-size: 1.125rem;
           color: var(--color-surface-700);
+          font-weight: 500;
         }
       }
     }
   }
 
   /* Grid Constructor */
-  #grid-model {
+  :global(#grid-model) {
     .builder {
       background: var(--color-surface-50);
       border-radius: calc(var(--radius-container) * 2);
-      padding: 2.5rem;
+      padding: 2rem;
       margin: 2rem 0;
       box-shadow: 0 4px 12px
         color-mix(in oklab, var(--color-surface-900) 0.08, transparent);
@@ -817,14 +810,16 @@
 
       .header {
         margin-bottom: 1.5rem;
+        text-align: center;
 
         h3 {
           margin: 0 0 0.5rem;
+          color: var(--color-surface-900);
         }
 
         .hint {
           font-size: 1rem;
-          color: var(--color-surface-500);
+          color: var(--color-surface-600);
           margin: 0;
         }
       }
@@ -833,6 +828,7 @@
         display: flex;
         gap: 1rem;
         margin-bottom: 2rem;
+        justify-content: center;
         flex-wrap: wrap;
 
         .tool {
@@ -842,11 +838,12 @@
           padding: 0.75rem 1.25rem;
           background: var(--color-surface-100);
           border: 2px solid transparent;
-          border-radius: var(--radius-container);
+          border-radius: 99px;
           cursor: pointer;
           transition: all 0.2s;
           font-size: 1rem;
           color: var(--color-surface-900);
+          font-weight: 600;
 
           &:hover {
             background: var(--color-surface-200);
@@ -854,15 +851,12 @@
 
           &.active {
             background: var(--color-primary-100);
-            border-color: var(--color-primary-600);
+            border-color: var(--color-primary-500);
+            color: var(--color-primary-900);
           }
 
           .icon {
-            font-size: 1.5rem;
-          }
-
-          .label {
-            color: var(--color-surface-700);
+            font-size: 1.25rem;
           }
         }
       }
@@ -871,6 +865,7 @@
         display: flex;
         gap: 0.5rem;
         margin-bottom: 1.5rem;
+        justify-content: center;
 
         .axis {
           display: flex;
@@ -900,19 +895,21 @@
             gap: 2px;
             background: var(--color-surface-300);
             padding: 2px;
-            border-radius: var(--radius-base);
+            border-radius: var(--radius-container);
+            touch-action: manipulation;
 
             .cell {
               aspect-ratio: 1;
-              width: 48px;
+              width: 44px;
               display: flex;
               align-items: center;
               justify-content: center;
               background: var(--color-surface-50);
               border: none;
               cursor: pointer;
-              transition: all 0.15s;
-              font-size: 1.25rem;
+              transition: all 0.1s;
+              font-size: 1.5rem;
+              border-radius: 2px;
 
               &:hover {
                 background: var(--color-primary-100);
@@ -941,11 +938,13 @@
       .info {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 1rem;
         padding: 1rem 1.5rem;
         background: var(--color-surface-100);
         border-radius: var(--radius-container);
         font-size: 1.125rem;
+        text-align: center;
 
         &.placeholder {
           color: var(--color-surface-500);
@@ -962,7 +961,7 @@
   }
 
   /* Logic Navigator */
-  #logic-navigator {
+  :global(#logic-navigator) {
     .flowchart {
       background: linear-gradient(
         135deg,
@@ -970,7 +969,7 @@
         var(--color-surface-50)
       );
       border-radius: calc(var(--radius-container) * 2);
-      padding: 2.5rem;
+      padding: 2rem;
       margin: 2rem 0;
       box-shadow: 0 4px 12px
         color-mix(in oklab, var(--color-surface-900) 0.08, transparent);
@@ -978,8 +977,9 @@
       .header {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 1rem;
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
 
         .icon {
           font-size: 2.5rem;
@@ -988,6 +988,7 @@
         h3 {
           margin: 0;
           font-size: 1.5rem;
+          color: var(--color-primary-900);
         }
       }
 
@@ -995,65 +996,177 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 1.5rem;
+        width: 100%;
 
         .node {
           display: flex;
           align-items: center;
-          gap: 1rem;
-          padding: 1.25rem 2rem;
-          border-radius: calc(var(--radius-container) * 2);
-          font-size: 1.25rem;
-          font-weight: 600;
+          gap: 0.75rem;
+          padding: 1rem 1.5rem;
+          border-radius: 99px;
+          font-size: 1.125rem;
+          font-weight: 700;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+          background: white;
+          border: 2px solid transparent;
+          text-align: left;
+          position: relative;
+          z-index: 2;
+
+          .icon {
+            font-size: 1.5rem;
+          }
 
           &.question {
-            background: var(--color-warning-100);
-            border: 2px solid var(--color-warning-400);
-            color: var(--color-warning-900);
+            border-color: var(--color-primary-300);
+            color: var(--color-primary-900);
+            padding: 1.25rem 2rem;
+            font-size: 1.25rem;
           }
 
           &.action-yes {
-            background: var(--color-success-100);
-            border: 2px solid var(--color-success-400);
-            color: var(--color-success-900);
+            background: var(--color-success-50);
+            border-color: var(--color-success-200);
+            color: var(--color-success-800);
           }
 
           &.action-no {
-            background: var(--color-error-100);
-            border: 2px solid var(--color-error-400);
-            color: var(--color-error-900);
-          }
-
-          .icon {
-            font-size: 1.75rem;
+            background: var(--color-error-50);
+            border-color: var(--color-error-200);
+            color: var(--color-error-800);
           }
         }
 
-        .branches {
-          display: flex;
-          gap: 3rem;
+        /* Desktop Layout (>768px) */
+        @media (min-width: 769px) {
+          .node.question {
+            margin-bottom: 3rem;
+          }
 
-          .branch {
+          /* Question Node Connector */
+          .node.question::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 1.5rem; /* Half distance to crossbar */
+            width: 3px;
+            background: var(--color-surface-300);
+          }
+
+          .branches {
+            display: flex;
+            gap: 4rem;
+            position: relative;
+            padding-top: 1.5rem; /* Space for lines */
+
+            /* Horizontal Crossbar */
+            &::before {
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 25%; /* Connects centers of branches approx */
+              right: 25%;
+              height: 3px;
+              background: var(--color-surface-300);
+            }
+
+            /* Vertical connector from Question line */
+            &::after {
+              content: "";
+              position: absolute;
+              top: -1.5rem;
+              left: 50%;
+              transform: translateX(-50%);
+              height: 1.5rem;
+              width: 3px;
+              background: var(--color-surface-300);
+            }
+
+            .branch {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 1rem;
+              position: relative;
+
+              /* Vertical line to node */
+              &::before {
+                content: "";
+                position: absolute;
+                top: -1.5rem; /* Connects to horizontal bar */
+                left: 50%;
+                transform: translateX(-50%);
+                height: 1.5rem;
+                width: 3px;
+                background: var(--color-surface-300);
+                z-index: 0;
+              }
+
+              .label {
+                background: white;
+                border: 2px solid var(--color-surface-200);
+                padding: 0.25rem 0.75rem;
+                border-radius: 12px;
+                font-size: 0.875rem;
+                font-weight: 700;
+                text-transform: uppercase;
+                z-index: 1;
+              }
+            }
+          }
+        }
+
+        /* Mobile Layout (<=768px) */
+        @media (max-width: 768px) {
+          .node.question {
+            margin-bottom: 2rem;
+            width: 100%;
+            justify-content: center;
+          }
+
+          /* Arrow down from question */
+          .node.question::after {
+            content: "↓";
+            position: absolute;
+            bottom: -1.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.5rem;
+            color: var(--color-surface-400);
+            font-weight: 900;
+          }
+
+          .branches {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 0.75rem;
+            gap: 1rem;
+            width: 100%;
 
-            .label {
-              font-size: 1rem;
-              font-weight: 700;
-              padding: 0.5rem 1rem;
-              border-radius: var(--radius-container);
-            }
+            .branch {
+              display: flex;
+              flex-direction: row; /* Horizontal row */
+              align-items: center;
+              gap: 1rem;
+              width: 100%;
 
-            &.yes .label {
-              background: var(--color-success-200);
-              color: var(--color-success-800);
-            }
+              .label {
+                min-width: 60px;
+                text-align: center;
+                padding: 0.5rem;
+                background: var(--color-surface-200);
+                border-radius: 12px;
+                font-weight: 700;
+                font-size: 0.9rem;
+                color: var(--color-surface-700);
+              }
 
-            &.no .label {
-              background: var(--color-error-200);
-              color: var(--color-error-800);
+              .node {
+                flex: 1;
+                font-size: 1rem;
+                padding: 0.75rem 1rem;
+              }
             }
           }
         }
@@ -1062,7 +1175,7 @@
   }
 
   /* Simulator */
-  #simulator {
+  :global(#simulator) {
     .simulator-panel {
       background: var(--color-surface-50);
       border-radius: calc(var(--radius-container) * 2);
@@ -1079,17 +1192,21 @@
       h3 {
         margin: 0 0 1rem;
         font-size: 1.25rem;
+        text-align: center;
+        color: var(--color-surface-800);
       }
 
       .options {
         display: flex;
         gap: 1rem;
         flex-wrap: wrap;
+        justify-content: center;
       }
 
       .option {
         flex: 1;
-        min-width: 200px;
+        min-width: 240px;
+        max-width: 320px;
         display: flex;
         align-items: center;
         gap: 1rem;
@@ -1106,8 +1223,8 @@
         }
 
         &.active {
-          background: var(--color-primary-100);
-          border-color: var(--color-primary-600);
+          background: var(--color-primary-50);
+          border-color: var(--color-primary-500);
         }
 
         .icon {
@@ -1169,7 +1286,7 @@
       gap: 2px;
       background: var(--color-surface-300);
       padding: 2px;
-      border-radius: var(--radius-base);
+      border-radius: var(--radius-container);
     }
 
     .sim-cell {
@@ -1182,6 +1299,7 @@
       font-size: 1rem;
       transition: all 0.15s;
       position: relative;
+      border-radius: 2px;
 
       &.wall {
         background: var(--color-surface-600);
@@ -1206,10 +1324,11 @@
       &.robot {
         background: var(--color-primary-200);
         z-index: 1;
+        box-shadow: 0 0 0 2px var(--color-primary-500) inset;
       }
 
       .robot-icon {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
         animation: pulse 0.5s ease-in-out infinite alternate;
       }
     }
@@ -1240,23 +1359,25 @@
 
     .sim-actions {
       display: flex;
-      gap: 0.75rem;
+      gap: 1rem;
       flex-wrap: wrap;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      justify-content: center;
     }
 
     .btn {
-      padding: 0.75rem 1.25rem;
+      padding: 0.75rem 1.5rem;
       font-size: 1rem;
       font-weight: 600;
       border: none;
-      border-radius: var(--radius-container);
+      border-radius: 99px;
       cursor: pointer;
       transition: all 0.2s;
 
       &.primary {
         background: var(--color-primary-600);
         color: white;
+        min-width: 140px;
 
         &:hover:not(:disabled) {
           background: var(--color-primary-700);
@@ -1280,6 +1401,7 @@
 
         &:hover:not(:disabled) {
           background: var(--color-surface-100);
+          color: var(--color-surface-900);
         }
       }
 
@@ -1291,8 +1413,11 @@
 
     .sim-stats {
       display: flex;
-      gap: 1.5rem;
+      gap: 2rem;
       flex-wrap: wrap;
+      justify-content: center;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--color-surface-200);
     }
 
     .stat {
@@ -1307,12 +1432,14 @@
         color: var(--color-surface-500);
         text-transform: uppercase;
         letter-spacing: 0.05em;
+        font-weight: 700;
       }
 
       .value {
-        font-size: 1.5rem;
+        font-size: 1.75rem;
         font-weight: 700;
         color: var(--color-surface-800);
+        line-height: 1;
       }
 
       &.success .value {
@@ -1338,12 +1465,12 @@
       transform: scale(1);
     }
     to {
-      transform: scale(1.1);
+      transform: scale(1.15);
     }
   }
 
   /* Project */
-  #project {
+  :global(#project) {
     .project {
       background: linear-gradient(
         135deg,
@@ -1369,16 +1496,17 @@
           border-radius: var(--radius-container);
           box-shadow: 0 2px 4px
             color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
+          border: 1px solid var(--color-surface-200);
 
           .number {
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--color-primary-600);
             color: white;
-            font-size: 1.25rem;
+            font-size: 1rem;
             font-weight: 700;
             border-radius: 50%;
             flex-shrink: 0;
@@ -1388,12 +1516,14 @@
             h4 {
               margin: 0 0 0.5rem;
               font-size: 1.125rem;
+              color: var(--color-surface-900);
             }
 
             p {
               font-size: 1rem;
               margin: 0;
               color: var(--color-surface-600);
+              line-height: 1.5;
             }
           }
         }
@@ -1402,7 +1532,7 @@
   }
 
   /* Quiz */
-  #quiz {
+  :global(#quiz) {
     .list {
       display: grid;
       gap: 1.5rem;
@@ -1415,34 +1545,29 @@
     }
   }
 
-  @keyframes shake {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-2px);
+  /* Summary Section */
+  :global(#summary) {
+    p {
+      font-size: 1.25rem;
+      margin: 0;
+      color: var(--color-surface-700);
+      line-height: 1.6;
     }
   }
 
   /* Responsive */
   @media (max-width: 1100px) {
-    #logic-navigator .flowchart .diagram .branches {
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    #grid-model .builder .container {
+    :global(#grid-model) .builder .container {
       overflow-x: auto;
     }
   }
 
   @media (max-width: 768px) {
-    #crisis .scenarios {
+    :global(#crisis) .scenarios {
       flex-direction: column;
 
       .item {
-        padding: 0.75rem 1rem;
+        padding: 1rem;
 
         .icon {
           font-size: 1.5rem;
@@ -1454,14 +1579,14 @@
       }
     }
 
-    #grid-model .builder {
+    :global(#grid-model) .builder {
       padding: 1.5rem;
 
       .toolbar {
         gap: 0.5rem;
 
         .tool {
-          padding: 0.5rem 0.75rem;
+          padding: 0.5rem 1rem;
           font-size: 0.875rem;
 
           .icon {
@@ -1470,9 +1595,13 @@
         }
       }
 
-      .container .wrapper .grid .cell {
-        width: 36px;
-        font-size: 1rem;
+      .container .wrapper .grid {
+        gap: 1px;
+        
+        .cell {
+          width: 34px;
+          font-size: 1.1rem;
+        }
       }
 
       .info {
@@ -1482,30 +1611,7 @@
       }
     }
 
-    #logic-navigator .flowchart {
-      padding: 1.5rem;
-
-      .header {
-        .icon {
-          font-size: 2rem;
-        }
-
-        h3 {
-          font-size: 1.25rem;
-        }
-      }
-
-      .diagram .node {
-        padding: 1rem 1.25rem;
-        font-size: 1rem;
-
-        .icon {
-          font-size: 1.25rem;
-        }
-      }
-    }
-
-    #simulator {
+    :global(#simulator) {
       .simulator-panel {
         padding: 1.25rem;
       }
@@ -1521,6 +1627,7 @@
 
         .option {
           min-width: unset;
+          max-width: unset;
           padding: 0.75rem 1rem;
 
           .icon {
@@ -1558,21 +1665,23 @@
       }
 
       .sim-actions {
+        flex-direction: column;
+        
         .btn {
-          flex: 1 1 calc(50% - 0.5rem);
-          min-width: 120px;
-          padding: 0.625rem 0.75rem;
-          font-size: 0.875rem;
+          width: 100%;
+          min-width: unset;
+          padding: 0.75rem;
         }
       }
 
       .sim-stats {
         gap: 1rem;
-        justify-content: center;
+        justify-content: space-between;
       }
 
       .stat {
         min-width: 60px;
+        flex: 1;
 
         .label {
           font-size: 0.65rem;
@@ -1584,16 +1693,16 @@
       }
     }
 
-    #project .project {
+    :global(#project) .project {
       padding: 1.5rem;
 
       .steps .step {
         padding: 1rem;
 
         .number {
-          width: 32px;
-          height: 32px;
-          font-size: 1rem;
+          width: 28px;
+          height: 28px;
+          font-size: 0.875rem;
         }
 
         .content {
@@ -1610,12 +1719,12 @@
   }
 
   @media (max-width: 480px) {
-    #grid-model .builder .container .wrapper .grid .cell {
+    :global(#grid-model) .builder .container .wrapper .grid .cell {
       width: 28px;
       font-size: 0.85rem;
     }
 
-    #simulator {
+    :global(#simulator) {
       .sim-cell {
         width: 26px;
         font-size: 0.75rem;
@@ -1623,10 +1732,6 @@
         .robot-icon {
           font-size: 0.55rem;
         }
-      }
-
-      .sim-actions .btn {
-        flex: 1 1 100%;
       }
     }
   }

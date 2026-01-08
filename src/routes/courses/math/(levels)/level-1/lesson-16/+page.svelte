@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Crisis, QuizCard, Summary } from "../../components";
+  import { Crisis, QuizCard, Section, Summary } from "../../components";
 
   // Magician's puzzle - easy
   let easyGuess = $state<number | null>(null);
@@ -68,8 +68,8 @@
   />
 </svelte:head>
 
-<!-- Крючок: Черный ящик фокусника -->
-<section id="magician-easy">
+<!-- Crisis Section -->
+<Section id="crisis">
   <Crisis icon="🎩" title="Чёрный ящик фокусника">
     <p>
       Фокусник говорит: «Я задумал число. Умножил его на 2, затем прибавил 3 и
@@ -100,32 +100,29 @@
         Попробуй подобрать число. Подсказка: оно маленькое.
       {/if}
     </p>
-  </Crisis>
-</section>
 
-<!-- Кризис: Сложная задача -->
-<section id="magician-hard">
-  <Crisis icon="🤯" title="Кризис: когда подбор не работает">
-    <p>
-      Фокусник усмехается: «Теперь посложнее. Я задумал число, умножил его на
-      37, вычел 115, разделил на 4 и получил 350. Какое число?»
-    </p>
+    <div class="hard-part">
+      <p>
+        Фокусник усмехается: «Теперь посложнее. Я задумал число, умножил его на
+        37, вычел 115, разделил на 4 и получил 350. Какое число?»
+      </p>
 
-    <div class="guess-box">
-      <label for="hard-guess">Попробуй угадать:</label>
-      <input
-        id="hard-guess"
-        type="number"
-        bind:value={hardGuess}
-        placeholder="?"
-        aria-label="Введи число"
-      />
-      {#if hardGuess !== null}
-        <span class="result" class:correct={hardCorrect}>
-          ({hardGuess} × 37 − 115) ÷ 4 = {hardResult?.toFixed(2)}
-          {hardCorrect ? "✓" : "✗"}
-        </span>
-      {/if}
+      <div class="guess-box">
+        <label for="hard-guess">Попробуй угадать:</label>
+        <input
+          id="hard-guess"
+          type="number"
+          bind:value={hardGuess}
+          placeholder="?"
+          aria-label="Введи число"
+        />
+        {#if hardGuess !== null}
+          <span class="result" class:correct={hardCorrect}>
+            ({hardGuess} × 37 − 115) ÷ 4 = {hardResult?.toFixed(2)}
+            {hardCorrect ? "✓" : "✗"}
+          </span>
+        {/if}
+      </div>
     </div>
 
     {#snippet question()}
@@ -136,13 +133,14 @@
       </p>
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
-<!-- Метафора: Одевание и раздевание -->
-<section id="dressing-metaphor">
-  <h2>Одевание и раздевание</h2>
-  <p>Чтобы понять метод «обратного хода», вспомним обычное утро и вечер.</p>
-
+<!-- Metaphor: Dressing and Undressing -->
+<Section
+  id="dressing-metaphor"
+  title="Одевание и раздевание"
+  description="Чтобы понять метод «обратного хода», вспомним обычное утро и вечер."
+>
   <div class="grid">
     <div class="card morning">
       <div class="icon">🌅</div>
@@ -173,18 +171,14 @@
       </p>
     </div>
   </div>
-</section>
+</Section>
 
-<!-- Схема: Слои луковицы -->
-<section id="onion-model">
-  <h2>Математическая «машина времени»</h2>
-  <p>
-    Уравнение — это история того, как неизвестное число (наш <strong
-      >Герой</strong
-    >) маскировалось. Чтобы его найти, нужно снять маскировку в обратном
-    порядке.
-  </p>
-
+<!-- Onion Model -->
+<Section
+  id="onion-model"
+  title="Математическая «машина времени»"
+  description="Уравнение — это история того, как неизвестное число (наш Герой) маскировалось. Чтобы его найти, нужно снять маскировку в обратном порядке."
+>
   <div class="visual">
     <div class="layer outer">
       <span class="label">÷ 4</span>
@@ -200,49 +194,54 @@
       </div>
     </div>
     <div class="description">
-      <span>⟵</span>
+      <span class="arrow">⟵</span>
       <span class="text">снимаем слои снаружи внутрь</span>
     </div>
   </div>
 
-  <p class="insight">
+  <div class="insight">
     Чтобы добраться до <strong>x</strong>, начинаем с внешнего слоя: сначала
     отменяем деление, потом вычитание, потом умножение.
-  </p>
-</section>
+  </div>
+</Section>
 
-<!-- Симуляция: Весы -->
-<section id="balance-scale">
-  <h2>Лаборатория весов</h2>
-  <p>
-    Знак <strong>=</strong> означает равновесие. Любое действие с одной чашей требует
-    зеркального действия с другой.
-  </p>
-
+<!-- Balance Scale -->
+<Section
+  id="balance-scale"
+  title="Лаборатория весов"
+  description="Знак = означает равновесие. Любое действие с одной чашей требует зеркального действия с другой."
+>
   <div class="demo">
-    <div class="visual" class:unbalanced={scaleState !== "balanced"}>
+    <div class="scale-container">
       <div
-        class="beam"
+        class="scale-assembly"
         class:tilt-left={scaleState === "unbalanced-left"}
         class:tilt-right={scaleState === "unbalanced-right"}
       >
-        <div class="pan left">
-          <div class="content">
-            <div class="box" class:revealed={showBoxContent}>
-              {showBoxContent ? "8" : "?"}
+        <div class="beam-bar"></div>
+        <div class="pan-wrapper left">
+          <div class="string"></div>
+          <div class="pan">
+            <div class="content">
+              <div class="box" class:revealed={showBoxContent}>
+                {showBoxContent ? "8" : "?"}
+              </div>
+              {#if leftWeight > 8}
+                <div class="weights">+{leftWeight - 8}</div>
+              {/if}
             </div>
-            {#if leftWeight > 8}
-              <div class="weights">+{leftWeight - 8}</div>
-            {/if}
+            <div class="value-tag">{leftWeight}</div>
           </div>
-          <span class="label">Левая чаша: {leftWeight}</span>
         </div>
-        <div class="fulcrum">⚖️</div>
-        <div class="pan right">
-          <div class="content">
-            <div class="coins">{rightWeight} 🪙</div>
+        <div class="fulcrum"></div>
+        <div class="pan-wrapper right">
+          <div class="string"></div>
+          <div class="pan">
+            <div class="content">
+              <div class="coins">{rightWeight} 🪙</div>
+            </div>
+            <div class="value-tag">{rightWeight}</div>
           </div>
-          <span class="label">Правая чаша: {rightWeight}</span>
         </div>
       </div>
     </div>
@@ -260,32 +259,37 @@
     </div>
 
     <div class="controls">
-      <div class="group">
-        <span class="label">Левая чаша:</span>
+      <div class="actions">
         <button
           onclick={() => removeFromLeft(2)}
           disabled={leftWeight <= 8}
-          aria-label="Убрать 2 с левой чаши">−2</button
+          aria-label="Убрать 2 с левой чаши"
         >
-      </div>
-      <div class="group">
-        <span class="label">Правая чаша:</span>
+          -2 слева
+        </button>
         <button
           onclick={() => removeFromRight(2)}
           disabled={rightWeight <= 0}
-          aria-label="Убрать 2 с правой чаши">−2</button
+          aria-label="Убрать 2 с правой чаши"
         >
+          -2 справа
+        </button>
       </div>
-      <button class="reset" onclick={resetScale} aria-label="Сбросить весы"
-        >🔄 Сброс</button
-      >
-      {#if leftWeight === 8 && rightWeight === 8 && scaleState === "balanced"}
-        <button
-          class="reveal"
-          onclick={() => (showBoxContent = true)}
-          aria-label="Открыть коробку">📦 Открыть коробку</button
-        >
-      {/if}
+
+      <div class="system-actions">
+        <button class="reset" onclick={resetScale} aria-label="Сбросить весы">
+          🔄 Сброс
+        </button>
+        {#if leftWeight === 8 && rightWeight === 8 && scaleState === "balanced"}
+          <button
+            class="reveal"
+            onclick={() => (showBoxContent = true)}
+            aria-label="Открыть коробку"
+          >
+            📦 Открыть
+          </button>
+        {/if}
+      </div>
     </div>
 
     <p class="hint">
@@ -293,16 +297,14 @@
       равновесие?
     </p>
   </div>
-</section>
+</Section>
 
-<!-- Формализация: Пошаговое решение -->
-<section id="equation-solver">
-  <h2>От коробки к символам</h2>
-  <p>
-    Вместо коробки математики используют букву <span class="variable">x</span> — это
-    маска, которую носит число, пока мы его не нашли.
-  </p>
-
+<!-- Equation Solver -->
+<Section
+  id="equation-solver"
+  title="От коробки к символам"
+  description="Вместо коробки математики используют букву x — это маска, которую носит число, пока мы его не нашли."
+>
   <div class="demo">
     <div class="steps">
       {#each solverSteps as step, i}
@@ -340,16 +342,14 @@
     <strong>уничтожаем</strong> то, что мешает, делая одинаковые действия с обеих
     сторон равенства.
   </div>
-</section>
+</Section>
 
-<!-- Практика: Таможенный сканер -->
-<section id="suitcase-problem">
-  <h2>Мини-проект: таможенный сканер</h2>
-  <p>
-    Аэропорт. Есть чемодан, вес которого известен. Мы знаем вес пустого чемодана
-    и вес одного сувенира. Сколько сувениров внутри?
-  </p>
-
+<!-- Suitcase Problem -->
+<Section
+  id="suitcase-problem"
+  title="Мини-проект: таможенный сканер"
+  description="Аэропорт. Есть чемодан, вес которого известен. Мы знаем вес пустого чемодана и вес одного сувенира. Сколько сувениров внутри?"
+>
   <div class="problem">
     <div class="data">
       <div class="item">
@@ -393,18 +393,16 @@
       </div>
     </details>
   </div>
-</section>
+</Section>
 
-<!-- Вопросы на понимание -->
-<section id="quiz">
-  <h2>Проверь понимание</h2>
-
+<!-- Quiz -->
+<Section id="quiz" title="Проверь понимание">
   <div class="cards">
-    <QuizCard icon="🧥">
-      <div class="question">
+    <QuizCard icon="🧥" title="Порядок действий">
+      <p>
         Если надеть на число «куртку» (× 4), а потом «шапку» (+ 9), что снять
         первым, чтобы добраться до числа?
-      </div>
+      </p>
       {#snippet answer()}
         <p>
           Сначала <strong>шапку</strong> (отменить +9), потом
@@ -413,11 +411,11 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="⚖️">
-      <div class="question">
+    <QuizCard icon="⚖️" title="Зеркальные действия">
+      <p>
         Почему нельзя просто вычесть 8 из левой части уравнения, ничего не делая
         с правой?
-      </div>
+      </p>
       {#snippet answer()}
         <p>
           Нарушится равновесие — правда перестанет быть правдой. Равенство
@@ -426,11 +424,11 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="🚫">
-      <div class="question">
+    <QuizCard icon="🚫" title="Необратимость">
+      <p>
         Можно ли решить уравнение <span class="formula">x · 0 = 7</span>
         методом обратного хода?
-      </div>
+      </p>
       {#snippet answer()}
         <p>
           Нет! Умножение на 0 — <strong>необратимая операция</strong>. Любое
@@ -439,22 +437,22 @@
       {/snippet}
     </QuizCard>
   </div>
-</section>
+</Section>
 
-<section id="summary">
+<Section id="summary">
   <Summary title="Резюме">
-    <blockquote>
+    <p>
       Решение уравнения — это не магия и не угадывание. Это
       <strong>расследование</strong>, где мы просто прокручиваем «киноплёнку»
       действий в обратном порядке, чтобы вернуться к началу. Главное правило:
       сохраняй равновесие. Что сделал с одной стороной — обязан сделать и с
       другой.
-    </blockquote>
+    </p>
   </Summary>
-</section>
+</Section>
 
 <style>
-  /* Common button styles inside sections */
+  /* Common button styles */
   button {
     padding: 0.5rem 1rem;
     border-radius: var(--radius-container);
@@ -476,9 +474,12 @@
     cursor: not-allowed;
   }
 
-  /* Magician's Puzzle (Easy & Hard) */
-  #magician-easy,
-  #magician-hard {
+  /* Crisis */
+  :global(#crisis) {
+    p {
+      margin-bottom: 1rem;
+    }
+
     .guess-box {
       display: flex;
       align-items: center;
@@ -499,9 +500,9 @@
         padding: 0.75rem;
         font-size: 1.25rem;
         text-align: center;
-        border: 1px solid var(--color-surface-300);
+        border: none;
         border-radius: var(--radius-container);
-        background: var(--color-surface-50);
+        background: var(--color-warning-50); /* Highlighted */
 
         &:focus {
           outline: none;
@@ -526,20 +527,18 @@
 
     .note {
       font-size: 1.125rem;
-      margin-bottom: 0;
+      margin-bottom: 2rem;
+    }
+
+    .hard-part {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px dashed var(--color-surface-300);
     }
   }
 
-  #magician-hard :global(.card) {
-    background: linear-gradient(
-      135deg,
-      var(--color-error-100),
-      var(--color-warning-50)
-    );
-  }
-
   /* Metaphor */
-  #dressing-metaphor {
+  :global(#dressing-metaphor) {
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -584,8 +583,10 @@
           align-items: center;
           justify-content: center;
           gap: 0.5rem;
-          flex-wrap: wrap;
+          flex-wrap: nowrap; /* Single line */
           font-size: 1.125rem;
+          overflow-x: auto; /* Scroll if needed */
+          padding-bottom: 0.5rem;
 
           &.reverse .arrow {
             color: var(--color-primary-700);
@@ -593,15 +594,16 @@
 
           .item {
             padding: 0.5rem 1rem;
-            background: var(--color-surface-50);
             border-radius: var(--radius-container);
             box-shadow: 0 2px 4px
               color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
+            white-space: nowrap; /* No wrapping inside */
           }
 
           .arrow {
-            color: var(--color-primary-500);
+            color: var(--color-primary-900);
             font-size: 1.25rem;
+            flex-shrink: 0;
           }
         }
 
@@ -618,10 +620,16 @@
         }
       }
     }
+
+    @media (max-width: 1100px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
   }
 
   /* Onion Model */
-  #onion-model {
+  :global(#onion-model) {
     .visual {
       display: flex;
       align-items: center;
@@ -670,9 +678,7 @@
           font-weight: 600;
           font-family: "Consolas", "Monaco", monospace;
           color: var(--color-surface-700);
-          background: var(--color-surface-50);
-          padding: 0.25rem 0.75rem;
-          border-radius: var(--radius-container);
+          text-align: center;
         }
       }
 
@@ -719,65 +725,170 @@
       padding: 1.5rem;
       background: var(--color-primary-50);
       border-radius: var(--radius-container);
-      border-left: 4px solid var(--color-primary-500);
+    }
+
+    @media (max-width: 1100px) {
+      .visual {
+        flex-direction: column;
+
+        .layer {
+          &.outer {
+            width: 320px;
+            height: 320px;
+          }
+
+          &.middle {
+            width: 240px;
+            height: 240px;
+          }
+
+          &.inner {
+            width: 160px;
+            height: 160px;
+          }
+        }
+
+        .description {
+          .arrow {
+            transform: rotate(90deg);
+          }
+        }
+      }
     }
   }
 
   /* Balance Scale */
-  #balance-scale {
+  :global(#balance-scale) {
     .demo {
       background: var(--color-surface-100);
       border-radius: calc(var(--radius-container) * 2);
       padding: 2rem;
 
-      .visual {
+      .scale-container {
         display: flex;
         justify-content: center;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem;
+        padding: 1rem 0;
+        overflow: hidden; /* Contain tilting */
 
-        .beam {
+        .scale-assembly {
+          position: relative;
+          width: 100%;
+          max-width: 500px;
+          height: 200px;
           display: flex;
-          align-items: flex-start;
           justify-content: center;
-          gap: 2rem;
-          padding: 1.5rem 2rem;
-          background: var(--color-surface-50);
-          border-radius: calc(var(--radius-container) * 2);
-          box-shadow: 0 4px 12px
-            color-mix(in oklab, var(--color-surface-900) 0.1, transparent);
+          align-items: flex-end;
           transition: transform 0.3s ease;
 
           &.tilt-left {
-            transform: rotate(-5deg);
-          }
-          &.tilt-right {
-            transform: rotate(5deg);
+            .beam-bar {
+              transform: rotate(-10deg);
+            }
+            .pan-wrapper.left {
+              transform: translateY(20px);
+            }
+            .pan-wrapper.right {
+              transform: translateY(-20px);
+            }
           }
 
-          .pan {
+          &.tilt-right {
+            .beam-bar {
+              transform: rotate(10deg);
+            }
+            .pan-wrapper.left {
+              transform: translateY(-20px);
+            }
+            .pan-wrapper.right {
+              transform: translateY(20px);
+            }
+          }
+
+          .beam-bar {
+            position: absolute;
+            top: 20px;
+            width: 80%;
+            height: 8px;
+            background: var(--color-surface-800);
+            border-radius: 4px;
+            z-index: 2;
+            transition: transform 0.3s ease;
+          }
+
+          .fulcrum {
+            width: 20px;
+            height: 140px;
+            background: var(--color-surface-400);
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 4px 4px 0 0;
+            z-index: 1;
+
+            &::after {
+              content: "";
+              position: absolute;
+              bottom: 0;
+              left: 50%;
+              transform: translateX(-50%);
+              width: 100px;
+              height: 20px;
+              background: var(--color-surface-600);
+              border-radius: 10px 10px 0 0;
+            }
+          }
+
+          .pan-wrapper {
+            position: absolute;
+            top: 24px; /* Attach to beam */
+            width: 120px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.75rem;
-            min-width: 120px;
+            transition: transform 0.3s ease;
 
-            .content {
+            &.left {
+              left: 10%;
+            }
+
+            &.right {
+              right: 10%;
+            }
+
+            .string {
+              width: 2px;
+              height: 60px;
+              background: var(--color-surface-400);
+            }
+
+            .pan {
+              width: 100%;
+              background: var(--color-surface-50);
+              border: 2px solid var(--color-surface-300);
+              border-radius: 0 0 60px 60px;
+              padding: 1rem 0.5rem;
               display: flex;
               flex-direction: column;
               align-items: center;
-              gap: 0.5rem;
-              padding: 1rem;
-              background: var(--color-surface-100);
-              border-radius: var(--radius-container);
-              min-height: 80px;
+              position: relative;
+              box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+
+              .content {
+                min-height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.25rem;
+              }
 
               .box {
-                font-size: 2rem;
                 font-weight: 700;
-                padding: 0.5rem 1rem;
+                padding: 0.25rem 0.5rem;
                 background: var(--color-primary-100);
-                border: 3px dashed var(--color-primary-400);
-                border-radius: var(--radius-container);
+                border: 2px dashed var(--color-primary-400);
+                border-radius: 4px;
                 color: var(--color-primary-700);
 
                 &.revealed {
@@ -788,28 +899,26 @@
               }
 
               .weights {
-                font-size: 1.25rem;
+                font-size: 0.9rem;
                 font-weight: 600;
                 color: var(--color-warning-700);
                 background: var(--color-warning-100);
-                padding: 0.25rem 0.75rem;
-                border-radius: var(--radius-container);
+                padding: 0.1rem 0.4rem;
+                border-radius: 4px;
               }
 
               .coins {
-                font-size: 1.5rem;
+                font-size: 1.25rem;
+              }
+
+              .value-tag {
+                position: absolute;
+                bottom: -1.5rem;
+                font-size: 0.9rem;
+                color: var(--color-surface-500);
+                font-weight: 600;
               }
             }
-
-            .label {
-              font-size: 0.9rem;
-              color: var(--color-surface-600);
-            }
-          }
-
-          .fulcrum {
-            font-size: 3rem;
-            align-self: center;
           }
         }
       }
@@ -835,21 +944,16 @@
 
       .controls {
         display: flex;
-        align-items: center;
-        justify-content: center;
+        flex-direction: column;
         gap: 1rem;
-        flex-wrap: wrap;
-        margin-bottom: 1rem;
+        align-items: center;
 
-        .group {
+        .actions,
+        .system-actions {
           display: flex;
-          align-items: center;
-          gap: 0.5rem;
-
-          .label {
-            font-size: 0.95rem;
-            color: var(--color-surface-600);
-          }
+          gap: 1rem;
+          flex-wrap: wrap;
+          justify-content: center;
         }
 
         .reset {
@@ -867,23 +971,13 @@
         font-size: 1rem;
         text-align: center;
         color: var(--color-surface-600);
-        margin: 0;
+        margin-top: 1rem;
       }
     }
   }
 
   /* Equation Solver */
-  #equation-solver {
-    .variable {
-      font-family: "Consolas", "Monaco", monospace;
-      font-size: 1.1em;
-      color: var(--color-primary-600);
-      font-weight: 600;
-      background: var(--color-primary-50);
-      padding: 0.1em 0.3em;
-      border-radius: 0.25rem;
-    }
-
+  :global(#equation-solver) {
     .demo {
       background: var(--color-surface-50);
       border-radius: calc(var(--radius-container) * 2);
@@ -957,6 +1051,15 @@
         }
       }
 
+      .equation {
+        font-family: "Consolas", "Monaco", monospace;
+        font-size: 1.1em;
+        color: var(--color-primary-600);
+        font-weight: 600;
+        padding: 0.1em 0.3em;
+        border-radius: 0.25rem;
+      }
+
       .controls {
         display: flex;
         align-items: center;
@@ -983,189 +1086,205 @@
       border-radius: calc(var(--radius-container) * 2);
       margin-top: 2rem;
     }
+
+    @media (max-width: 1100px) {
+      .demo .steps .step {
+        grid-template-columns: 2rem 1fr;
+
+        .explanation {
+          grid-column: 1 / -1;
+          padding-left: 3rem;
+        }
+      }
+    }
   }
 
   /* Suitcase Problem */
-  #suitcase-problem {
+  :global(#suitcase-problem) {
     .problem {
       background: var(--color-surface-50);
       border-radius: calc(var(--radius-container) * 2);
-      padding: 2rem;
-      box-shadow: 0 4px 12px
-        color-mix(in oklab, var(--color-surface-900) 0.1, transparent);
+      padding: 2.5rem;
+      box-shadow: 0 8px 32px
+        color-mix(in oklab, var(--color-surface-900) 0.08, transparent);
+      border: 1px solid var(--color-surface-200);
 
       .data {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         gap: 1.5rem;
-        flex-wrap: wrap;
-        margin-bottom: 1.5rem;
+        margin-bottom: 2.5rem;
 
         .item {
           display: flex;
+          flex-direction: column;
           align-items: center;
-          gap: 0.5rem;
-          padding: 0.75rem 1.25rem;
-          background: var(--color-surface-100);
+          text-align: center;
+          gap: 0.75rem;
+          padding: 1.5rem;
+          background: white;
           border-radius: var(--radius-container);
-          flex: 1;
-          min-width: 180px;
+          border: 1px solid var(--color-surface-200);
+          transition: transform 0.2s, box-shadow 0.2s;
+
+          &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px
+              color-mix(in oklab, var(--color-surface-900) 0.06, transparent);
+            border-color: var(--color-primary-200);
+          }
 
           .icon {
-            font-size: 1.5rem;
+            font-size: 2.5rem;
+            background: var(--color-surface-100);
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
           }
 
           .label {
             color: var(--color-surface-600);
             font-size: 0.95rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
           }
 
           .value {
-            font-weight: 700;
-            font-size: 1.125rem;
-            color: var(--color-surface-800);
-            margin-left: auto;
+            font-weight: 800;
+            font-size: 1.75rem;
+            color: var(--color-surface-900);
           }
         }
       }
 
       .equation {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 1rem;
-        padding: 1.25rem;
-        background: var(--color-primary-50);
-        border-radius: var(--radius-container);
-        margin-bottom: 1.5rem;
+        gap: 0.75rem;
+        padding: 2rem;
+        background: var(--color-primary-600);
+        color: white;
+        border-radius: calc(var(--radius-container) * 1.5);
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 8px 24px
+          color-mix(in oklab, var(--color-primary-600) 0.3, transparent);
 
         .label {
           font-weight: 600;
-          color: var(--color-surface-600);
+          color: var(--color-primary-200);
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          font-size: 0.9rem;
         }
 
         .formula {
           font-family: "Consolas", "Monaco", monospace;
-          font-size: 1.5rem;
-          font-weight: 600;
-          color: var(--color-primary-700);
+          font-size: clamp(1.5rem, 5vw, 2.5rem);
+          font-weight: 700;
+          letter-spacing: 0.05em;
         }
       }
 
       .solution {
+        border: 2px solid var(--color-surface-200);
+        border-radius: var(--radius-container);
+        overflow: hidden;
+        background: white;
+
         summary {
           cursor: pointer;
-          color: var(--color-primary-600);
+          color: var(--color-surface-700);
           font-weight: 600;
-          font-size: 1rem;
-          padding: 0.5rem 0;
+          font-size: 1.1rem;
+          padding: 1.25rem 2rem;
+          background: var(--color-surface-50);
+          list-style: none;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          transition: background 0.2s;
+
+          &:hover {
+            background: var(--color-surface-100);
+            color: var(--color-primary-700);
+          }
+
+          &::after {
+            content: "+";
+            font-size: 1.5rem;
+            font-weight: 300;
+          }
+        }
+
+        &[open] summary {
+          border-bottom: 1px solid var(--color-surface-200);
+          background: var(--color-surface-50);
+          
+          &::after {
+            content: "−";
+          }
         }
 
         .steps {
-          margin-top: 1rem;
-          padding: 1.5rem;
-          background: var(--color-success-50);
-          border-radius: var(--radius-container);
+          padding: 2rem;
+          background: white;
 
           .step {
-            font-size: 1.125rem;
-            margin-bottom: 0.75rem;
+            font-size: 1.15rem;
+            margin-bottom: 1rem;
             font-family: "Consolas", "Monaco", monospace;
+            color: var(--color-surface-700);
+            padding-left: 1rem;
+            border-left: 3px solid var(--color-surface-200);
           }
 
           .answer {
-            font-size: 1.25rem;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 2px solid var(--color-success-300);
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: var(--color-success-50);
+            border-radius: var(--radius-container);
+            color: var(--color-success-800);
+            text-align: center;
+            border: 1px solid var(--color-success-200);
           }
+        }
+      }
+    }
+
+    @media (max-width: 900px) {
+      .problem {
+        padding: 1.5rem;
+        
+        .data {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+        
+        .equation {
+          padding: 1.5rem;
         }
       }
     }
   }
 
   /* Quiz */
-  #quiz {
+  :global(#quiz) {
     .cards {
       display: grid;
       gap: 1.5rem;
-
-      .question {
-        font-size: 1.25rem;
-        line-height: 1.6;
-        color: var(--color-surface-800);
-      }
 
       .formula {
         font-family: "Consolas", "Monaco", monospace;
         font-weight: 600;
         color: var(--color-primary-700);
       }
-    }
-  }
-
-  /* Responsive */
-  @media (max-width: 1100px) {
-    #dressing-metaphor .grid {
-      grid-template-columns: 1fr;
-    }
-
-    #onion-model .visual {
-      flex-direction: column;
-
-      .layer.outer {
-        width: 320px;
-        height: 320px;
-      }
-
-      .layer.middle {
-        width: 240px;
-        height: 240px;
-      }
-
-      .layer.inner {
-        width: 160px;
-        height: 160px;
-      }
-    }
-
-    #balance-scale {
-      .beam {
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      .fulcrum {
-        order: -1;
-      }
-    }
-
-    #equation-solver .step {
-      grid-template-columns: 2rem 1fr;
-
-      .explanation {
-        grid-column: 1 / -1;
-        padding-left: 3rem;
-      }
-    }
-
-    #suitcase-problem {
-      .data {
-        flex-direction: column;
-
-        .item {
-          min-width: unset;
-        }
-      }
-
-      .equation {
-        flex-direction: column;
-        text-align: center;
-      }
-    }
-
-    #magician-easy .guess-box,
-    #magician-hard .guess-box {
-      flex-direction: column;
-      align-items: flex-start;
     }
   }
 </style>

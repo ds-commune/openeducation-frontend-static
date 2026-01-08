@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { Crisis, DefinitionCard, QuizCard, Summary } from "../../components";
+  import {
+    Crisis,
+    DefinitionCard,
+    QuizCard,
+    Section,
+    Summary,
+  } from "../../components";
 
   // Fairness generator: people around fire
   let fairnessLevel = $state(0);
@@ -110,7 +116,7 @@
 </svelte:head>
 
 <!-- Крючок: Сломанный мир -->
-<section id="broken-world" class="crisis">
+<Section id="crisis">
   <Crisis icon="🔧" title="Сломанный мир">
     <p>
       Представьте мир, где перепутаны все формы. Велосипед едет на
@@ -138,26 +144,21 @@
       </div>
     </div>
 
-    {#snippet question()}
-      <strong>Вопрос:</strong> почему природа и инженеры выбирают именно эти формы?
-      Круг — для колёс, сфера — для пузырей, прямоугольник — для домов. Это просто
-      красота или математическая необходимость?
-    {/snippet}
+    <blockquote>
+      Почему природа и инженеры выбирают именно эти формы? Круг — для колёс,
+      сфера — для пузырей, прямоугольник — для домов. Это просто красота или
+      математическая необходимость?
+    </blockquote>
   </Crisis>
-</section>
+</Section>
 
 <!-- Часть А: Круг -->
-<section id="circle">
-  <h2>Круг — форма равноправия</h2>
-  <p>
-    Представьте холодную ночь у костра. Где встанут люди, чтобы
-    <strong>всем</strong> было одинаково тепло? Если выстроиться квадратом, тем,
-    кто в углах, будет холоднее — они дальше от огня. Но если встать
-    <strong>кругом</strong>, каждый находится на одинаковом расстоянии от
-    центра.
-  </p>
-
-  <DefinitionCard title="Определение">
+<Section
+  id="circle"
+  title="Круг — форма равноправия"
+  description="Представьте холодную ночь у костра. Где встанут люди, чтобы всем было одинаково тепло? Если выстроиться квадратом, тем, кто в углах, будет холоднее — они дальше от огня. Но если встать кругом, каждый находится на одинаковом расстоянии от центра."
+>
+  <DefinitionCard>
     <p>
       <strong>Круг</strong> — это линия, где каждая точка находится на
       <strong>одинаковом расстоянии</strong> от центра. Это форма справедливости:
@@ -235,16 +236,14 @@
       {/if}
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Часть Б: Треугольник -->
-<section id="triangle">
-  <h2>Треугольник — форма жёсткости</h2>
-  <p>
-    Почему мосты, краны и Эйфелева башня состоят из треугольников? Дело в том,
-    что треугольник — это <strong>самая жёсткая</strong> плоская фигура.
-  </p>
-
+<Section
+  id="triangle"
+  title="Треугольник — форма жёсткости"
+  description="Почему мосты, краны и Эйфелева башня состоят из треугольников? Дело в том, что треугольник — это самая жёсткая плоская фигура."
+>
   <p>
     Сравните: если надавить на угол квадрата, он легко сложится в ромб — углы
     изменятся, хотя стороны останутся целыми. Квадрат — «мягкая» форма. Но у
@@ -252,7 +251,7 @@
     изменить форму треугольника, нужно сломать саму сторону.
   </p>
 
-  <DefinitionCard title="Принцип">
+  <DefinitionCard>
     <p>
       <strong>Треугольник</strong> — единственный многоугольник, который нельзя деформировать,
       не сломав стороны. Это геометрия прочности.
@@ -352,18 +351,14 @@
       {/if}
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Часть В: Квадрат -->
-<section id="square">
-  <h2>Квадрат — форма порядка</h2>
-  <p>
-    Круги неудобно хранить — между ними остаются пустоты. Треугольники острые и
-    неудобные. А вот <strong>квадраты</strong> и
-    <strong>прямоугольники</strong> идеально прилегают друг к другу, заполняя пространство
-    без зазоров.
-  </p>
-
+<Section
+  id="square"
+  title="Квадрат — форма порядка"
+  description="Круги неудобно хранить — между ними остаются пустоты. Треугольники острые и неудобные. А вот квадраты и прямоугольники идеально прилегают друг к другу, заполняя пространство без зазоров."
+>
   <div class="comparison">
     <div class="warehouse">
       <div class="label">Склад с бочками</div>
@@ -373,7 +368,8 @@
           <span class="item circle">○</span>
           <span class="item circle">○</span>
         </div>
-        <div class="row offset">
+        <div class="row">
+          <span class="item circle">○</span>
           <span class="item circle">○</span>
           <span class="item circle">○</span>
         </div>
@@ -409,19 +405,20 @@
     </div>
   </div>
 
-  <DefinitionCard title="Принцип">
+  <DefinitionCard>
     <p>
       <strong>Квадрат</strong> — паркетная фигура. Четыре угла по 90° в сумме дают
       360° — идеальное покрытие плоскости без зазоров. Кирпичи, коробки, пиксели экрана
       — всё это квадраты.
     </p>
   </DefinitionCard>
-</section>
+</Section>
 
-<section id="math-language">
-  <h2>Математический язык</h2>
-  <p>Переведём наши открытия на язык математики:</p>
-
+<Section
+  id="math-language"
+  title="Математический язык"
+  description="Переведём наши открытия на язык математики:"
+>
   <div class="cards">
     <div class="card">
       <div class="shape">○</div>
@@ -453,12 +450,10 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Практика -->
-<section id="practice">
-  <h2>Проверь понимание</h2>
-
+<Section id="practice" title="Проверь понимание">
   <div class="quiz-list">
     <QuizCard icon="🕳️">
       <div class="question">
@@ -502,63 +497,68 @@
       {/snippet}
     </QuizCard>
   </div>
-</section>
+</Section>
 
-<section id="summary" class="summary">
+<Section id="summary">
   <Summary title="Резюме">
-    <blockquote>
+    <p>
       Форма в математике и природе — это не случайность, а
       <strong>функция</strong>. Нужно сохранить расстояние или сэкономить
       материал? → <strong>Круг</strong>. Нужна прочность? →
       <strong>Треугольник</strong>. Нужен порядок и плотная укладка? →
       <strong>Квадрат</strong>. Мы учимся видеть не просто фигуры, а инженерные
       решения, которые они несут.
-    </blockquote>
+    </p>
   </Summary>
-</section>
+</Section>
 
 <style>
-  /* Broken World */
-  #broken-world {
+  /* Crisis */
+  :global(#crisis) {
     .visual {
       display: flex;
       justify-content: center;
-      gap: 2rem;
+      gap: 1rem;
       margin: 2rem 0;
       flex-wrap: wrap;
+
+      .item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem;
+        background: var(--color-surface-50);
+        border-radius: var(--radius-container);
+        box-shadow: 0 4px 12px
+          color-mix(in oklab, var(--color-surface-950) 0.05, transparent);
+        min-width: 80px;
+
+        .emoji {
+          font-size: 2.5rem;
+        }
+
+        .shape {
+          font-size: 1.5rem;
+          color: var(--color-error-500);
+        }
+
+        .effect {
+          font-size: 0.875rem;
+          color: var(--color-error-600);
+          font-weight: 600;
+        }
+      }
     }
 
-    .item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 1.5rem;
-      background: var(--color-surface-50);
-      border-radius: var(--radius-container);
-      box-shadow: 0 4px 12px
-        color-mix(in oklab, var(--color-surface-950) 0.05, transparent);
-      min-width: 100px;
-    }
-
-    .emoji {
-      font-size: 2.5rem;
-    }
-
-    .shape {
-      font-size: 1.5rem;
-      color: var(--color-error-500);
-    }
-
-    .effect {
-      font-size: 0.875rem;
-      color: var(--color-error-600);
-      font-weight: 600;
+    blockquote {
+      margin: 1.5rem 0;
+      color: var(--color-surface-700);
     }
   }
 
   /* Circle Section */
-  #circle {
+  :global(#circle) {
     .demo-card {
       margin: 2.5rem 0;
       padding: 2rem;
@@ -566,11 +566,11 @@
       border-radius: calc(var(--radius-container) * 4);
       box-shadow: 0 12px 32px
         color-mix(in oklab, var(--color-surface-950) 0.05, transparent);
-    }
 
-    .demo-card h3 {
-      margin-top: 0;
-      color: var(--color-primary-700);
+      h3 {
+        margin-top: 0;
+        color: var(--color-primary-700);
+      }
     }
 
     .instruction {
@@ -607,7 +607,9 @@
       transition: all 0.3s ease;
 
       &.warm {
-        fill: var(--color-success-500);
+        fill: var(--color-success-700);
+        stroke: white;
+        stroke-width: 1px;
       }
     }
 
@@ -660,7 +662,7 @@
   }
 
   /* Triangle Section */
-  #triangle {
+  :global(#triangle) {
     .demo-card {
       margin: 2.5rem 0;
       padding: 2rem;
@@ -674,234 +676,255 @@
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-    }
 
-    .visuals {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 2rem;
-    }
+      .visuals {
+        display: grid;
+        grid-template-columns: auto auto;
+        justify-content: center;
+        gap: 2rem;
 
-    .structure {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-    }
+        .structure {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+          text-align: center;
 
-    .label {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--color-surface-700);
-    }
+          .label {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-surface-700);
+          }
 
-    .canvas {
-      width: 100%;
-      max-width: 180px;
-      height: auto;
-      background: var(--color-surface-100);
-      border-radius: var(--radius-container);
-    }
+          .canvas {
+            width: 100%;
+            max-width: 180px;
+            height: auto;
+            background: var(--color-surface-100);
+            border-radius: var(--radius-container);
+          }
 
-    .frame {
-      stroke: var(--color-surface-600);
-      stroke-width: 4;
-      transition: all 0.3s ease;
+          .frame {
+            stroke: var(--color-surface-600);
+            stroke-width: 4;
+            transition: all 0.3s ease;
 
-      &.collapsed {
-        transform: skewX(-15deg);
-        stroke: var(--color-error-500);
+            &.collapsed {
+              transform: skewX(-15deg);
+              stroke: var(--color-error-500);
+            }
+
+            &.triangle.loaded {
+              stroke: var(--color-success-500);
+            }
+          }
+
+          .diagonal {
+            stroke: var(--color-primary-500);
+            stroke-width: 3;
+            stroke-dasharray: 5 3;
+          }
+
+          .status {
+            font-size: 0.7rem;
+
+            &.fail {
+              fill: var(--color-error-600);
+            }
+
+            &.ok {
+              fill: var(--color-success-600);
+            }
+          }
+        }
       }
 
-      &.triangle.loaded {
-        stroke: var(--color-success-500);
-      }
-    }
+      .controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
 
-    .diagonal {
-      stroke: var(--color-primary-500);
-      stroke-width: 3;
-      stroke-dasharray: 5 3;
-    }
-
-    .status {
-      font-size: 0.7rem;
-
-      &.fail {
-        fill: var(--color-error-600);
+        .btn {
+          /* Inherits Skeleton button styles via class="btn" */
+          font-weight: 600;
+        }
       }
 
-      &.ok {
-        fill: var(--color-success-600);
+      .hint {
+        padding: 1rem;
+        background: var(--color-warning-50);
+        border-radius: var(--radius-container);
+        font-size: 1rem;
+        color: var(--color-warning-700);
+        text-align: center;
       }
-    }
-
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      /* Inherits Skeleton button styles via class="btn" */
-      font-weight: 600;
-    }
-
-    .hint {
-      padding: 1rem;
-      background: var(--color-warning-50);
-      border-radius: var(--radius-container);
-      font-size: 1rem;
-      color: var(--color-warning-700);
-      text-align: center;
     }
   }
 
   /* Square Section */
-  #square {
+  :global(#square) {
     .comparison {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
       margin: 2rem 0;
-    }
 
-    .warehouse {
-      padding: 1.5rem;
-      background: var(--color-surface-50);
-      border-radius: calc(var(--radius-container) * 4);
-      box-shadow: 0 4px 12px
-        color-mix(in oklab, var(--color-surface-950) 0.05, transparent);
-    }
+      .warehouse {
+        padding: 1.5rem;
+        background: var(--color-surface-50);
+        border-radius: calc(var(--radius-container) * 4);
+        box-shadow: 0 4px 12px
+          color-mix(in oklab, var(--color-surface-950) 0.05, transparent);
 
-    .label {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--color-surface-700);
-      margin-bottom: 1rem;
-      text-align: center;
-    }
+        .label {
+          font-size: 1rem;
+          font-weight: 600;
+          color: var(--color-surface-700);
+          margin-bottom: 1rem;
+          text-align: center;
+        }
 
-    .visual {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 1rem;
-      background: var(--color-surface-100);
-      border-radius: var(--radius-container);
-    }
+        .visual {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 1rem;
+          border-radius: var(--radius-container);
 
-    .row {
-      display: flex;
-      gap: 0.25rem;
+          .row {
+            display: flex;
+            gap: 0.25rem;
+          }
 
-      &.offset {
-        margin-left: 1.5rem;
-      }
-    }
+          .item {
+            font-size: 2rem;
+            line-height: 0.8;
 
-    .item {
-      font-size: 2rem;
-      line-height: 1;
+            &.circle {
+              color: var(--color-surface-400);
+            }
 
-      &.circle {
-        color: var(--color-surface-400);
-      }
+            &.box {
+              color: var(--color-primary-500);
+            }
+          }
 
-      &.box {
-        color: var(--color-primary-500);
-      }
-    }
+          .indicator {
+            margin-top: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-container);
+            font-size: 0.875rem;
+            font-weight: 600;
 
-    .indicator {
-      margin-top: 0.75rem;
-      padding: 0.5rem 1rem;
-      border-radius: var(--radius-container);
-      font-size: 0.875rem;
-      font-weight: 600;
+            &.waste {
+              background: var(--color-error-100);
+              color: var(--color-error-700);
+            }
 
-      &.waste {
-        background: var(--color-error-100);
-        color: var(--color-error-700);
-      }
-
-      &.efficiency {
-        background: var(--color-success-100);
-        color: var(--color-success-700);
+            &.efficiency {
+              background: var(--color-success-100);
+              color: var(--color-success-700);
+            }
+          }
+        }
       }
     }
   }
 
   /* Math Language Section */
-  #math-language {
+  :global(#math-language) {
     .cards {
       display: grid;
       gap: 1.5rem;
-    }
 
-    .card {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      padding: 1.5rem 2rem;
-      background: var(--color-surface-50);
-      border-radius: calc(var(--radius-container) * 4);
-      border: 2px solid var(--color-surface-200);
-    }
+      .card {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        padding: 1.5rem 2rem;
+        background: var(--color-surface-50);
+        border-radius: calc(var(--radius-container) * 4);
+        border: 2px solid var(--color-surface-200);
 
-    .shape {
-      font-size: 3rem;
-      color: var(--color-primary-500);
-      line-height: 1;
-    }
+        .shape {
+          font-size: 3rem;
+          color: var(--color-primary-500);
+          line-height: 1;
+        }
 
-    .content {
-      flex: 1;
-    }
+        .content {
+          flex: 1;
 
-    .name {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--color-surface-800);
-      margin-bottom: 0.5rem;
-    }
+          .name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-surface-800);
+            margin-bottom: 0.5rem;
+          }
 
-    .text {
-      font-size: 1.125rem;
-      color: var(--color-surface-600);
-      line-height: 1.5;
+          .text {
+            font-size: 1.125rem;
+            color: var(--color-surface-600);
+            line-height: 1.5;
+          }
+        }
+      }
     }
   }
 
   /* Practice Section */
-  #practice {
+  :global(#practice) {
     .quiz-list {
       display: grid;
       gap: 1.5rem;
-    }
 
-    .question {
+      .question {
+        font-size: 1.25rem;
+        line-height: 1.6;
+        color: var(--color-surface-800);
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  /* Summary Section */
+  :global(#summary) {
+    p {
       font-size: 1.25rem;
+      margin: 0;
+      color: var(--color-surface-700);
       line-height: 1.6;
-      color: var(--color-surface-800);
-      margin-bottom: 1rem;
     }
   }
 
   /* Responsive */
   @media (max-width: 1100px) {
-    #broken-world .visual {
-      gap: 1rem;
+    :global(#broken-world) {
+      .visual {
+        gap: 1rem;
+      }
     }
 
-    #triangle .visuals {
-      grid-template-columns: 1fr;
-    }
+    :global(#square) {
+      .comparison {
+        grid-template-columns: 1fr;
 
-    #square .comparison {
-      grid-template-columns: 1fr;
+        .warehouse {
+          .item {
+            line-height: 0.5;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 600px) {
+    :global(#triangle) {
+      .visuals {
+        grid-template-columns: 1fr;
+      }
     }
   }
 </style>

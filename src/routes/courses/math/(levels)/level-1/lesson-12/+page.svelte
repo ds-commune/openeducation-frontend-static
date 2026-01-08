@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { Crisis, DefinitionCard, Summary } from "../../components";
+  import {
+    Crisis,
+    DefinitionCard,
+    QuizCard,
+    Section,
+    Summary,
+  } from "../../components";
 
   // Mode toggle for number line visualization
   let mode = $state<"cardinal" | "ordinal">("cardinal");
@@ -65,7 +71,7 @@
   />
 </svelte:head>
 
-<section id="intro">
+<Section id="crisis">
   <Crisis icon="🤖" title="Ошибка робота-строителя">
     <p>
       Ты — оператор строительного дрона. Архитектор просит: «Доставь стальные
@@ -91,17 +97,14 @@
       машину различать «сколько» и «какой»?
     </p>
   </div>
-</section>
+</Section>
 
 <!-- Section 1: Heap vs Queue -->
-<section id="heap-queue">
-  <h2>Хаос против Очереди</h2>
-
-  <p>
-    Количество может существовать в хаосе. Порядок требует структуры. Сравни два
-    способа хранения одних и тех же книг:
-  </p>
-
+<Section
+  id="heap-queue"
+  title="Хаос против Очереди"
+  description="Количество может существовать в хаосе. Порядок требует структуры. Сравни два способа хранения одних и тех же книг:"
+>
   <div class="comparison">
     <div class="item heap">
       <h3>📚 Куча</h3>
@@ -133,18 +136,14 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Section 2: Ball Race Simulation -->
-<section id="race">
-  <h2>Гонка шариков</h2>
-
-  <p>
-    Число становится <strong>именем</strong>, когда объекты выстраиваются в
-    очередь. «Три шарика» — это группа. «Третий шарик» — это один конкретный
-    шарик, статус которого зависит от других.
-  </p>
-
+<Section
+  id="race"
+  title="Гонка шариков"
+  description="Число становится именем, когда объекты выстраиваются в очередь. «Три шарика» — это группа. «Третий шарик» — это один конкретный шарик, статус которого зависит от других."
+>
   <div class="simulation">
     {#if !raceFinished}
       <div class="start">
@@ -210,17 +209,14 @@
       </div>
     {/if}
   </div>
-</section>
+</Section>
 
 <!-- Section 3: Number Line Visualization -->
-<section id="number-line">
-  <h2>Прыжок или Точка</h2>
-
-  <p>
-    Числовой луч — идеальная очередь. Но одно и то же число «4» может означать
-    разное в зависимости от вопроса:
-  </p>
-
+<Section
+  id="number-line"
+  title="Прыжок или Точка"
+  description="Числовой луч — идеальная очередь. Но одно и то же число «4» может означать разное в зависимости от вопроса:"
+>
   <div class="demo">
     <div class="toggle">
       <button
@@ -291,12 +287,10 @@
       {/if}
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Section 4: Formalization -->
-<section id="formal">
-  <h2>Формальный язык</h2>
-
+<Section id="formal" title="Формальный язык">
   <DefinitionCard title="Количественные числа (Cardinal)">
     <p>Отвечают на вопрос: <strong>Сколько?</strong></p>
     <p>Описывают размер множества (группы).</p>
@@ -318,23 +312,61 @@
     </ul>
   </DefinitionCard>
 
-  <p>
+  <p class="formal-note">
     В языке мы используем окончания: пятый, третья. В математике контекст
     задаётся переменной: <code>n</code> — количество, <code>i</code> или
     <code>aᵢ</code> — номер элемента.
   </p>
-</section>
+</Section>
 
-<section id="summary">
+<!-- Section 5: Quiz -->
+<Section id="quiz" title="Проверь себя">
+  <QuizCard title="Карандаши">
+    <p>
+      В коробке лежат карандаши. Ты взял карандаш, на котором написано «2М». Это
+      значит, что у тебя два карандаша или что это карандаш определенной
+      твердости?
+    </p>
+    {#snippet answer()}
+      <p>
+        Это метка (имя/тип), а не количество. Это не значит, что у тебя 2
+        карандаша.
+      </p>
+    {/snippet}
+  </QuizCard>
+
+  <QuizCard title="Медали">
+    <p>
+      Спортсмен прибежал первым, но получил ноль медалей. Где здесь порядок, а
+      где количество?
+    </p>
+    {#snippet answer()}
+      <p>«Первым» — это порядок (позиция). «Ноль медалей» — это количество.</p>
+    {/snippet}
+  </QuizCard>
+
+  <QuizCard title="Очередь">
+    <p>
+      Если из очереди уйдет третий человек, станет ли второй человек третьим?
+    </p>
+    {#snippet answer()}
+      <p>
+        Нет, второй останется вторым. А вот бывший четвёртый станет третьим.
+      </p>
+    {/snippet}
+  </QuizCard>
+</Section>
+
+<Section id="summary">
   <Summary title="Главная мысль">
-    <blockquote>
+    <p>
       Число — это хамелеон. Оно может означать «сколько у нас всего» (как вес
       мешка), а может означать «где это находится» (как номер квартиры). Чтобы
       управлять реальностью, нужно всегда уточнять: мы считаем толпу или ищем
       адрес?
-    </blockquote>
+    </p>
   </Summary>
-</section>
+</Section>
 
 <style>
   code {
@@ -355,25 +387,39 @@
     margin-bottom: 0.5rem;
   }
 
+  /* Crisis Section */
+  :global(#crisis) {
+    p {
+      margin-bottom: 1rem;
+      font-size: 1.125rem;
+    }
+  }
+
   /* Intro Section */
-  #intro {
+  :global(#intro) {
     .key-problem {
       font-size: 1.25rem;
       text-align: center;
-      padding: 1.5rem 2rem;
+      padding: 1.5rem;
       background: var(--color-surface-100);
       border-radius: var(--radius-container);
-      margin: 2rem 0 3rem;
+      margin: 2rem 0;
       border: 1px solid var(--color-surface-200);
+
+      @media (min-width: 768px) {
+        font-size: 1.5rem;
+        padding: 2rem;
+      }
     }
   }
 
   /* Heap vs Queue Section */
-  #heap-queue {
+  :global(#heap-queue) {
     .comparison {
       display: flex;
+      flex-direction: column;
       align-items: stretch;
-      gap: 2rem;
+      gap: 1.5rem;
       margin: 2rem 0;
 
       .item {
@@ -381,14 +427,14 @@
         background: var(--color-surface-50);
         border: 1px solid var(--color-surface-200);
         border-radius: var(--radius-container);
-        padding: 2rem;
+        padding: 1.5rem;
         text-align: center;
         box-shadow: 0 4px 6px
           color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
 
         h3 {
-          margin-bottom: 1.5rem;
-          font-size: 1.5rem;
+          margin-bottom: 1rem;
+          font-size: 1.25rem;
         }
 
         .visual {
@@ -414,7 +460,7 @@
           &::after {
             content: attr(data-pos);
             position: absolute;
-            bottom: -2rem;
+            bottom: -1.5rem;
             left: 50%;
             transform: translateX(-50%);
             font-size: 0.875rem;
@@ -423,13 +469,13 @@
         }
 
         .desc {
-          font-size: 1.125rem;
+          font-size: 1rem;
           color: var(--color-surface-600);
           margin: 1.5rem 0 1rem;
         }
 
         .question {
-          font-size: 1.25rem;
+          font-size: 1.125rem;
           background: var(--color-primary-100);
           padding: 0.75rem 1rem;
           border-radius: var(--radius-container);
@@ -439,21 +485,50 @@
 
       .divider {
         display: flex;
+        justify-content: center;
         align-items: center;
         font-size: 1.5rem;
         font-weight: 600;
         color: var(--color-surface-400);
+        padding: 0.5rem 0;
+      }
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+        gap: 2rem;
+
+        .item {
+          padding: 2rem;
+
+          h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+          }
+
+          .desc {
+            font-size: 1.125rem;
+          }
+
+          .question {
+            font-size: 1.25rem;
+          }
+        }
+
+        .divider {
+          transform: none;
+          padding: 0;
+        }
       }
     }
   }
 
   /* Race Section */
-  #race {
+  :global(#race) {
     .simulation {
       background: var(--color-surface-50);
       border: 1px solid var(--color-surface-200);
       border-radius: var(--radius-container);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
       text-align: center;
       box-shadow: 0 4px 6px
@@ -469,16 +544,16 @@
 
       .balls {
         display: flex;
-        gap: 1rem;
-        font-size: 3rem;
-      }
-
-      .emoji {
+        gap: 0.5rem;
         font-size: 2.5rem;
       }
 
+      .emoji {
+        font-size: 2rem;
+      }
+
       button {
-        font-size: 1.125rem;
+        font-size: 1rem;
         padding: 0.75rem 1.5rem;
         border: none;
         border-radius: var(--radius-container);
@@ -516,7 +591,7 @@
 
       .line {
         display: flex;
-        gap: 1rem;
+        gap: 0.5rem;
         justify-content: center;
         flex-wrap: wrap;
       }
@@ -525,7 +600,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: 0.75rem 1rem;
+        padding: 0.5rem 0.75rem;
         border: 2px solid var(--color-surface-300);
         border-radius: var(--radius-container);
         background: white;
@@ -543,7 +618,7 @@
         }
 
         .position {
-          font-size: 0.875rem;
+          font-size: 0.75rem;
           color: var(--color-surface-600);
           font-weight: normal;
         }
@@ -551,12 +626,12 @@
 
       .task {
         p {
-          font-size: 1.25rem;
+          font-size: 1.125rem;
           margin-bottom: 0.75rem;
         }
 
         .hint {
-          font-size: 1rem;
+          font-size: 0.875rem;
           color: var(--color-surface-500);
         }
 
@@ -567,9 +642,54 @@
           border-left: 4px solid var(--color-success-500);
 
           p {
-            font-size: 1.125rem;
+            font-size: 1rem;
             margin: 0;
             color: var(--color-success-900);
+          }
+        }
+      }
+
+      @media (min-width: 768px) {
+        padding: 2rem;
+
+        .balls {
+          gap: 1rem;
+          font-size: 3rem;
+        }
+
+        .emoji {
+          font-size: 2.5rem;
+        }
+
+        button {
+          font-size: 1.125rem;
+        }
+
+        .line {
+          gap: 1rem;
+        }
+
+        .ball {
+          padding: 0.75rem 1rem;
+
+          .position {
+            font-size: 0.875rem;
+          }
+        }
+
+        .task {
+          p {
+            font-size: 1.25rem;
+          }
+
+          .hint {
+            font-size: 1rem;
+          }
+
+          .insight {
+            p {
+              font-size: 1.125rem;
+            }
           }
         }
       }
@@ -577,31 +697,35 @@
   }
 
   /* Number Line Section */
-  #number-line {
+  :global(#number-line) {
     .demo {
       background: var(--color-surface-50);
       border: 1px solid var(--color-surface-200);
       border-radius: var(--radius-container);
-      padding: 2rem;
+      padding: 1.5rem;
       margin: 2rem 0;
       box-shadow: 0 4px 6px
         color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
 
       .toggle {
         display: flex;
-        gap: 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
         justify-content: center;
         margin-bottom: 2rem;
+        align-items: center;
 
         .toggle-btn {
-          font-size: 1.125rem;
-          padding: 0.75rem 1.5rem;
+          font-size: 1rem;
+          padding: 0.5rem 1rem;
           border: 2px solid var(--color-surface-300);
           border-radius: var(--radius-container);
           background: white;
           cursor: pointer;
           transition: all 0.2s;
           color: var(--color-surface-900);
+          width: 100%;
+          max-width: 300px;
 
           &:hover {
             border-color: var(--color-primary-400);
@@ -649,14 +773,14 @@
         span {
           flex: 1;
           text-align: left;
-          font-size: 1rem;
+          font-size: 0.875rem;
           font-weight: 600;
           color: var(--color-surface-600);
           position: relative;
-          border-right: 2px solid transparent; /* учёт border-right сегментов */
+          border-right: 2px solid transparent;
 
           &:nth-last-child(2) {
-            border-right: none; /* предпоследний — как последний сегмент */
+            border-right: none;
           }
 
           &:last-child {
@@ -671,9 +795,9 @@
 
           .flag {
             position: absolute;
-            bottom: calc(100% + 30px); /* над числовой прямой */
+            bottom: calc(100% + 30px);
             left: 0;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             line-height: 1;
             animation: wave 0.5s ease-in-out infinite alternate;
           }
@@ -689,19 +813,19 @@
           display: flex;
           align-items: center;
           gap: 1rem;
-          font-size: 1.25rem;
+          font-size: 1.125rem;
         }
 
         input[type="range"] {
-          width: 200px;
+          width: 150px;
           cursor: pointer;
         }
 
         .display {
-          font-size: 1.5rem;
+          font-size: 1.25rem;
           font-weight: 700;
           color: var(--color-primary-600);
-          min-width: 2rem;
+          min-width: 1.5rem;
         }
       }
 
@@ -710,27 +834,66 @@
         margin-top: 1rem;
 
         p {
-          font-size: 1.25rem;
+          font-size: 1.125rem;
           margin: 0;
           color: var(--color-surface-700);
+        }
+      }
+
+      @media (min-width: 768px) {
+        padding: 2rem;
+
+        .toggle {
+          flex-direction: row;
+          gap: 1rem;
+
+          .toggle-btn {
+            font-size: 1.125rem;
+            padding: 0.75rem 1.5rem;
+            width: auto;
+            max-width: none;
+          }
+        }
+
+        .labels {
+          span {
+            font-size: 1rem;
+
+            .flag {
+              font-size: 1.5rem;
+            }
+          }
+        }
+
+        .controls {
+          label {
+            font-size: 1.25rem;
+          }
+
+          input[type="range"] {
+            width: 200px;
+          }
+
+          .display {
+            font-size: 1.5rem;
+            min-width: 2rem;
+          }
+        }
+
+        .explanation {
+          p {
+            font-size: 1.25rem;
+          }
         }
       }
     }
   }
 
-  @media (max-width: 1100px) {
-    #heap-queue .comparison {
-      flex-direction: column;
-
-      .divider {
-        transform: rotate(90deg);
-        padding: 0.5rem 0;
-      }
-    }
-
-    #number-line .demo .toggle {
-      flex-direction: column;
-      align-items: center;
+  /* Formal Section */
+  :global(#formal) {
+    .formal-note {
+      font-size: 1.125rem;
+      margin-top: 1rem;
     }
   }
 </style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Crisis, QuizCard, Summary } from "../../components";
+  import { Crisis, QuizCard, Section, Summary } from "../../components";
 
   // Building height calculator
   let floors = $state(8);
@@ -9,6 +9,22 @@
   const totalHeight = $derived(
     floorHeight * floors + roofHeight + foundationDepth
   );
+
+  function getPluralFloor(n: number): string {
+    const lastDigit = n % 10;
+    const lastTwoDigits = n % 100;
+
+    if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
+      return "этажей";
+    }
+    if (lastDigit === 1) {
+      return "этаж";
+    }
+    if (lastDigit >= 2 && lastDigit <= 4) {
+      return "этажа";
+    }
+    return "этажей";
+  }
 
   // Formula translator demo
   let selectedFormula = $state<"add" | "multiply" | "subtract">("add");
@@ -22,11 +38,11 @@
 
   // Dictionary items
   const dictionary = [
-    { phrase: "«неизвестное число»", symbol: "x", desc: "(любая буква)" },
-    { phrase: "«увеличили на...»", symbol: "+", desc: "(добавили)" },
-    { phrase: "«уменьшили на...»", symbol: "−", desc: "(отняли)" },
-    { phrase: "«увеличили в... раз»", symbol: "·", desc: "(умножили)" },
-    { phrase: "«разделили на группы»", symbol: ":", desc: "(поделили)" },
+    { phrase: "«неизвестное число»", symbol: "x", desc: "любая буква" },
+    { phrase: "«увеличили на...»", symbol: "+", desc: "сложение" },
+    { phrase: "«уменьшили на...»", symbol: "−", desc: "вычитание" },
+    { phrase: "«увеличили в... раз»", symbol: "·", desc: "умножение" },
+    { phrase: "«разделили на группы»", symbol: ":", desc: "деление" },
   ];
 </script>
 
@@ -37,8 +53,8 @@
   />
 </svelte:head>
 
-<!-- Крючок: Проблема ленивого архитектора -->
-<section id="lazy-architect">
+<!-- Crisis Section -->
+<Section id="crisis">
   <Crisis icon="🏗️" title="Проблема ленивого архитектора">
     <p>
       Вы — главный архитектор города будущего. Мэрия присылает странное
@@ -76,20 +92,14 @@
       </p>
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
-<!-- Решение: Контейнер для смысла -->
-<section id="meaning-container">
-  <h2>Контейнер для смысла</h2>
-  <p>
-    Мы не можем записать число, потому что оно меняется. Но мы можем поставить <strong
-      >«коробку»</strong
-    >
-    — контейнер, в который потом упадет нужное число. В математике мы даем имя не
-    самому числу, а
-    <strong>роли</strong>, которую это число играет.
-  </p>
-
+<!-- Meaning Container -->
+<Section
+  id="meaning-container"
+  title="Контейнер для смысла"
+  description="Мы не можем записать число, потому что оно меняется. Но мы можем поставить «коробку» — контейнер, в который потом упадет нужное число. В математике мы даем имя не самому числу, а роли, которую это число играет."
+>
   <div class="conveyor">
     <div class="box labeled">
       <span class="label">Высота этажа</span>
@@ -106,30 +116,48 @@
     </div>
   </div>
 
-  <p class="insight">
+  <div class="insight">
     Пока мы не знаем число, мы работаем с <strong>наклейкой</strong> (ярлыком). Это
     обещание: «сюда придет значение позже».
-  </p>
-</section>
+  </div>
+</Section>
 
-<!-- От коробки к символу -->
-<section id="box-to-symbol">
-  <h2>От коробки к символу</h2>
-  <p>
-    Рисовать коробки долго. Математики — люди ленивые (читай: эффективные).
-    Вместо рисунка коробки они используют <strong>букву</strong>. Пусть
-    «количество этажей» = <span class="math-var">n</span>.
-  </p>
-
-  <div class="evolution">
-    <div class="step">
-      <div class="label">Реальность:</div>
-      <div class="text">«Три метра на каждый этаж плюс крыша и фундамент»</div>
+<!-- Box to Symbol -->
+<Section
+  id="box-to-symbol"
+  title="От коробки к символу"
+  description="Рисовать коробки долго. Математики — люди ленивые (читай: эффективные). Вместо рисунка коробки они используют букву. Пусть «количество этажей» = n."
+>
+  <div class="distillation">
+    <div class="card reality">
+      <div class="header">
+        <span class="icon">🗣️</span>
+        <span class="title">Человеческий язык</span>
+      </div>
+      <div class="content">
+        «Чтобы узнать высоту, нужно взять <strong>3 метра</strong> на каждый из
+        этажей, а затем добавить <strong>5 метров</strong> (крыша + фундамент)»
+      </div>
     </div>
-    <div class="arrow">↓</div>
-    <div class="step highlight">
-      <div class="label">Математика:</div>
-      <div class="formula">3 · n + 5</div>
+
+    <div class="connector">
+      <div class="arrow-group">
+        <div class="line"></div>
+        <div class="tip">▼</div>
+      </div>
+      <div class="badge">Сжатие смысла</div>
+    </div>
+
+    <div class="card math">
+      <div class="header">
+        <span class="icon">💎</span>
+        <span class="title">Математика</span>
+      </div>
+      <div class="content">
+        <span class="token">3</span><span class="token var">n</span>
+        <span class="token op">+</span>
+        <span class="token">5</span>
+      </div>
     </div>
   </div>
 
@@ -141,16 +169,14 @@
     Слитное написание символизирует единый объект — как «три этажа» звучит
     слитно.
   </p>
-</section>
+</Section>
 
-<!-- Интерактив: Калькулятор здания -->
-<section id="building-calculator">
-  <h2>Проверь формулу</h2>
-  <p>
-    Измените количество этажей и убедитесь, что одна формула работает для всех
-    случаев.
-  </p>
-
+<!-- Building Calculator -->
+<Section
+  id="building-calculator"
+  title="Проверь формулу"
+  description="Измените количество этажей и убедитесь, что одна формула работает для всех случаев."
+>
   <div class="demo">
     <div class="input-group">
       <label for="floors-input"
@@ -173,8 +199,10 @@
       <div class="part roof">🏠 Крыша: +{roofHeight} м</div>
       <div class="part floors" style="--floor-count: {floors}">
         <span class="icon">🏢</span>
-        <span>{floors} этажей × {floorHeight} м = {floors * floorHeight} м</span
-        >
+        <span>
+          {floors}
+          {getPluralFloor(floors)} × {floorHeight} м = {floors * floorHeight} м
+        </span>
       </div>
       <div class="part foundation">⬇️ Фундамент: +{foundationDepth} м</div>
     </div>
@@ -192,17 +220,14 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
-<!-- Словарь переводчика -->
-<section id="translator-dictionary">
-  <h2>Словарь переводчика</h2>
-  <p>
-    <strong>Переменная</strong> — это символ, обозначающий любое число из заданного
-    множества. Это «забронированное место». Вот как переводить с человеческого на
-    математический:
-  </p>
-
+<!-- Translator Dictionary -->
+<Section
+  id="translator-dictionary"
+  title="Словарь переводчика"
+  description="Переменная — это символ, обозначающий любое число из заданного множества. Это «забронированное место». Вот как переводить с человеческого на математический:"
+>
   <div class="grid">
     {#each dictionary as item}
       <div class="row">
@@ -213,16 +238,14 @@
       </div>
     {/each}
   </div>
-</section>
+</Section>
 
-<!-- Живая формула -->
-<section id="live-formula">
-  <h2>Живая формула</h2>
-  <p>
-    Выберите операцию и измените значение переменной. Одна линия описывает
-    <strong>бесконечное количество ситуаций</strong>.
-  </p>
-
+<!-- Live Formula -->
+<Section
+  id="live-formula"
+  title="Живая формула"
+  description="Выберите операцию и измените значение переменной. Одна линия описывает бесконечное количество ситуаций."
+>
   <div class="demo">
     <div class="selector">
       <button
@@ -267,18 +290,16 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
-<!-- Практика -->
-<section id="practice">
-  <h2>Проверь понимание</h2>
-
+<!-- Practice -->
+<Section id="practice" title="Проверь понимание">
   <div class="cards">
-    <QuizCard icon="🎮">
-      <div class="question">
+    <QuizCard icon="🎮" title="Очки в игре">
+      <p>
         Почему запись <span class="math-formula">x + 7</span> лучше, чем просто число
         10, если мы описываем правило начисления очков в игре?
-      </div>
+      </p>
       {#snippet answer()}
         <p>
           Потому что <span class="math-formula">x + 7</span> — это
@@ -289,12 +310,12 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="🤩">
-      <div class="question">
+    <QuizCard icon="🤩" title="Смайлик в уравнении">
+      <p>
         Можно ли использовать смайлик 🤩 вместо <span class="math-formula"
           >x</span
         > в уравнении?
-      </div>
+      </p>
       {#snippet answer()}
         <p>
           Да! Символ не важен — важна его <strong>роль как контейнера</strong>.
@@ -303,12 +324,12 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="👨‍👦">
-      <div class="question">
+    <QuizCard icon="👨‍👦" title="Отец и сын">
+      <p>
         Если <span class="math-formula">a</span> — возраст сына, а
         <span class="math-formula">b</span> — возраст отца, что означает
         <span class="math-formula">b = a + 25</span>?
-      </div>
+      </p>
       {#snippet answer()}
         <p>
           Отец <strong>старше сына на 25 лет</strong>. Это утверждение верно для
@@ -317,18 +338,18 @@
       {/snippet}
     </QuizCard>
   </div>
-</section>
+</Section>
 
-<section id="summary-section">
+<Section id="summary">
   <Summary title="Резюме">
-    <blockquote>
+    <p>
       Математика начинается там, где заканчиваются конкретные числа. Используя
       <strong>переменные</strong>, мы создаем универсальные законы и
       инструменты, которые работают для всех случаев сразу. Переменная — это не
       загадка, это пустой карман, готовый принять любое значение.
-    </blockquote>
+    </p>
   </Summary>
-</section>
+</Section>
 
 <style>
   /* Common Math Styles */
@@ -350,8 +371,12 @@
     color: var(--color-primary-800);
   }
 
-  /* Section 1: Lazy Architect */
-  #lazy-architect {
+  /* Section 1: Crisis (Lazy Architect) */
+  :global(#crisis) {
+    p {
+      margin-bottom: 1rem;
+    }
+
     .calculations {
       display: flex;
       flex-direction: column;
@@ -366,18 +391,22 @@
       .row {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.5rem;
         font-size: 1.25rem;
 
         .label {
           font-weight: 600;
           color: var(--color-surface-700);
-          min-width: 100px;
+          flex: 0 0 30%;
+          width: 30%;
+          text-align: left;
         }
 
         .formula {
           font-family: "Consolas", "Monaco", monospace;
           color: var(--color-primary-700);
+          word-break: break-all;
+          flex: 1;
         }
 
         &.problem {
@@ -386,10 +415,15 @@
         }
       }
     }
+
+    blockquote {
+      margin: 1.5rem 0;
+      color: var(--color-surface-700);
+    }
   }
 
   /* Section 2: Meaning Container */
-  #meaning-container {
+  :global(#meaning-container) {
     .conveyor {
       display: flex;
       justify-content: center;
@@ -454,63 +488,197 @@
       border-radius: var(--radius-container);
       border-left: 4px solid var(--color-primary-500);
     }
+
+    @media (max-width: 1100px) {
+      .conveyor {
+        flex-direction: column;
+        padding: 1.5rem;
+        gap: 2rem;
+
+        .box {
+          width: 100%;
+        }
+      }
+    }
   }
 
   /* Section 3: Box to Symbol */
-  #box-to-symbol {
-    .evolution {
+  :global(#box-to-symbol) {
+    .distillation {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .card {
+      padding: 2rem;
+      border-radius: calc(var(--radius-container) * 1.5);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 12px
+        color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
+      transition: transform 0.2s;
+
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid color-mix(in oklab, currentColor 0.1, transparent);
+
+        .icon {
+          font-size: 1.5rem;
+        }
+
+        .title {
+          font-size: 1rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+        }
+      }
+    }
+
+    .card.reality {
+      background: white;
+      border: 1px solid var(--color-surface-200);
+
+      .header {
+        color: var(--color-surface-600);
+      }
+
+      .content {
+        font-family: "Georgia", serif;
+        font-size: 1.25rem;
+        line-height: 1.6;
+        color: var(--color-surface-800);
+        font-style: italic;
+      }
+    }
+
+    .card.math {
+      background: var(--color-primary-600);
+      color: white;
+      border: 1px solid var(--color-primary-700);
+      box-shadow: 0 12px 32px
+        color-mix(in oklab, var(--color-primary-600) 0.3, transparent);
+      justify-content: center;
+
+      .header {
+        color: var(--color-primary-100);
+        border-bottom-color: var(--color-primary-500);
+      }
+
+      .content {
+        font-family: "Consolas", "Monaco", monospace;
+        font-size: 3.5rem;
+        font-weight: 700;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.1em;
+
+        .token {
+          display: inline-block;
+          transition: transform 0.2s;
+        }
+
+        .var {
+          color: var(--color-warning-300);
+        }
+
+        .op {
+          color: var(--color-primary-300);
+          margin: 0 0.1em;
+        }
+      }
+    }
+
+    .connector {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1rem;
-      margin: 2rem 0;
-      padding: 2rem;
-      background: var(--color-surface-50);
-      border-radius: calc(var(--radius-container) * 2);
-      box-shadow: 0 12px 32px
-        color-mix(in oklab, var(--color-surface-900) 0.12, transparent);
+      gap: 0.5rem;
+      color: var(--color-surface-400);
 
-      .step {
+      .arrow-group {
         display: flex;
         align-items: center;
-        gap: 1rem;
-        padding: 1rem 2rem;
-        width: 100%;
+        /* Desktop: Horizontal arrow */
+        flex-direction: row;
 
-        &.highlight {
-          background: var(--color-primary-100);
-          border-radius: var(--radius-container);
+        .line {
+          background: var(--color-surface-300);
+          /* Desktop: Horizontal line */
+          width: 4rem;
+          height: 2px;
         }
 
-        .label {
-          font-size: 1rem;
-          font-weight: 600;
-          color: var(--color-surface-600);
-          min-width: 120px;
-        }
-
-        .text {
+        .tip {
           font-size: 1.25rem;
-          color: var(--color-surface-700);
-        }
-
-        .formula {
-          font-size: 1.75rem;
-          font-family: "Consolas", "Monaco", monospace;
-          font-weight: 700;
-          color: var(--color-primary-800);
+          color: var(--color-surface-300);
+          /* Desktop: Point right */
+          transform: rotate(-90deg);
+          /* Fix alignment visually */
+          margin-left: -4px; 
         }
       }
 
-      .arrow {
-        font-size: 1.5rem;
-        color: var(--color-primary-500);
+      .badge {
+        background: var(--color-surface-200);
+        color: var(--color-surface-600);
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        padding: 0.35rem 0.75rem;
+        border-radius: 1rem;
+        white-space: nowrap;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .distillation {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .connector {
+        flex-direction: row; /* Wrapper row to put badge next to arrow? No, keep column for simplicity first */
+        flex-direction: column;
+        gap: 0.25rem;
+
+        .arrow-group {
+          /* Mobile: Vertical arrow */
+          flex-direction: column;
+          
+          .line {
+            /* Mobile: Vertical line */
+            width: 2px;
+            height: 3rem;
+          }
+
+          .tip {
+            /* Mobile: Point down */
+            transform: rotate(0deg);
+            margin-left: 0;
+            margin-top: -4px;
+          }
+        }
+      }
+
+      .card.math .content {
+        font-size: 3rem;
       }
     }
   }
 
   /* Section 4: Building Calculator */
-  #building-calculator {
+  :global(#building-calculator) {
     .demo {
       background: var(--color-surface-100);
       border-radius: calc(var(--radius-container) * 2);
@@ -524,6 +692,7 @@
         align-items: center;
         gap: 1rem;
         flex-wrap: wrap;
+        box-shadow: none;
 
         label {
           font-size: 1.125rem;
@@ -537,6 +706,7 @@
           align-items: center;
           gap: 1rem;
           min-width: 200px;
+          border: none;
 
           input[type="range"] {
             flex: 1;
@@ -545,6 +715,7 @@
             background: var(--color-surface-300);
             accent-color: var(--color-primary-600);
             cursor: pointer;
+            box-shadow: none;
           }
 
           .value-badge {
@@ -642,60 +813,135 @@
         }
       }
     }
+
+    @media (max-width: 1100px) {
+      .demo {
+        padding: 1.5rem;
+
+        .input-group {
+          flex-direction: column;
+          align-items: stretch;
+
+          .range-wrapper {
+            width: 100%;
+          }
+        }
+
+        .result {
+          flex-direction: column;
+          text-align: center;
+          align-items: stretch;
+
+          .formula-display {
+            flex-direction: column;
+            text-align: center;
+          }
+
+          .universal {
+            flex-direction: column;
+          }
+        }
+      }
+    }
   }
 
   /* Section 5: Translator Dictionary */
-  #translator-dictionary {
+  :global(#translator-dictionary) {
     .grid {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 1rem;
       margin: 2rem 0;
-      padding: 2rem;
-      background: var(--color-surface-50);
-      border-radius: calc(var(--radius-container) * 2);
-      box-shadow: 0 12px 32px
-        color-mix(in oklab, var(--color-surface-900) 0.12, transparent);
+    }
 
-      .row {
+    .row {
+      display: grid;
+      grid-template-columns: minmax(200px, 1.5fr) 40px minmax(60px, auto) 1fr;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 1.5rem 2rem;
+      background: var(--color-surface-50);
+      border: 1px solid var(--color-surface-200);
+      border-radius: var(--radius-container);
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        background: white;
+        box-shadow: 0 8px 24px
+          color-mix(in oklab, var(--color-primary-500) 0.08, transparent);
+        border-color: var(--color-primary-200);
+      }
+
+      .phrase {
+        font-size: 1.15rem;
+        color: var(--color-surface-800);
+        font-weight: 500;
+      }
+
+      .arrow {
+        color: var(--color-surface-400);
+        font-size: 1.5rem;
+        justify-self: center;
+      }
+
+      .symbol {
+        font-size: 2rem;
+        font-family: "Consolas", "Monaco", monospace;
+        font-weight: 700;
+        color: var(--color-primary-600);
+        justify-self: center;
+        width: 3.5rem;
+        height: 3.5rem;
         display: flex;
         align-items: center;
+        justify-content: center;
+        background: var(--color-primary-50);
+        border-radius: 50%;
+      }
+
+      .desc {
+        font-size: 1.1rem;
+        color: var(--color-surface-600);
+        justify-self: end;
+        text-align: right;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .row {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
         gap: 1rem;
-        padding: 1rem;
-        background: var(--color-surface-100);
-        border-radius: var(--radius-container);
+        padding: 1.5rem;
 
         .phrase {
-          font-size: 1.125rem;
-          color: var(--color-surface-700);
-          flex: 1;
-        }
-
-        .arrow {
-          color: var(--color-primary-500);
           font-size: 1.25rem;
         }
 
+        .arrow {
+          display: none;
+        }
+
         .symbol {
-          font-size: 1.75rem;
-          font-family: "Consolas", "Monaco", monospace;
-          font-weight: 700;
-          color: var(--color-primary-700);
-          min-width: 2rem;
-          text-align: center;
+          font-size: 2.5rem;
+          width: 5rem;
+          height: 5rem;
+          background: white;
+          border: 2px solid var(--color-primary-100);
         }
 
         .desc {
-          font-size: 0.95rem;
-          color: var(--color-surface-500);
-          min-width: 100px;
+          justify-self: center;
+          text-align: center;
         }
       }
     }
   }
 
   /* Section 6: Live Formula */
-  #live-formula {
+  :global(#live-formula) {
     .demo {
       background: var(--color-surface-100);
       border-radius: calc(var(--radius-container) * 2);
@@ -759,7 +1005,7 @@
             padding: 0.75rem;
             font-size: 1.5rem;
             text-align: center;
-            border: 2px solid var(--color-surface-300);
+            border: none;
             border-radius: var(--radius-base);
             background: var(--color-surface-50);
             color: var(--color-surface-900);
@@ -796,6 +1042,22 @@
             background: var(--color-success-100);
             padding: 0.5rem 1.5rem;
             border-radius: var(--radius-container);
+            min-width: 160px;
+            text-align: center;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .demo {
+        padding: 1.5rem;
+
+        .calculator {
+          flex-direction: column;
+
+          .arrow {
+            transform: rotate(90deg);
           }
         }
       }
@@ -803,74 +1065,11 @@
   }
 
   /* Section 7: Practice */
-  #practice {
+  :global(#practice) {
     .cards {
-      display: grid;
-      gap: 1.5rem;
-
-      .question {
-        font-size: 1.25rem;
-        line-height: 1.6;
-        color: var(--color-surface-800);
-      }
-    }
-  }
-
-  /* Responsive */
-  @media (max-width: 1100px) {
-    #meaning-container .conveyor {
+      display: flex;
       flex-direction: column;
-    }
-
-    #box-to-symbol {
-      .evolution {
-        padding: 1.5rem;
-
-        .step {
-          flex-direction: column;
-          gap: 0.5rem;
-          text-align: center;
-
-          .label {
-            min-width: unset;
-          }
-        }
-      }
-    }
-
-    #building-calculator {
-      .demo {
-        .input-group {
-          flex-direction: column;
-          align-items: stretch;
-        }
-
-        .result {
-          flex-direction: column;
-          text-align: center;
-        }
-      }
-    }
-
-    #translator-dictionary {
-      .grid .row {
-        flex-wrap: wrap;
-
-        .phrase {
-          flex-basis: 100%;
-          margin-bottom: 0.5rem;
-        }
-      }
-    }
-
-    #live-formula {
-      .calculator {
-        flex-direction: column;
-
-        .arrow {
-          transform: rotate(90deg);
-        }
-      }
+      gap: 1.5rem;
     }
   }
 </style>

@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { Crisis, DefinitionCard, QuizCard, Summary } from "../../components";
+  import {
+    Section,
+    Crisis,
+    DefinitionCard,
+    QuizCard,
+    Summary,
+  } from "../../components";
 
   let activeFilter = $state<"color" | "angles">("color");
 
@@ -32,7 +38,7 @@
   />
 </svelte:head>
 
-<section id="intro">
+<Section id="intro">
   <Crisis icon="🏭" title="Свалка цивилизации" questionTitle="Ключевой вопрос">
     <p>
       Вы — оператор гигантского перерабатывающего завода будущего. По конвейеру
@@ -56,15 +62,13 @@
       </p>
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
-<section id="filter">
-  <h2>Признак как фильтр</h2>
-  <p>
-    Мы не можем сказать машине «возьми этот камень». Мы должны сказать: «хватай
-    всё, что блестит». Мы переходим от объекта к его свойству.
-  </p>
-
+<Section
+  id="filter"
+  title="Признак как фильтр"
+  description="Мы не можем сказать машине «возьми этот камень». Мы должны сказать: «хватай всё, что блестит». Мы переходим от объекта к его свойству."
+>
   <div class="xray">
     <div class="object">🍎</div>
     <div class="arrow">→</div>
@@ -87,14 +91,13 @@
       </p>
     </div>
   </div>
-</section>
+</Section>
 
-<section id="creation">
-  <h2>Создание множества</h2>
-  <p>
+<Section id="creation" title="Создание множества">
+  {#snippet description()}
     Когда мы применяем правило, мы создаём невидимую границу. Всё, что попадает
     под правило, оказывается «внутри». Это и есть <strong>множество</strong>.
-  </p>
+  {/snippet}
 
   <div class="magnet">
     <div class="controls">
@@ -137,14 +140,13 @@
     Только подходящие объекты «притягиваются» к магниту и образуют группу.
     Остальные остаются снаружи.
   </p>
-</section>
+</Section>
 
-<section id="binary">
-  <h2>Бинарная природа принадлежности</h2>
-  <p>
+<Section id="binary" title="Бинарная природа принадлежности">
+  {#snippet description()}
     Для математики (и компьютера) нет «почти подходит». Объект либо
     <strong>в множестве</strong>, либо <strong>нет</strong>. Границы абсолютны.
-  </p>
+  {/snippet}
 
   <div class="light-circle">
     <div class="label">Множество «Живое»</div>
@@ -166,16 +168,14 @@
     Внутри освещённого круга — элементы множества. Снаружи — всё остальное.
     Никаких полутонов.
   </p>
-</section>
+</Section>
 
-<section id="formalization">
-  <h2>Формализация</h2>
-  <p>
-    Переведём интуицию «коробки с вещами» на язык математики. Математика — это
-    способ записывать наши правила фильтрации максимально коротко.
-  </p>
-
-  <DefinitionCard title="Основные обозначения">
+<Section
+  id="formalization"
+  title="Формализация"
+  description="Переведём интуицию «коробки с вещами» на язык математики. Математика — это способ записывать наши правила фильтрации максимально коротко."
+>
+  <DefinitionCard label="Основные обозначения">
     <ul class="list">
       <li>
         <strong>Множество</strong> — наша «коробка» или «круг света». Обозначаем
@@ -214,14 +214,11 @@
       Фигурные скобки показывают, что внутри — элементы одного множества.
     </div>
   </div>
-</section>
+</Section>
 
-<section id="practice">
-  <h2>Проверь понимание</h2>
-
+<Section id="practice" title="Проверь понимание">
   <div class="grid">
-    <QuizCard icon="🥦">
-      <h3>Парадокс границы</h3>
+    <QuizCard icon="🥦" title="Парадокс границы">
       <p>
         Если множество — это «вкусная еда», будет ли брокколи его элементом?
       </p>
@@ -240,8 +237,7 @@
       </details>
     </QuizCard>
 
-    <QuizCard icon="∅">
-      <h3>Пустота</h3>
+    <QuizCard icon="∅" title="Пустота">
       <p>
         Можно ли создать множество, в котором нет ни одного элемента? Приведите
         пример.
@@ -262,8 +258,7 @@
       </details>
     </QuizCard>
 
-    <QuizCard icon="5️⃣">
-      <h3>Контекст</h3>
+    <QuizCard icon="5️⃣" title="Контекст">
       <p>
         Является ли число 5 элементом множества «цифры номера телефона»? А
         множества «оценки в школе»?
@@ -283,11 +278,9 @@
       </details>
     </QuizCard>
   </div>
-</section>
+</Section>
 
-<section id="project">
-  <h2>Мини-проект: умный плейлист</h2>
-
+<Section id="project" title="Мини-проект: умный плейлист">
   <div class="card">
     <div class="scenario">
       <p>
@@ -317,20 +310,20 @@
       </ol>
     </div>
   </div>
-</section>
+</Section>
 
-<section id="summary">
+<Section id="summary">
   <Summary title="Главная мысль">
-    <blockquote>
+    <p>
       Множество — это не просто группа предметов. Это <strong>правило</strong>,
       которое отделяет нужное от ненужного. Умение мыслить множествами — это
       умение видеть не хаос вещей, а структуру мира.
-    </blockquote>
+    </p>
   </Summary>
-</section>
+</Section>
 
 <style>
-  /* Общие стили для математических символов */
+  /* Global Symbols */
   .math {
     font-family: "Times New Roman", serif;
     font-size: 1.1em;
@@ -340,8 +333,14 @@
     border-radius: var(--radius-base);
   }
 
+  p {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
   /* Filter Section */
-  #filter {
+  :global(#filter) {
     .xray {
       display: flex;
       align-items: center;
@@ -350,6 +349,12 @@
       border-radius: var(--radius-container);
       padding: 2.5rem;
       margin: 2rem 0;
+
+      @media (max-width: 900px) {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+      }
 
       .object {
         font-size: 5rem;
@@ -364,6 +369,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 0.75rem;
+        justify-content: center; /* Better for mobile centering */
       }
 
       .tag {
@@ -384,25 +390,41 @@
       padding: 2rem;
       margin: 2rem 0;
 
+      @media (max-width: 900px) {
+        flex-direction: column;
+        padding: 1.5rem;
+      }
+
       .icon {
         font-size: 3rem;
         flex-shrink: 0;
       }
 
-      .content p {
-        margin: 0;
-        font-size: 1.25rem;
+      .content {
+        h3 {
+          margin-top: 0;
+          margin-bottom: 0.5rem;
+        }
+
+        p {
+          margin: 0;
+          font-size: 1.25rem;
+        }
       }
     }
   }
 
   /* Creation Section */
-  #creation {
+  :global(#creation) {
     .magnet {
       background: var(--color-surface-100);
       border-radius: var(--radius-container);
       padding: 2.5rem;
       margin: 2rem 0;
+
+      @media (max-width: 900px) {
+        padding: 1.5rem;
+      }
 
       .controls {
         margin-bottom: 2rem;
@@ -416,6 +438,7 @@
         .chips {
           display: flex;
           gap: 0.75rem;
+          flex-wrap: wrap;
         }
 
         .chip {
@@ -424,6 +447,9 @@
           font-size: 0.9rem;
           background: var(--color-surface-200);
           color: var(--color-surface-700);
+          cursor: pointer;
+          border: none;
+          transition: all 0.2s;
 
           &.active {
             background: var(--color-primary-600);
@@ -439,6 +465,11 @@
         justify-content: center;
         padding: 2rem 0;
 
+        @media (max-width: 900px) {
+          flex-direction: column;
+          gap: 2rem;
+        }
+
         .zone {
           display: flex;
           flex-direction: column;
@@ -448,6 +479,7 @@
           background: var(--color-success-50);
           border: 3px dashed var(--color-success-400);
           border-radius: var(--radius-container);
+          min-width: 150px;
 
           .icon {
             font-size: 3rem;
@@ -456,6 +488,8 @@
           .attracted {
             display: flex;
             gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
           }
         }
 
@@ -463,6 +497,8 @@
           display: flex;
           gap: 1rem;
           opacity: 0.5;
+          flex-wrap: wrap;
+          justify-content: center;
         }
 
         .shape {
@@ -486,7 +522,7 @@
   }
 
   /* Binary Section */
-  #binary {
+  :global(#binary) {
     .light-circle {
       display: flex;
       flex-direction: column;
@@ -497,6 +533,12 @@
       border-radius: var(--radius-container);
       padding: 3rem;
       margin: 2rem 0;
+      box-sizing: border-box;
+      max-width: 100%;
+
+      @media (max-width: 900px) {
+        padding: 1.5rem;
+      }
 
       .label {
         color: var(--color-surface-700);
@@ -513,6 +555,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
 
         .inside {
           display: flex;
@@ -523,6 +566,8 @@
       .outside {
         display: flex;
         gap: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
       }
 
       .object {
@@ -540,23 +585,7 @@
   }
 
   /* Formalization Section */
-  #formalization {
-    .list {
-      font-size: 1.25rem;
-      line-height: 1.8;
-      margin: 0;
-      padding-left: 1.5rem;
-
-      li {
-        margin-bottom: 1rem;
-      }
-
-      ul {
-        margin-top: 0.5rem;
-        padding-left: 1.5rem;
-      }
-    }
-
+  :global(#formalization) {
     .notation {
       background: var(--color-surface-100);
       border-radius: var(--radius-container);
@@ -573,6 +602,12 @@
       .formula {
         font-size: 1.75rem;
         margin-bottom: 1rem;
+        overflow-x: auto; /* Safety for small screens */
+        padding-bottom: 0.5rem; /* Scrollbar clearance */
+
+        @media (max-width: 900px) {
+          font-size: 1.4rem;
+        }
       }
 
       .note {
@@ -584,18 +619,15 @@
   }
 
   /* Practice Section */
-  #practice {
+  :global(#practice) {
     .grid {
       display: grid;
       gap: 1.5rem;
       margin: 2rem 0;
+      /* Default grid logic, single column implied unless styled otherwise */
     }
 
-    /* Styles inside QuizCard content */
-    h3 {
-      margin-bottom: 0.5rem;
-    }
-
+    /* Content inside QuizCards */
     p {
       font-size: 1.25rem;
       margin: 0 0 1rem;
@@ -634,12 +666,16 @@
   }
 
   /* Project Section */
-  #project {
+  :global(#project) {
     .card {
       background: var(--color-surface-100);
       border-radius: var(--radius-container);
       padding: 2.5rem;
       margin: 2rem 0;
+
+      @media (max-width: 900px) {
+        padding: 1.5rem;
+      }
 
       .scenario {
         background: white;
@@ -666,32 +702,18 @@
 
         .formula-example {
           background: var(--color-surface-100);
-          padding: 1.25rem 1.5rem;
+          padding: 1.25rem 0;
           border-radius: var(--radius-base);
           margin: 1rem 0;
           text-align: center;
+          overflow-x: auto;
 
           .math {
             font-size: 1.5rem;
+            white-space: nowrap; /* Prevent breaking inside formula */
           }
         }
       }
-    }
-  }
-
-  /* Responsive */
-  @media (max-width: 1100px) {
-    #filter .xray {
-      flex-direction: column;
-      text-align: center;
-    }
-
-    #filter .analogy {
-      flex-direction: column;
-    }
-
-    #creation .magnet .visualization {
-      flex-direction: column;
     }
   }
 </style>

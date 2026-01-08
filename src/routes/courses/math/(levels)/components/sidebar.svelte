@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { PUBLIC_SHOW_LESSON_NUMBERS_IN_SIDEBAR } from "$env/static/public";
   import { math } from "$lib/data/courses/math";
+  import { devicePixelRatio } from "svelte/reactivity/window";
 
   interface Props {
     levelIndex: keyof typeof math.levels;
@@ -18,6 +19,11 @@
 
   // Track viewport for backdrop logic
   let isMobile = $state(false);
+
+  // Derived open state that mirrors CSS defaults:
+  // - desktop: open by default
+  // - mobile: closed by default
+  const isSidebarOpen = $derived(userState === null ? !isMobile : userState);
 
   onMount(() => {
     const checkViewport = () => {
@@ -38,35 +44,58 @@
     }
   }
 
-  function closeOnMobile() {
+  function closeSidebar() {
     userState = false;
   }
+
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === "Escape" && isSidebarOpen) {
+      closeSidebar();
+    }
+  }
 </script>
+
+<svelte:window on:keydown={handleKeydown} />
 
 <!-- Mobile backdrop (only visible when mobile sidebar is open) -->
 <button
   class="backdrop"
-  class:visible={isMobile && userState === true}
-  onclick={closeOnMobile}
+  class:visible={isMobile && isSidebarOpen}
+  onclick={closeSidebar}
   aria-label="Закрыть меню"
 ></button>
 
+<!-- Mobile-only floating toggle button (always visible when sidebar is closed) -->
+<button
+  class="mobile-toggle-btn"
+  class:hidden={!isMobile || isSidebarOpen}
+  onclick={toggle}
+  aria-label="Открыть меню"
+  aria-expanded={isSidebarOpen}
+  aria-controls="course-sidebar"
+>
+  ☰
+</button>
+
 <aside
+  id="course-sidebar"
   class:user-open={userState === true}
   class:user-closed={userState === false}
   aria-label="Навигация по курсу"
 >
   <!-- Sticky header with toggle button and level title -->
   <header>
+    <div class="level-title">{level.name}</div>
     <button
       class="toggle-btn"
       onclick={toggle}
-      aria-label="Открыть/закрыть меню"
+      aria-label={isSidebarOpen ? "Закрыть меню" : "Открыть меню"}
+      aria-expanded={isSidebarOpen}
+      aria-controls="course-sidebar"
     >
       <span class="toggle-icon icon-expand">☰</span>
       <span class="toggle-icon icon-collapse">✕</span>
     </button>
-    <div class="level-title">{level.name}</div>
   </header>
 
   <nav>
@@ -116,8 +145,42 @@
     border: none;
     cursor: pointer;
 
-    &:visible {
+    &.visible {
       display: block;
+    }
+  }
+
+  /* ======================
+     MOBILE TOGGLE BUTTON (floating, always visible when sidebar closed)
+     ====================== */
+  .mobile-toggle-btn {
+    position: fixed;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 101;
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--color-surface-300, #dee2e6);
+    background: var(--color-surface-50, #f8f9fa);
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--color-surface-700, #495057);
+    border-radius: calc(var(--radius-container, 0.25rem) * 2);
+    box-shadow: 0 4px 12px
+      color-mix(in oklab, var(--color-surface-900, #111827) 0.1, transparent);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: var(--color-surface-100, #f1f3f4);
+      box-shadow: 0 6px 16px
+        color-mix(in oklab, var(--color-surface-900, #111827) 0.15, transparent);
+    }
+
+    &.hidden {
+      display: none;
     }
   }
 
@@ -187,6 +250,9 @@
     color: var(--color-surface-600, #6c757d);
     margin: 0;
     line-height: 1.3;
+    text-wrap: balance;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* Desktop: default is open, show collapse icon */
@@ -236,7 +302,7 @@
      ====================== */
   @media (min-width: 1101px) {
     aside {
-      width: 320px;
+      width: 450px;
       border-right: 1px solid var(--color-surface-200, #e9ecef);
 
       /* Desktop: collapsed when user explicitly closed */
@@ -278,8 +344,8 @@
       bottom: 0;
       left: auto;
       z-index: 100;
-      width: 320px;
-      max-width: 85vw;
+      width: 380px;
+      max-width: 90vw;
       height: auto;
       border-left: 1px solid var(--color-surface-200, #e9ecef);
       box-shadow: 0 12px 32px
@@ -292,23 +358,6 @@
       &.user-open {
         transform: translateX(0);
         pointer-events: auto;
-      }
-
-      &:not(.user-open) {
-        /* Mobile: toggle button in fixed position when sidebar closed */
-        header {
-          position: fixed;
-          top: 0;
-          right: 0;
-          width: auto;
-          padding: 0.75rem;
-          border: none;
-          background: transparent;
-        }
-
-        .level-title {
-          display: none;
-        }
       }
     }
   }
@@ -353,6 +402,7 @@
 
   .lesson-item {
     margin: 0.2rem 0;
+    transform: translateX(-1rem);
 
     a {
       display: block;

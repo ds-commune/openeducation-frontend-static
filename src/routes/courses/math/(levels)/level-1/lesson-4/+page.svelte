@@ -1,5 +1,6 @@
 <script>
   import {
+    Section,
     Crisis,
     DefinitionCard,
     QuizCard,
@@ -7,6 +8,36 @@
     TakeawayCard,
     VisualBreak,
   } from "../../components";
+
+  // Состояние цепи 1 (прямая связь)
+  let btn1Pressed = $state(false);
+  let wire1Cut = $state(false);
+
+  // Состояние цепи 2 (через НЕ)
+  let btn2Pressed = $state(false);
+  let wire2aCut = $state(false); // Провод кнопка → НЕ
+  let wire2bCut = $state(false); // Провод НЕ → лампа
+
+  // Вычисляемые значения
+  // Лампа 1: горит если кнопка нажата И провод цел
+  let lamp1On = $derived(btn1Pressed && !wire1Cut);
+
+  // Сигнал на входе НЕ: true если кнопка нажата И провод цел
+  let notGateInput = $derived(btn2Pressed && !wire2aCut);
+
+  // Выход оператора НЕ: инвертирует вход
+  let notGateOutput = $derived(!notGateInput);
+
+  // Лампа 2: горит если выход НЕ true И провод до лампы цел
+  let lamp2On = $derived(notGateOutput && !wire2bCut);
+
+  function resetCircuits() {
+    btn1Pressed = false;
+    wire1Cut = false;
+    btn2Pressed = false;
+    wire2aCut = false;
+    wire2bCut = false;
+  }
 </script>
 
 <svelte:head>
@@ -17,7 +48,7 @@
 </svelte:head>
 
 <!-- Крючок: мир без связей -->
-<section id="intro">
+<Section id="intro">
   <Crisis icon="🌀" title="Мир без связей">
     <p>
       Представьте мир, где ничто не связано. Человек нажимает на выключатель
@@ -57,16 +88,15 @@
       </p>
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
 <!-- Шаг 1: Жёсткая сцепка -->
-<section id="rigid-link">
-  <h2>Жёсткая сцепка: атом логики</h2>
-  <p>
+<Section id="rigid-link" title="Жёсткая сцепка: атом логики">
+  {#snippet description()}
     Мы вводим понятие <strong>«если — то»</strong> не как абстракцию, а как механический
     рычаг. Это железная дорога: стрелка перевода путей. Поезд (событие) не может поехать
     иначе, если рельсы (условие) проложены определённым образом.
-  </p>
+  {/snippet}
 
   <VisualBreak>
     <div class="implication">
@@ -94,21 +124,103 @@
     <div class="header">
       <span class="icon">🔌</span>
       <h3>Выключатель реальности</h3>
+      <button class="reset-btn" type="button" onclick={() => resetCircuits()}>
+        🔄 Сброс
+      </button>
     </div>
-    <div class="circuit">
-      <div class="element">
-        <div class="icon">🔘</div>
-        <div class="label">Кнопка</div>
-      </div>
-      <div class="wire"></div>
-      <div class="element">
-        <div class="icon">💡</div>
-        <div class="label">Лампа</div>
+
+    <!-- Цепь 1: Прямая связь -->
+    <div class="circuit-block">
+      <div class="circuit-label">Прямая связь: кнопка → лампа</div>
+      <div class="circuit">
+        <button
+          class="element btn"
+          type="button"
+          onmousedown={() => (btn1Pressed = true)}
+          onmouseup={() => (btn1Pressed = false)}
+          onmouseleave={() => (btn1Pressed = false)}
+          ontouchstart={(e) => {
+            e.preventDefault();
+            btn1Pressed = true;
+          }}
+          ontouchend={() => (btn1Pressed = false)}
+          ontouchcancel={() => (btn1Pressed = false)}
+          oncontextmenu={(e) => e.preventDefault()}
+        >
+          <div class="icon">{btn1Pressed ? "🔵" : "🔘"}</div>
+          <div class="label">Кнопка</div>
+        </button>
+        <button
+          class="wire long"
+          class:cut={wire1Cut}
+          class:active={btn1Pressed && !wire1Cut}
+          type="button"
+          onclick={() => (wire1Cut = true)}
+          oncontextmenu={(e) => e.preventDefault()}
+        >
+          {#if wire1Cut}<span class="cut-mark">✂️</span>{/if}
+        </button>
+        <div class="element lamp" class:off={!lamp1On}>
+          <div class="icon">💡</div>
+          <div class="label">Лампа</div>
+        </div>
       </div>
     </div>
+
+    <!-- Цепь 2: Через оператор НЕ -->
+    <div class="circuit-block">
+      <div class="circuit-label">Инверсия: кнопка → НЕ → лампа</div>
+      <div class="circuit">
+        <button
+          class="element btn"
+          type="button"
+          onmousedown={() => (btn2Pressed = true)}
+          onmouseup={() => (btn2Pressed = false)}
+          onmouseleave={() => (btn2Pressed = false)}
+          ontouchstart={(e) => {
+            e.preventDefault();
+            btn2Pressed = true;
+          }}
+          ontouchend={() => (btn2Pressed = false)}
+          ontouchcancel={() => (btn2Pressed = false)}
+          oncontextmenu={(e) => e.preventDefault()}
+        >
+          <div class="icon">{btn2Pressed ? "🔵" : "🔘"}</div>
+          <div class="label">Кнопка</div>
+        </button>
+        <button
+          class="wire"
+          class:cut={wire2aCut}
+          class:active={btn2Pressed && !wire2aCut}
+          type="button"
+          onclick={() => (wire2aCut = true)}
+          oncontextmenu={(e) => e.preventDefault()}
+        >
+          {#if wire2aCut}<span class="cut-mark">✂️</span>{/if}
+        </button>
+        <div class="element not-gate">
+          <div class="icon">🚫</div>
+          <div class="label">НЕ</div>
+        </div>
+        <button
+          class="wire"
+          class:cut={wire2bCut}
+          class:active={notGateOutput && !wire2bCut}
+          type="button"
+          onclick={() => (wire2bCut = true)}
+          oncontextmenu={(e) => e.preventDefault()}
+        >
+          {#if wire2bCut}<span class="cut-mark">✂️</span>{/if}
+        </button>
+        <div class="element lamp" class:off={!lamp2On}>
+          <div class="icon">💡</div>
+          <div class="label">Лампа</div>
+        </div>
+      </div>
+    </div>
+
     <p class="text">
-      Ученик нажимает кнопку — лампа загорается. Отпускает — гаснет. Если
-      разорвать провод ✂️ и нажать снова — лампа не горит.
+      Нажмите и удерживайте кнопки. Кликните на провод, чтобы перерезать его ✂️
     </p>
     <TakeawayCard>
       <p>
@@ -117,16 +229,14 @@
       </p>
     </TakeawayCard>
   </div>
-</section>
+</Section>
 
 <!-- Шаг 2: Односторонняя направленность -->
-<section id="one-way">
-  <h2>Односторонняя улица</h2>
-  <p>
-    Самая частая ошибка новичков — думать, что связь работает в обе стороны. Но
-    логика — это улица с односторонним движением.
-  </p>
-
+<Section
+  id="one-way"
+  title="Односторонняя улица"
+  description="Самая частая ошибка новичков — думать, что связь работает в обе стороны. Но логика — это улица с односторонним движением."
+>
   <div class="examples">
     <div class="correct">
       <div class="label">✓ Правильно</div>
@@ -142,37 +252,32 @@
   <VisualBreak>
     <div class="causality">
       <div class="title">Много причин — один результат</div>
-      <div class="grid">
-        <div class="causes">
-          <div class="item">🌧️ Дождь</div>
-          <div class="item">💧 Ведро воды</div>
-          <div class="item">🚿 Полив</div>
-        </div>
-        <div class="arrows">
-          <span class="arrow">→</span>
-          <span class="arrow">→</span>
-          <span class="arrow">→</span>
-        </div>
-        <div class="results">
-          <div class="item">💦 Мокрый асфальт</div>
-        </div>
+      <div class="causes-row">
+        <div class="cause">🌧️ Дождь</div>
+        <div class="cause">💧 Ведро воды</div>
+        <div class="cause">🚿 Полив</div>
       </div>
+      <div class="arrows-row">
+        <span class="arrow">↓</span>
+        <span class="arrow">↓</span>
+        <span class="arrow">↓</span>
+      </div>
+      <div class="result-item">💦 Мокрый асфальт</div>
       <p class="caption">
         Видя результат, нельзя точно сказать, какая именно причина его вызвала.
         Логика работает <strong>от причины к следствию</strong>, не наоборот.
       </p>
     </div>
   </VisualBreak>
-</section>
+</Section>
 
 <!-- Шаг 3: Цепочки -->
-<section id="chains">
-  <h2>Цепочки событий</h2>
-  <p>
+<Section id="chains" title="Цепочки событий">
+  {#snippet description()}
     События редко ходят поодиночке. Одно запускает другое. Как домино — толкнул
     первое, упало последнее. Это <strong>машина Голдберга</strong>: сложная
     цепочка простых «если — то».
-  </p>
+  {/snippet}
 
   <div class="chain">
     <div class="step">
@@ -207,15 +312,13 @@
       Уберите шарик — кнопка не нажмётся, хлеб не выпрыгнет.
     </p>
   </TakeawayCard>
-</section>
+</Section>
 
-<section id="formalization">
-  <h2>Формализация</h2>
-  <p>
-    Переводим интуицию «рычагов» и «воронок» на язык символов. Нам не нужно
-    много слов, нам нужна стрелка.
-  </p>
-
+<Section
+  id="formalization"
+  title="Формализация"
+  description="Переводим интуицию «рычагов» и «воронок» на язык символов. Нам не нужно много слов, нам нужна стрелка."
+>
   <div class="formal">
     <div class="block">
       <h3>Символ следования</h3>
@@ -233,21 +336,114 @@
 
     <div class="block">
       <h3>Блок-схема</h3>
-      <div class="flowchart">
-        <div class="row">
-          <div class="diamond">Условие?</div>
-        </div>
-        <div class="row branches">
-          <div class="branch yes">
-            <span class="line">✓</span>
-            <span>Да → выполнить действие</span>
-          </div>
-          <div class="branch no">
-            <span class="line">✗</span>
-            <span>Нет → пропустить</span>
-          </div>
-        </div>
-      </div>
+      <svg
+        class="flowchart-svg"
+        viewBox="0 0 320 180"
+        aria-label="Блок-схема условного оператора"
+      >
+        <!-- Diamond (condition) -->
+        <polygon
+          points="160,10 230,50 160,90 90,50"
+          fill="var(--color-warning-100)"
+          stroke="var(--color-warning-400)"
+          stroke-width="2"
+        />
+        <text
+          x="160"
+          y="55"
+          text-anchor="middle"
+          font-size="14"
+          font-weight="600"
+          fill="var(--color-surface-700)">Условие?</text
+        >
+
+        <!-- Left branch line (Yes) -->
+        <line
+          x1="120"
+          y1="70"
+          x2="70"
+          y2="120"
+          stroke="var(--color-success-500)"
+          stroke-width="2"
+        />
+        <polygon
+          points="70,120 75,108 82,115"
+          fill="var(--color-success-500)"
+        />
+        <text
+          x="80"
+          y="95"
+          font-size="12"
+          font-weight="600"
+          fill="var(--color-success-700)">Да</text
+        >
+
+        <!-- Right branch line (No) -->
+        <line
+          x1="200"
+          y1="70"
+          x2="250"
+          y2="120"
+          stroke="var(--color-surface-400)"
+          stroke-width="2"
+        />
+        <polygon
+          points="250,120 245,108 238,115"
+          fill="var(--color-surface-400)"
+        />
+        <text
+          x="232"
+          y="95"
+          font-size="12"
+          font-weight="600"
+          fill="var(--color-surface-600)">Нет</text
+        >
+
+        <!-- Yes action box -->
+        <rect
+          x="10"
+          y="125"
+          width="120"
+          height="45"
+          rx="6"
+          fill="var(--color-success-100)"
+          stroke="var(--color-success-400)"
+          stroke-width="1.5"
+        />
+        <text
+          x="70"
+          y="152"
+          text-anchor="middle"
+          font-size="12"
+          fill="var(--color-success-700)">Выполнить</text
+        >
+        <text
+          x="70"
+          y="165"
+          text-anchor="middle"
+          font-size="12"
+          fill="var(--color-success-700)">действие</text
+        >
+
+        <!-- No action box -->
+        <rect
+          x="190"
+          y="125"
+          width="120"
+          height="45"
+          rx="6"
+          fill="var(--color-surface-100)"
+          stroke="var(--color-surface-300)"
+          stroke-width="1.5"
+        />
+        <text
+          x="250"
+          y="155"
+          text-anchor="middle"
+          font-size="12"
+          fill="var(--color-surface-600)">Пропустить</text
+        >
+      </svg>
     </div>
   </div>
 
@@ -264,26 +460,24 @@
       — то».
     </p>
   </DefinitionCard>
-</section>
+</Section>
 
 <!-- Проверка понимания -->
-<section id="quiz">
-  <h2>Проверь себя</h2>
-
-  <QuizCard icon="🍋">
+<Section id="quiz" title="Проверь себя">
+  <QuizCard icon="🍋" title="Ловушка обратной логики">
     <p>
-      <strong>Ловушка обратной логики:</strong> если человек ест лимон, он морщится.
-      Человек морщится. Значит ли это, что он ест лимон?
+      Если человек ест лимон, он морщится. Человек морщится. Значит ли это, что
+      он ест лимон?
     </p>
     {#snippet answer()}
       <p>Нет! Он может морщиться от яркого солнца, от боли или от запаха.</p>
     {/snippet}
   </QuizCard>
 
-  <QuizCard icon="🀄">
+  <QuizCard icon="🁅" title="Разрыв цепи">
     <p>
-      <strong>Разрыв цепи:</strong> у нас есть цепочка из 5 домино. Мы убрали третье.
-      Толкаем первое. Упадёт ли пятое? Почему?
+      У нас есть цепочка из 5 домино. Мы убрали третье. Толкаем первое. Упадёт
+      ли пятое? Почему?
     </p>
     {#snippet answer()}
       <p>
@@ -293,10 +487,10 @@
     {/snippet}
   </QuizCard>
 
-  <QuizCard icon="🚗">
+  <QuizCard icon="🚗" title="Скрытые условия">
     <p>
-      <strong>Скрытые условия:</strong> «машина едет, если нажат газ». Достаточно
-      ли только нажать газ, чтобы машина поехала?
+      «Машина едет, если нажат газ». Достаточно ли только нажать газ, чтобы
+      машина поехала?
     </p>
     {#snippet answer()}
       <p>
@@ -305,64 +499,49 @@
       </p>
     {/snippet}
   </QuizCard>
-</section>
+</Section>
 
 <!-- Мини-проект -->
-<section id="project">
-  <h2>Мини-проект: умная теплица</h2>
-  <p>
-    Давайте построим логику для автоматической теплицы. У нас есть датчики
-    (условия) и устройства (действия).
-  </p>
-
+<Section
+  id="project"
+  title="Мини-проект: умная теплица"
+  description="Давайте построим логику для автоматической теплицы. У нас есть датчики (условия) и устройства (действия)."
+>
   <div class="greenhouse">
     <div class="rules">
       <div class="card">
-        <div class="condition">
-          <span class="icon">🏜️</span>
-          <span>Если сухо</span>
-        </div>
-        <div class="arrow">→</div>
-        <div class="action">
-          <span>Включить полив</span>
-          <span class="icon-sm">💧</span>
-        </div>
+        <span class="icon">🏜️</span>
+        <span class="condition">Если сухо</span>
+        <span class="arrow">→</span>
+        <span class="action">включить полив</span>
+        <span class="icon-sm">💧</span>
       </div>
       <div class="card">
-        <div class="condition">
-          <span class="icon">🌑</span>
-          <span>Если темно</span>
-        </div>
-        <div class="arrow">→</div>
-        <div class="action">
-          <span>Включить свет</span>
-          <span class="icon-sm">💡</span>
-        </div>
+        <span class="icon">🌑</span>
+        <span class="condition">Если темно</span>
+        <span class="arrow">→</span>
+        <span class="action">включить свет</span>
+        <span class="icon-sm">💡</span>
       </div>
       <div class="card">
-        <div class="condition">
-          <span class="icon">❄️</span>
-          <span>Если холодно</span>
-        </div>
-        <div class="arrow">→</div>
-        <div class="action">
-          <span>Включить обогрев</span>
-          <span class="icon-sm">🔥</span>
-        </div>
+        <span class="icon">❄️</span>
+        <span class="condition">Если холодно</span>
+        <span class="arrow">→</span>
+        <span class="action">включить обогрев</span>
+        <span class="icon-sm">🔥</span>
       </div>
     </div>
   </div>
 
-  <TakeawayCard icon="🧠" variant="danger">
+  <DefinitionCard label="🧠 Усложнение">
     <p>
-      <strong>Усложнение:</strong> растение нельзя поливать, когда холодно
-      (замёрзнет). Нужно составное условие:
-      <em>Если сухо <strong>И</strong> тепло → Включить полив.</em>
+      Растение нельзя поливать, когда холодно (замёрзнет). Нужно составное
+      условие: Если сухо <strong>И</strong> тепло → включить полив.
     </p>
-  </TakeawayCard>
-</section>
+  </DefinitionCard>
+</Section>
 
-<section id="summary">
+<Section id="summary">
   <Summary title="Главная мысль">
     <p>
       Логика «если — то» — это способ <strong>предсказывать будущее</strong>.
@@ -374,44 +553,46 @@
       простых пар причин и следствий.
     </p>
   </Summary>
-</section>
+</Section>
 
 <style>
   /* #intro */
-  #intro {
+  :global(#intro) {
     .chaos {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+      display: grid;
+      grid-template-columns: auto auto auto;
+      gap: 0.5rem 1rem;
+      justify-content: start;
       margin: 1.5rem 0;
       padding: 1.5rem;
       background: var(--color-warning-100);
       border-radius: var(--radius-container);
+      font-size: 1.25rem;
 
       .item {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        font-size: 1.25rem;
+        display: contents;
       }
 
       .action {
         font-weight: 500;
+        white-space: nowrap;
       }
 
       .arrow {
         color: var(--color-error-500);
+        text-align: center;
       }
 
       .result {
         color: var(--color-error-600);
         font-weight: 600;
+        white-space: nowrap;
       }
     }
   }
 
   /* #rigid-link */
-  #rigid-link {
+  :global(#rigid-link) {
     .caption {
       font-size: 1.05rem;
       font-style: italic;
@@ -421,19 +602,18 @@
 
     .implication {
       display: flex;
+      flex-direction: row;
       align-items: center;
       justify-content: center;
-      gap: 1.5rem;
-      flex-wrap: wrap;
+      gap: 1rem;
 
       .step {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.5rem;
-        padding: 1.5rem 2rem;
+        gap: 0.35rem;
+        padding: 1rem 1.25rem;
         border-radius: calc(var(--radius-container) * 4);
-        min-width: 160px;
 
         &.condition {
           background: var(--color-primary-100);
@@ -446,17 +626,17 @@
         }
 
         .icon {
-          font-size: 2.5rem;
+          font-size: 2rem;
         }
 
         .text {
-          font-size: 1.125rem;
+          font-size: 1rem;
           font-weight: 600;
           color: var(--color-surface-700);
         }
 
         .example {
-          font-size: 0.95rem;
+          font-size: 0.85rem;
           color: var(--color-surface-600);
           font-style: italic;
         }
@@ -469,13 +649,13 @@
         gap: 0.25rem;
 
         .arrow {
-          font-size: 2rem;
+          font-size: 1.75rem;
           color: var(--color-primary-500);
           font-weight: 700;
         }
 
         .label {
-          font-size: 0.85rem;
+          font-size: 0.75rem;
           color: var(--color-surface-500);
         }
       }
@@ -500,6 +680,32 @@
         h3 {
           margin: 0;
           font-size: 1.5rem;
+          flex: 1;
+        }
+
+        .reset-btn {
+          padding: 0.5rem 1rem;
+          border: 1px solid var(--color-surface-300);
+          border-radius: var(--radius-container);
+          background: var(--color-surface-100);
+          cursor: pointer;
+          font-size: 0.9rem;
+
+          &:hover {
+            background: var(--color-surface-200);
+          }
+        }
+      }
+
+      .circuit-block {
+        margin: 1.5rem 0;
+
+        .circuit-label {
+          font-size: 0.95rem;
+          color: var(--color-surface-600);
+          margin-bottom: 0.75rem;
+          font-weight: 500;
+          text-align: center;
         }
       }
 
@@ -507,60 +713,134 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.5rem;
-        margin: 2rem 0;
+        gap: 0.25rem;
 
         .element {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 0.5rem;
+          gap: 0.25rem;
+          padding: 0.5rem;
+          border: none;
+          background: none;
+          user-select: none;
+          -webkit-user-select: none;
+          -webkit-touch-callout: none;
 
           .icon {
-            font-size: 3rem;
+            font-size: 2.5rem;
           }
 
           .label {
-            font-size: 1rem;
+            font-size: 0.85rem;
             color: var(--color-surface-600);
+            text-align: center;
+          }
+
+          &.btn {
+            cursor: pointer;
+            border-radius: var(--radius-container);
+            transition: background 0.1s;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+
+            @media (hover: hover) {
+              &:hover {
+                background: var(--color-surface-100);
+              }
+            }
+
+            &:active {
+              background: var(--color-primary-100);
+            }
+          }
+
+          &.not-gate {
+            background: var(--color-warning-100);
+            border-radius: var(--radius-container);
+            padding: 0.5rem 0.75rem;
+            min-width: 3.5rem;
+          }
+
+          &.lamp {
+            transition: filter 0.2s;
+
+            &.off {
+              filter: grayscale(1) opacity(0.5);
+            }
           }
         }
 
         .wire {
-          width: 100px;
-          height: 4px;
-          background: linear-gradient(
-            90deg,
-            var(--color-surface-400) 0%,
-            var(--color-surface-400) 45%,
-            transparent 45%,
-            transparent 55%,
-            var(--color-surface-400) 55%
-          );
-          background-size: 20px 4px;
-          animation: wire-flow 0.5s linear infinite;
+          width: 60px;
+          height: 6px;
+          background: var(--color-surface-300);
+          border: none;
+          border-radius: 3px;
+          cursor: pointer;
+          position: relative;
+          transition: background 0.2s;
+
+          &.long {
+            /* Ширина = 2 провода + оператор НЕ + gaps */
+            width: calc(60px + 60px + 3.5rem + 0.5rem);
+          }
+
+          &:hover:not(.cut) {
+            background: var(--color-error-300);
+          }
+
+          &.active {
+            background: var(--color-success-400);
+            box-shadow: 0 0 8px var(--color-success-400);
+          }
+
+          &.cut {
+            background: transparent;
+            cursor: default;
+
+            &::before,
+            &::after {
+              content: "";
+              position: absolute;
+              top: 0;
+              height: 100%;
+              width: 35%;
+              background: var(--color-surface-300);
+              border-radius: 3px;
+            }
+
+            &::before {
+              left: 0;
+            }
+
+            &::after {
+              right: 0;
+            }
+
+            .cut-mark {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              font-size: 1rem;
+              z-index: 1;
+            }
+          }
         }
       }
 
       .text {
         text-align: center;
-        font-size: 1.25rem;
-        margin: 1.5rem 0;
+        font-size: 1.125rem;
+        margin: 1.5rem 0 0;
+        color: var(--color-surface-600);
       }
     }
   }
 
-  @keyframes wire-flow {
-    from {
-      background-position: 0 0;
-    }
-    to {
-      background-position: 20px 0;
-    }
-  }
-
   /* #one-way */
-  #one-way {
+  :global(#one-way) {
     .examples {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -629,63 +909,52 @@
         color: var(--color-surface-700);
       }
 
-      .grid {
+      .causes-row {
         display: flex;
-        align-items: center;
         justify-content: center;
-        gap: 1.5rem;
-        flex-wrap: wrap;
+        gap: 0.75rem;
+        flex-wrap: nowrap;
+      }
 
-        .causes {
-          display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
+      .cause {
+        padding: 0.5rem 1rem;
+        background: var(--color-primary-100);
+        border-radius: var(--radius-container);
+        font-size: 1rem;
+        border: 1px solid var(--color-primary-200);
+        white-space: nowrap;
+      }
 
-          .item {
-            padding: 0.75rem 1.25rem;
-            background: var(--color-primary-100);
-            border-radius: var(--radius-container);
-            font-size: 1.125rem;
-            border: 1px solid var(--color-primary-200);
-          }
+      .arrows-row {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        margin: 0.75rem 0;
+
+        .arrow {
+          font-size: 1.5rem;
+          color: var(--color-primary-500);
+          font-weight: 700;
         }
+      }
 
-        .arrows {
-          display: flex;
-          flex-direction: column;
-          gap: 0.75rem;
-          align-items: center;
-
-          .arrow {
-            font-size: 1.5rem;
-            color: var(--color-primary-500);
-            font-weight: 700;
-          }
-        }
-
-        .results {
-          display: flex;
-          align-items: center;
-
-          .item {
-            padding: 1rem 1.5rem;
-            background: var(--color-success-500);
-            color: var(--color-success-contrast-500);
-            border-radius: var(--radius-container);
-            font-weight: 600;
-            font-size: 1.25rem;
-          }
-        }
+      .result-item {
+        padding: 1rem 1.5rem;
+        background: var(--color-success-200);
+        color: var(--color-surface-900);
+        border-radius: var(--radius-container);
+        font-weight: 600;
+        font-size: 1.25rem;
       }
     }
   }
 
   /* #chains */
-  #chains {
+  :global(#chains) {
     .chain {
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
       margin: 2rem 0;
       padding: 2rem;
       background: var(--color-surface-50);
@@ -695,7 +964,7 @@
         display: flex;
         align-items: center;
         gap: 1rem;
-        padding: 1rem 2rem;
+        padding: 1rem 1.5rem;
         background: var(--color-surface-50);
         border-radius: var(--radius-container);
         box-shadow: 0 4px 12px
@@ -715,13 +984,13 @@
       .arrow {
         font-size: 1.5rem;
         color: var(--color-primary-500);
-        margin: 0.25rem 0;
+        margin: 0.25rem 0 0.25rem 2rem;
       }
     }
   }
 
   /* #formalization */
-  #formalization {
+  :global(#formalization) {
     .formal {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -767,61 +1036,17 @@
       }
     }
 
-    .flowchart {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-
-      .row {
-        display: flex;
-        justify-content: center;
-      }
-
-      .diamond {
-        padding: 1rem 2rem;
-        background: var(--color-warning-100);
-        border: 2px solid var(--color-warning-400);
-        border-radius: var(--radius-container);
-        font-weight: 600;
-        font-size: 1.125rem;
-      }
-
-      .branches {
-        display: flex;
-        gap: 2rem;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-
-      .branch {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem 1.25rem;
-        border-radius: var(--radius-container);
-        font-size: 1rem;
-
-        &.yes {
-          background: var(--color-success-100);
-          color: var(--color-success-700);
-        }
-
-        &.no {
-          background: var(--color-surface-100);
-          color: var(--color-surface-600);
-        }
-
-        .line {
-          font-weight: 700;
-          font-size: 1.25rem;
-        }
-      }
+    .flowchart-svg {
+      width: 100%;
+      max-width: 320px;
+      height: auto;
+      margin: 1rem auto 0;
+      display: block;
     }
   }
 
   /* #project */
-  #project {
+  :global(#project) {
     .greenhouse {
       margin: 2rem 0;
 
@@ -833,37 +1058,33 @@
         .card {
           display: flex;
           align-items: center;
-          gap: 1.5rem;
-          padding: 1.5rem 2rem;
+          gap: 0.5rem;
+          padding: 1rem 1.25rem;
           background: var(--color-surface-50);
           border-radius: calc(var(--radius-container) * 4);
           box-shadow: 0 4px 12px
             color-mix(in oklab, var(--color-surface-900) 0.08, transparent);
+          font-size: 1.05rem;
+          white-space: nowrap;
+
+          .icon {
+            font-size: 1.5rem;
+          }
+
+          .icon-sm {
+            font-size: 1.25rem;
+          }
 
           .condition {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.25rem;
             font-weight: 500;
           }
 
-          .icon,
-          .icon-sm {
-            font-size: 1.75rem;
-          }
-
           .arrow {
-            font-size: 1.5rem;
             color: var(--color-primary-500);
             font-weight: 700;
           }
 
           .action {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 1.25rem;
             color: var(--color-success-700);
             font-weight: 600;
           }
@@ -873,27 +1094,8 @@
   }
 
   @media (max-width: 1100px) {
-    #rigid-link .implication {
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    #one-way {
-      .causality .grid {
-        flex-direction: column;
-      }
-
-      .arrows {
-        flex-direction: row;
-      }
-
-      .examples {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    #project .greenhouse .rules .card {
-      flex-wrap: wrap;
+    :global(#one-way) .examples {
+      grid-template-columns: 1fr;
     }
   }
 </style>

@@ -3,6 +3,7 @@
     Crisis,
     DefinitionCard,
     QuizCard,
+    Section,
     Summary,
     TakeawayCard,
   } from "../../components";
@@ -24,8 +25,8 @@
   />
 </svelte:head>
 
-<!-- Крючок: Проблема бесконечной инструкции -->
-<section id="infinite-instruction">
+<!-- Crisis Section -->
+<Section id="crisis">
   <Crisis icon="🎫" title="Проблема бесконечной инструкции">
     <p>
       Представьте: вы — программист, настраивающий умный автомат по продаже
@@ -62,18 +63,14 @@
       записать правило, которое работает для <em>любого</em> числа?
     </blockquote>
   </Crisis>
-</section>
+</Section>
 
-<!-- Метафора контейнера -->
-<section id="container-metaphor">
-  <h2>Метафора контейнера</h2>
-  <p>
-    Решение элегантно: мы не пишем конкретное число. Мы ставим
-    <strong>коробку</strong>, в которую пассажир положит своё число позже. В
-    математике это называется <strong>переменная</strong> — зарезервированное место
-    под будущее значение.
-  </p>
-
+<!-- Container Metaphor -->
+<Section
+  id="container-metaphor"
+  title="Метафора контейнера"
+  description="Решение элегантно: мы не пишем конкретное число. Мы ставим коробку, в которую пассажир положит своё число позже. В математике это называется переменная — зарезервированное место под будущее значение."
+>
   <div class="visual">
     <div class="stage">
       <div class="box-wrapper">
@@ -105,17 +102,14 @@
     Коробка — это <strong>обещание</strong>. Мы не знаем, что внутри, но знаем,
     что с ней сделать. Это позволяет создать одно правило вместо миллиона.
   </TakeawayCard>
-</section>
+</Section>
 
-<!-- Детектив: обратная задача -->
-<section id="detective-math">
-  <h2>Математика как детектив</h2>
-  <p>
-    Теперь ситуация меняется. Мы видим результат, но не видели начала. Из
-    автомата выкатилась коробка с общим весом <strong>17 монет</strong>. Мы
-    знаем, что автомат <em>всегда</em> добавляет 6.
-  </p>
-
+<!-- Detective Scenario -->
+<Section
+  id="detective-math"
+  title="Математика как детектив"
+  description="Теперь ситуация меняется. Мы видим результат, но не видели начала. Из автомата выкатилась коробка с общим весом 17 монет. Мы знаем, что автомат всегда добавляет 6."
+>
   <div class="scenario">
     <div class="card">
       <div class="icon">🔍</div>
@@ -150,16 +144,14 @@
     Это расследование. Чтобы узнать содержимое, мы «отматываем время назад» —
     снимаем (вычитаем) то, что было добавлено.
   </p>
-</section>
+</Section>
 
-<!-- Интерактив: Универсальная дробилка -->
-<section id="universal-crusher">
-  <h2>Универсальная дробилка</h2>
-  <p>
-    Проверьте, как работает правило с разными входными значениями. Коробка
-    <span class="symbol">□</span> — это место для любого числа.
-  </p>
-
+<!-- Universal Crusher -->
+<Section
+  id="universal-crusher"
+  title="Универсальная дробилка"
+  description="Проверьте, как работает правило с разными входными значениями. Коробка □ — это место для любого числа."
+>
   <div class="demo">
     <div class="input-group">
       <label for="crusher-value">Вход:</label>
@@ -210,16 +202,14 @@
     Заметьте: <strong>правило первично</strong>, а число вторично. Мы описываем,
     <em>что делать</em>, не зная заранее, <em>с чем</em>.
   </p>
-</section>
+</Section>
 
-<section id="notation-evolution">
-  <h2>От коробки к букве</h2>
-  <p>
-    Рисовать коробку <span class="symbol">□</span> каждый раз долго. Математики
-    ленивы. Вместо рисунка они договорились ставить <strong>букву</strong> —
-    чаще всего <em>x</em>.
-  </p>
-
+<!-- Notation Evolution -->
+<Section
+  id="notation-evolution"
+  title="От коробки к букве"
+  description="Рисовать коробку □ каждый раз долго. Математики ленивы. Вместо рисунка они договорились ставить букву — чаще всего x."
+>
   <div class="evolution">
     <div class="step">
       <div class="old">[Коробка] + 3 = 10</div>
@@ -244,18 +234,16 @@
       значит <em>вскрыть коробку</em>.
     </p>
   </DefinitionCard>
-</section>
+</Section>
 
-<!-- Проверка понимания -->
-<section id="practice">
-  <h2>Проверь понимание</h2>
-
+<!-- Practice -->
+<Section id="practice" title="Проверь понимание">
   <div class="cards">
-    <QuizCard icon="🏷️">
-      <div class="question">
+    <QuizCard icon="🏷️" title="Замена буквы">
+      <p>
         Если заменить в уравнении букву <em>x</em> на <em>z</em> или на смайлик 😊,
         изменится ли ответ?
-      </div>
+      </p>
       {#snippet answer()}
         <p>
           Нет. Буква — это просто <strong>имя контейнера</strong>. Содержимое не
@@ -264,10 +252,10 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="📝">
-      <div class="question">
+    <QuizCard icon="📝" title="Зачем буква?">
+      <p>
         Почему запись <em>x + 2</em> удобнее, чем просто число 9 или 12?
-      </div>
+      </p>
       {#snippet answer()}
         <p>
           Потому что <em>x + 2</em> описывает ситуацию для
@@ -276,10 +264,10 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="🐱">
-      <div class="question">
+    <QuizCard icon="🐱" title="Возраст кошки">
+      <p>
         Если <em>x</em> — возраст кошки, что означает <em>x + 1</em>?
-      </div>
+      </p>
       {#snippet answer()}
         <p>
           Возраст кошки <strong>через год</strong>. А <em>x − 2</em> — её возраст
@@ -288,58 +276,62 @@
       {/snippet}
     </QuizCard>
   </div>
-</section>
+</Section>
 
-<section id="summary">
+<!-- Summary -->
+<Section id="summary">
   <Summary title="Резюме">
-    <blockquote>
+    <p>
       Буква в математике — это не страшный символ. Это
       <strong>контейнер</strong>, ожидающий наполнения. Мы используем буквы,
       когда хотим создать правило, работающее для всех чисел во Вселенной, а не
       только для одного. Уравнение — это поиск того, что лежит в этом
       контейнере, путём отматывания событий назад.
-    </blockquote>
+    </p>
   </Summary>
-</section>
+</Section>
 
 <style>
-  /* Infinite Instruction */
-  #infinite-instruction {
+  /* Crisis */
+  :global(#crisis) {
+    p {
+      margin-bottom: 1rem;
+    }
+
     .examples {
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
       margin: 1.5rem 0;
       padding: 1.5rem;
-      background: color-mix(
-        in oklab,
-        var(--color-surface-50, #f8f9fa) 80%,
-        transparent
-      );
-      border-radius: var(--radius-container, 0.5rem);
+      background: color-mix(in oklab, var(--color-surface-50) 80%, transparent);
+      border-radius: var(--radius-container);
 
       .row {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.5rem; /* Reduced gap */
         font-size: 1.25rem;
-        font-family: "Consolas", "Monaco", monospace;
+        font-family: "Consolas", monospace;
 
         .input {
-          background: var(--color-surface-100, #f1f3f5);
-          padding: 0.5rem 1rem;
-          border-radius: calc(var(--radius-container, 0.25rem) / 2);
-          min-width: 60px;
+          background: var(--color-surface-100);
+          padding: 0.25rem; /* Minimal padding */
+          border-radius: calc(var(--radius-container) / 2);
+          width: 10rem; /* Fixed small width (~48px) */
           text-align: center;
+          flex-shrink: 0; /* Prevent shrinking */
         }
 
         .arrow {
-          color: var(--color-surface-500, #adb5bd);
+          color: var(--color-surface-500);
+          flex-shrink: 0;
         }
 
         .output {
-          color: var(--color-primary-700, #2d5a30);
+          color: var(--color-primary-700);
           font-weight: 600;
+          word-break: break-all; /* Allow wrapping if absolutely needed */
         }
 
         &.endless {
@@ -348,21 +340,25 @@
         }
       }
     }
+
+    blockquote {
+      margin: 1.5rem 0;
+      color: var(--color-surface-700);
+    }
   }
 
   /* Container Metaphor */
-  #container-metaphor {
+  :global(#container-metaphor) {
     .visual {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 1rem;
       margin: 2.5rem 0;
-      padding: 2rem;
-      background: var(--color-surface-100, #f1f3f5);
-      border-radius: calc(var(--radius-container, 0.5rem) * 2);
-      border: 2px solid var(--color-surface-200, #e9ecef);
-      overflow-x: auto;
+      padding: 1.5rem;
+      background: var(--color-surface-100);
+      border-radius: calc(var(--radius-container) * 2);
+      border: 2px solid var(--color-surface-200);
 
       .stage {
         display: flex;
@@ -371,7 +367,7 @@
 
         .arrow {
           font-size: 2rem;
-          color: var(--color-surface-400, #ced4da);
+          color: var(--color-surface-400);
         }
 
         .box {
@@ -379,22 +375,22 @@
           flex-direction: column;
           align-items: center;
           padding: 1.5rem 2rem;
-          background: var(--color-surface-50, #ffffff);
-          border: 3px dashed var(--color-primary-400, #6b9b7a);
-          border-radius: var(--radius-container, 0.5rem);
+          background: var(--color-surface-50);
+          border: 3px dashed var(--color-primary-400);
+          border-radius: var(--radius-container);
           box-shadow: 0 4px 6px -1px
             color-mix(in oklab, var(--color-surface-900) 0.1, transparent);
 
           .label {
             font-size: 0.875rem;
-            color: var(--color-surface-600, #6c757d);
+            color: var(--color-surface-600);
             text-transform: uppercase;
             letter-spacing: 0.05em;
           }
 
           .symbol {
             font-size: 2.5rem;
-            color: var(--color-primary-600, #3a5a40);
+            color: var(--color-primary-600);
           }
         }
 
@@ -403,9 +399,9 @@
           flex-direction: column;
           align-items: center;
           padding: 1.5rem 2rem;
-          background: var(--color-surface-700, #495057);
-          border-radius: var(--radius-container, 0.5rem);
-          color: var(--color-surface-50, #ffffff);
+          background: var(--color-surface-700);
+          border-radius: var(--radius-container);
+          color: var(--color-surface-50);
 
           .label {
             font-size: 1rem;
@@ -423,21 +419,35 @@
           flex-direction: column;
           align-items: center;
           padding: 1.5rem 2rem;
-          background: var(--color-success-100, #d4edda);
-          border-radius: var(--radius-container, 0.5rem);
-          border: 2px solid var(--color-success-300, #a3cfbb);
+          background: var(--color-success-100);
+          border-radius: var(--radius-container);
+          border: 2px solid var(--color-success-300);
 
           .formula {
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--color-success-700, #2d5a30);
-            font-family: "Consolas", "Monaco", monospace;
+            color: var(--color-success-700);
+            font-family: "Consolas", monospace;
           }
 
           .label {
             font-size: 0.875rem;
-            color: var(--color-surface-600, #6c757d);
+            color: var(--color-surface-600);
             margin-top: 0.25rem;
+          }
+        }
+      }
+
+      @media (max-width: 1100px) {
+        flex-direction: column;
+        padding: 2rem;
+
+        .stage {
+          flex-direction: column;
+
+          .arrow {
+            transform: rotate(90deg);
+            margin: 0.5rem 0;
           }
         }
       }
@@ -445,7 +455,7 @@
   }
 
   /* Detective Scenario */
-  #detective-math {
+  :global(#detective-math) {
     .scenario {
       display: flex;
       align-items: center;
@@ -459,15 +469,15 @@
         align-items: center;
         gap: 1rem;
         padding: 1.25rem 1.75rem;
-        background: var(--color-surface-50, #ffffff);
-        border-radius: var(--radius-container, 0.5rem);
+        background: var(--color-surface-50);
+        border-radius: var(--radius-container);
         box-shadow: 0 4px 12px
           color-mix(in oklab, var(--color-surface-900) 0.08, transparent);
-        border: 2px solid var(--color-surface-200, #e9ecef);
+        border: 2px solid var(--color-surface-200);
 
         &.solved {
-          background: var(--color-success-100, #d4edda);
-          border-color: var(--color-success-300, #a3cfbb);
+          background: var(--color-success-100);
+          border-color: var(--color-success-300);
         }
 
         .icon {
@@ -479,32 +489,39 @@
             font-size: 0.875rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            color: var(--color-surface-500, #adb5bd);
+            color: var(--color-surface-500);
           }
 
           .data {
             font-size: 1.25rem;
             font-weight: 600;
-            color: var(--color-surface-800, #343a40);
+            color: var(--color-surface-800);
           }
         }
       }
 
       .arrow {
         font-size: 1.5rem;
-        color: var(--color-surface-400, #ced4da);
+        color: var(--color-surface-400);
       }
+
+      @media (max-width: 1100px) {
+        flex-direction: column;
+
+        .arrow {
+          transform: rotate(90deg);
+        }
+      }
+    }
+
+    p {
+      font-size: 1.25rem;
+      line-height: 1.6;
     }
   }
 
   /* Universal Crusher */
-  #universal-crusher {
-    .symbol {
-      font-size: 1.2em;
-      color: var(--color-primary-600, #3a5a40);
-      font-weight: 600;
-    }
-
+  :global(#universal-crusher) {
     .demo {
       display: flex;
       align-items: center;
@@ -512,8 +529,8 @@
       gap: 2rem;
       margin: 2rem 0;
       padding: 2rem;
-      background: var(--color-surface-100, #f1f3f5);
-      border-radius: calc(var(--radius-container, 0.5rem) * 2);
+      background: var(--color-surface-100);
+      border-radius: calc(var(--radius-container) * 2);
       flex-wrap: wrap;
 
       .input-group {
@@ -521,11 +538,13 @@
         flex-direction: column;
         align-items: center;
         gap: 0.5rem;
+        border: none;
+        box-shadow: none;
 
         label {
           font-size: 1rem;
           font-weight: 600;
-          color: var(--color-surface-600, #6c757d);
+          color: var(--color-surface-600);
         }
 
         input {
@@ -533,13 +552,12 @@
           padding: 0.75rem;
           font-size: 1.5rem;
           text-align: center;
-          border: 2px solid var(--color-surface-300, #dee2e6);
-          border-radius: var(--radius-container, 0.5rem);
-          background: var(--color-surface-50, #ffffff);
+          border-radius: var(--radius-container);
+          background: var(--color-surface-50);
 
           &:focus {
             outline: none;
-            border-color: var(--color-primary-500, #4a7c59);
+            border-color: var(--color-primary-500);
             box-shadow: 0 0 0 3px
               color-mix(in oklab, var(--color-primary-500) 0.2, transparent);
           }
@@ -555,26 +573,28 @@
         .rules {
           display: flex;
           gap: 0.5rem;
+          flex-wrap: wrap;
+          justify-content: center;
 
           .btn {
             padding: 0.5rem 1rem;
             font-size: 1rem;
-            font-family: "Consolas", "Monaco", monospace;
-            border: 2px solid var(--color-surface-300, #dee2e6);
-            border-radius: var(--radius-container, 0.5rem);
-            background: var(--color-surface-50, #ffffff);
+            font-family: "Consolas", monospace;
+            border: 2px solid var(--color-surface-300);
+            border-radius: var(--radius-container);
+            background: var(--color-surface-50);
             cursor: pointer;
             transition: all 0.2s;
 
             &:hover {
-              border-color: var(--color-primary-400, #6b9b7a);
-              background: var(--color-primary-50, #e8f5e9);
+              border-color: var(--color-primary-400);
+              background: var(--color-primary-50);
             }
 
             &.active {
-              background: var(--color-primary-600, #3a5a40);
-              color: var(--color-surface-50, #ffffff);
-              border-color: var(--color-primary-600, #3a5a40);
+              background: var(--color-primary-600);
+              color: var(--color-surface-50);
+              border-color: var(--color-primary-600);
             }
           }
         }
@@ -593,34 +613,37 @@
         .label {
           font-size: 1rem;
           font-weight: 600;
-          color: var(--color-surface-600, #6c757d);
+          color: var(--color-surface-600);
         }
 
         .value {
           font-size: 2.5rem;
           font-weight: 700;
-          color: var(--color-success-700, #2d5a30);
-          background: var(--color-success-100, #d4edda);
+          color: var(--color-success-700);
+          background: var(--color-success-100);
           padding: 0.5rem 1.5rem;
-          border-radius: var(--radius-container, 0.5rem);
+          border-radius: var(--radius-container);
+          min-width: 160px;
+          text-align: center;
         }
+      }
+
+      @media (max-width: 1100px) {
+        flex-direction: column;
+        gap: 1.5rem;
       }
     }
 
     .insight {
       text-align: center;
       font-style: italic;
+      font-size: 1.25rem;
+      color: var(--color-surface-600);
     }
   }
 
   /* Notation Evolution */
-  #notation-evolution {
-    .symbol {
-      font-size: 1.2em;
-      color: var(--color-primary-600, #3a5a40);
-      font-weight: 600;
-    }
-
+  :global(#notation-evolution) {
     .evolution {
       margin: 2rem 0;
       display: flex;
@@ -632,27 +655,27 @@
         align-items: center;
         gap: 0.75rem;
         padding: 2rem 3rem;
-        background: var(--color-surface-50, #ffffff);
-        border-radius: calc(var(--radius-container, 0.5rem) * 2);
+        background: var(--color-surface-50);
+        border-radius: calc(var(--radius-container) * 2);
         box-shadow: 0 4px 12px
           color-mix(in oklab, var(--color-surface-900) 0.08, transparent);
 
         .old {
           font-size: 1.25rem;
-          color: var(--color-surface-500, #adb5bd);
+          color: var(--color-surface-500);
           text-decoration: line-through;
         }
 
         .arrow {
           font-size: 1.5rem;
-          color: var(--color-primary-500, #4a7c59);
+          color: var(--color-primary-500);
         }
 
         .new {
           font-size: 1.75rem;
           font-weight: 700;
-          font-family: "Consolas", "Monaco", monospace;
-          color: var(--color-primary-700, #2d5a30);
+          font-family: "Consolas", monospace;
+          color: var(--color-primary-700);
         }
       }
     }
@@ -660,50 +683,28 @@
     .reading-guide {
       margin: 2rem 0;
       padding: 1.5rem;
-      background: var(--color-surface-50, #f8f9fa);
-      border-radius: var(--radius-container, 0.5rem);
+      background: var(--color-surface-50);
+      border-radius: var(--radius-container);
+
+      h3 {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+        font-size: 1.125rem;
+      }
 
       p {
         margin: 0;
+        font-size: 1.25rem;
       }
     }
   }
 
   /* Practice */
-  #practice {
+  :global(#practice) {
     .cards {
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: 1.5rem;
-
-      .question {
-        font-size: 1.25rem;
-        line-height: 1.6;
-        color: var(--color-surface-800, #343a40);
-        margin-bottom: 1rem;
-      }
-    }
-  }
-
-  /* Responsive */
-  @media (max-width: 1100px) {
-    #container-metaphor .visual {
-      flex-direction: column;
-
-      .stage .arrow {
-        transform: rotate(90deg);
-      }
-    }
-
-    #detective-math .scenario {
-      flex-direction: column;
-
-      .arrow {
-        transform: rotate(90deg);
-      }
-    }
-
-    #universal-crusher .demo {
-      flex-direction: column;
     }
   }
 </style>

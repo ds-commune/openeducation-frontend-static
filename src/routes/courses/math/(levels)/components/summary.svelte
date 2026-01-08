@@ -32,14 +32,20 @@
     box-shadow: 0 18px 40px
       color-mix(in oklab, var(--color-surface-900) 0.14, transparent);
     margin-top: 3rem;
+    font-size: 1.25rem;
   }
 
   h2 {
     margin-top: 0;
     margin-bottom: 1.5rem;
+    text-wrap: balance;
   }
 
   .summary :global {
+    p {
+      font-size: 1.25rem;
+    }
+
     blockquote {
       border-color: var(--color-primary-100, #2d4a32);
     }

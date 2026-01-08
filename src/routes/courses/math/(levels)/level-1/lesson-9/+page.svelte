@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Crisis, DefinitionCard, Summary } from "../../components";
+  import { Crisis, DefinitionCard, Section, Summary } from "../../components";
 
   // Binary toggle switches simulation (8 bits)
   const bitWeights = [128, 64, 32, 16, 8, 4, 2, 1];
@@ -109,7 +109,7 @@
   />
 </svelte:head>
 
-<section id="crisis">
+<Section id="crisis">
   <Crisis icon="🏠" title="Маяк и робот-спасатель">
     <p>
       Ты — инженер на маяке. На далёком острове стоит робот-спасатель, который
@@ -132,17 +132,14 @@
       передать большое число быстро, используя только вкл/выкл?
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
 <!-- Section 1: Place Value Reimagined -->
-<section id="place-value" aria-labelledby="place-value-title">
-  <h2 id="place-value-title">Переосмысление «места»</h2>
-
-  <p>
-    В числе 13 цифра «1» стоит на месте десятков, а «3» — на месте единиц. Это
-    потому, что у нас 10 пальцев. Но у лампочки «два пальца» — вкл и выкл.
-  </p>
-
+<Section
+  id="place-value"
+  title="Переосмысление «места»"
+  description="В числе 13 цифра «1» стоит на месте десятков, а «3» — на месте единиц. Это потому, что у нас 10 пальцев. Но у лампочки «два пальца» — вкл и выкл."
+>
   <p>
     Нам нужно изменить «ценность» позиции. Вместо того чтобы позиции росли в 10
     раз (1, 10, 100), они будут расти в <strong>2 раза</strong>.
@@ -169,27 +166,28 @@
         <div class="wallet">
           <span class="value">{weight}</span>
           <span class="label">
-            {#if weight === 8}восьмёрки
-            {:else if weight === 4}четвёрки
-            {:else if weight === 2}двойки
-            {:else}единицы
+            {#if weight === 8}
+              восьмёрки
+            {:else if weight === 4}
+              четвёрки
+            {:else if weight === 2}
+              двойки
+            {:else}
+              единицы
             {/if}
           </span>
         </div>
       {/each}
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Section 2: Assembling a Number -->
-<section id="assembly" aria-labelledby="assembly-title">
-  <h2 id="assembly-title">Сборка числа</h2>
-
-  <p>
-    Как набрать сумму <strong>13</strong>, используя кошельки номиналом 8, 4, 2,
-    1?
-  </p>
-
+<Section
+  id="assembly"
+  title="Сборка числа"
+  description="Как набрать сумму 13, используя кошельки номиналом 8, 4, 2, 1?"
+>
   <div class="steps">
     <div class="step">
       <span class="num">1</span>
@@ -227,12 +225,10 @@
     <span class="binary">1101</span>
     <span class="formula">= 8 + 4 + 0 + 1 = 13</span>
   </div>
-</section>
+</Section>
 
 <!-- Interactive Simulation: Robot Control Panel -->
-<section id="simulation" aria-labelledby="simulation-title">
-  <h2 id="simulation-title">Пульт управления роботом</h2>
-
+<Section id="simulation" title="Пульт управления роботом">
   <div class="panel">
     <p class="intro">
       Включай тумблеры, чтобы набрать нужное число. Каждый тумблер добавляет
@@ -305,18 +301,14 @@
       </div>
     {/if}
   </div>
-</section>
+</Section>
 
 <!-- Section 3: Universality -->
-<section id="universal" aria-labelledby="universal-title">
-  <h2 id="universal-title">Почему это работает?</h2>
-
-  <p>
-    Любое целое число можно представить как сумму уникальных степеней двойки.
-    Это не магия — это математическая неизбежность, как раскладывание гирек на
-    весах.
-  </p>
-
+<Section
+  id="universal"
+  title="Почему это работает?"
+  description="Любое целое число можно представить как сумму уникальных степеней двойки. Это не магия — это математическая неизбежность, как раскладывание гирек на весах."
+>
   <div class="powers">
     <div class="row header">
       <span>Степень</span>
@@ -329,16 +321,14 @@
       </div>
     {/each}
   </div>
-</section>
+</Section>
 
 <!-- Section 4: Formalization -->
-<section id="formal" aria-labelledby="formal-title">
-  <h2 id="formal-title">Формализация</h2>
-
-  <p>
-    Чтобы не путать 10 (десять) и 10 (два в двоичной), используем нижний индекс:
-  </p>
-
+<Section
+  id="formal"
+  title="Формализация"
+  description="Чтобы не путать 10 (десять) и 10 (два в двоичной), используем нижний индекс:"
+>
   <div class="notation">
     <div class="item">
       <span class="value">13<sub>10</sub></span>
@@ -358,12 +348,10 @@
     <p>Где d — это цифра (0 или 1).</p>
     <p class="example">Для числа 13: 1×8 + 1×4 + 0×2 + 1×1 = 13</p>
   </DefinitionCard>
-</section>
+</Section>
 
 <!-- Section 5: Practice -->
-<section id="practice" aria-labelledby="practice-title">
-  <h2 id="practice-title">Практика</h2>
-
+<Section id="practice" title="Практика">
   <div class="card">
     <h3>🖐️ Счёт на одной руке</h3>
     <p>
@@ -435,17 +423,14 @@
       Это работает, потому что последний разряд — это единицы.
     </p>
   </div>
-</section>
+</Section>
 
 <!-- Mini-project: Pixel Art -->
-<section id="pixel-project" aria-labelledby="project-title">
-  <h2 id="project-title">Мини-проект: чёрно-белый художник</h2>
-
-  <p>
-    Компьютер хранит картинки как набор чисел. Переведи каждое число в 8-битный
-    двоичный код, и на сетке проявится узор!
-  </p>
-
+<Section
+  id="pixel-project"
+  title="Мини-проект: чёрно-белый художник"
+  description="Компьютер хранит картинки как набор чисел. Переведи каждое число в 8-битный двоичный код, и на сетке проявится узор!"
+>
   <div class="container">
     <div class="numbers">
       {#each pixelData as num, rowIndex (rowIndex)}
@@ -498,25 +483,32 @@
       </button>
     </div>
   </div>
-</section>
+</Section>
 
-<section id="summary">
+<Section id="summary">
   <Summary title="Резюме">
-    <blockquote>
+    <p class="summary-text">
       Число — это абстрактная идея количества. «13», «XIII», «тринадцать» и
       «1101» — просто разные «костюмы» для одной идеи.
-    </blockquote>
+    </p>
     <p>
       Мы используем десятичную систему из-за анатомии (10 пальцев), а машины —
       двоичную из-за физики (ток есть / тока нет). Понимая двоичную систему, ты
       говоришь на родном языке электричества.
     </p>
   </Summary>
-</section>
+</Section>
 
 <style>
+  /* Common typography */
+  p {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
   /* Section: Place Value */
-  #place-value {
+  :global(#place-value) {
     .metaphor {
       display: flex;
       gap: 1.5rem;
@@ -568,10 +560,12 @@
         flex-direction: column;
         align-items: center;
         gap: 0.5rem;
-        padding: 1.5rem 2rem;
+        padding: 1.5rem 0;
         background: var(--color-warning-100);
         border-radius: var(--radius-container);
         border: 2px solid var(--color-warning-400);
+        flex: 1;
+        min-width: 0;
 
         .value {
           font-size: 2rem;
@@ -582,13 +576,15 @@
         .label {
           font-size: 0.875rem;
           color: var(--color-surface-600);
+          text-align: center;
+          width: 100%;
         }
       }
     }
   }
 
   /* Section: Assembly */
-  #assembly {
+  :global(#assembly) {
     .steps {
       display: flex;
       flex-direction: column;
@@ -657,7 +653,7 @@
   }
 
   /* Section: Simulation */
-  #simulation {
+  :global(#simulation) {
     .panel {
       background: var(--color-primary-50);
       border-radius: var(--radius-container);
@@ -833,7 +829,7 @@
   }
 
   /* Section: Universal */
-  #universal {
+  :global(#universal) {
     .powers {
       margin: 2rem 0;
       border-radius: var(--radius-container);
@@ -860,7 +856,7 @@
   }
 
   /* Section: Formal */
-  #formal {
+  :global(#formal) {
     .notation {
       display: flex;
       gap: 3rem;
@@ -901,7 +897,7 @@
   }
 
   /* Section: Practice */
-  #practice {
+  :global(#practice) {
     .card,
     .insight {
       background: var(--color-surface-50);
@@ -1047,7 +1043,7 @@
   }
 
   /* Section: Pixel Project */
-  #pixel-project {
+  :global(#pixel-project) {
     .container {
       display: flex;
       flex-direction: column;
@@ -1162,40 +1158,38 @@
     }
   }
 
-  /* Section: Summary */
-  #summary {
-    p {
-      font-size: 1.25rem;
-      margin: 0;
-      color: var(--color-surface-700);
-    }
-  }
-
-  /* Mobile responsiveness */
+  /* Responsive */
   @media (max-width: 1100px) {
-    #place-value {
+    :global(#place-value) {
       .metaphor {
         flex-direction: column;
       }
+
       .wallets .row {
-        gap: 1rem;
+        gap: 0.5rem;
       }
+
       .wallet {
-        padding: 1rem 1.25rem;
+        padding: 0.75rem 0.25rem;
+        min-width: 0;
+        flex: 1;
       }
     }
 
-    #simulation {
+    :global(#simulation) {
       .toggles {
         gap: 0.5rem;
+
         .switch {
           width: 55px;
           padding: 0.75rem;
+
           .weight {
             font-size: 0.875rem;
           }
         }
       }
+
       .display {
         flex-direction: column;
         gap: 1rem;
@@ -1203,25 +1197,45 @@
       }
     }
 
-    #formal .notation {
-      flex-direction: column;
-      gap: 1rem;
+    :global(#formal) {
+      .notation {
+        flex-direction: column;
+        gap: 1rem;
+      }
     }
 
-    #practice {
-      .hands .row {
-        flex-wrap: wrap;
-        justify-content: center;
+    :global(#practice) {
+      .hands {
+        .row {
+          flex-wrap: nowrap;
+          gap: 0.25rem;
+          width: 100%;
+        }
+
+        .finger {
+          min-width: 0;
+          flex: 1;
+          padding: 0.5rem;
+
+          .icon {
+            font-size: 1.25rem;
+          }
+        }
       }
+
       .demo {
         flex-direction: column;
         gap: 0.75rem;
       }
     }
 
-    #pixel-project .canvas .cell {
-      width: 24px;
-      height: 24px;
+    :global(#pixel-project) {
+      .canvas {
+        .cell {
+          width: 24px;
+          height: 24px;
+        }
+      }
     }
   }
 </style>

@@ -78,8 +78,13 @@
       display: block;
     }
 
+    header {
+      padding-right: 4rem; /* Space for mobile menu toggle button */
+      margin-bottom: 2.5rem;
+    }
+
     h1 {
-      font-size: 2.5rem;
+      font-size: 2rem;
     }
   }
 </style>

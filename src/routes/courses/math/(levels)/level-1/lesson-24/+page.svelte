@@ -1,5 +1,12 @@
 <script lang="ts">
-  import { Crisis, DefinitionCard, QuizCard, Summary } from "../../components";
+  import {
+    Card,
+    Crisis,
+    DefinitionCard,
+    QuizCard,
+    Section,
+    Summary,
+  } from "../../components";
 
   // Race simulation state
   let headsScore = $state(0);
@@ -119,7 +126,7 @@
 </svelte:head>
 
 <!-- Hook: Gambler's Fallacy -->
-<section id="gamblers-fallacy">
+<Section id="crisis">
   <Crisis icon="🎲" title="Странная серия">
     <p>
       Ты играешь с компьютером на виртуальные очки. Правила просты: подбрасываем
@@ -144,54 +151,66 @@
       наконец появиться? Или шансы всё ещё равны?
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
 <!-- Step 1: Coin has no memory -->
-<section id="coin-memory">
-  <h2>У монеты нет памяти</h2>
-  <p>
-    Мы должны разрушить миф о том, что монета «знает» историю прошлых бросков.
-    Это <strong>ошибка игрока</strong> — одно из самых коварных когнитивных искажений.
-  </p>
-
-  <div class="metaphor">
-    <div class="visual">
-      <div class="character coin">
-        <span class="emoji">💰</span>
-        <div class="bubble">Я понятия не имею, что было в прошлый раз!</div>
+<Section
+  id="coin-memory"
+  title="У монеты нет памяти"
+  description="Мы должны разрушить миф о том, что монета «знает» историю прошлых бросков. Это ошибка игрока — одно из самых коварных когнитивных искажений."
+>
+  <div class="memory-metaphor">
+    <div class="character-card coin">
+      <div class="avatar">
+        <span class="emoji">🪙</span>
+        <div class="status-badge">Память: 0 байт</div>
       </div>
-      <div class="character player">
-        <span class="emoji">📝</span>
-        <div class="notebook">О, О, О, О, О...</div>
+      <div class="dialogue">
+        «Я только что родилась! Что такое "прошлый бросок"?»
       </div>
     </div>
-    <div class="text">
-      <h3>Монетка с амнезией</h3>
-      <p>
-        Представь монетку как человека с полной амнезией. Каждый раз, когда её
-        подбрасывают, она «просыпается» и не помнит, что было секунду назад. Ей
-        всё равно, выпадала она орлом 5 или 100 раз подряд.
-        <strong>Для неё каждый бросок — это первый бросок в жизни.</strong>
-      </p>
+
+    <div class="divider">
+      <span class="icon">⚡</span>
+      <span class="label">vs</span>
+    </div>
+
+    <div class="character-card player">
+      <div class="avatar">
+        <span class="emoji">🧠</span>
+        <div class="status-badge">Память: Перегружена</div>
+      </div>
+      <div class="notebook">
+        <div class="entry">Бросок #1: Орёл</div>
+        <div class="entry">Бросок #2: Орёл</div>
+        <div class="entry">Бросок #3: Орёл...</div>
+        <div class="entry highlight">Значит, сейчас будет Решка?!</div>
+      </div>
     </div>
   </div>
 
-  <DefinitionCard title="Принцип независимости">
+  <div class="concept-explanation">
+    <p>
+      Для монеты каждый бросок — <strong>первый в жизни</strong>. Она физически не
+      может «устать» выпадать орлом или «задолжать» вам решку. Прошлое не влияет
+      на будущее.
+    </p>
+  </div>
+
+  <DefinitionCard label="Принцип независимости">
     <p>
       Результат броска №2 никак не зависит от броска №1. Вероятность орла
       остаётся <strong>1/2</strong> всегда, даже если до этого было 10 орлов подряд.
     </p>
   </DefinitionCard>
-</section>
+</Section>
 
 <!-- Step 2: Chaos near, order far -->
-<section id="chaos-order">
-  <h2>Хаос вблизи, порядок вдали</h2>
-  <p>
-    Если каждый бросок случаен, почему мы говорим, что шанс 50/50? Здесь
-    появляется важнейшая идея — <strong>масштаб</strong>.
-  </p>
-
+<Section
+  id="chaos-order"
+  title="Хаос вблизи, порядок вдали"
+  description="Если каждый бросок случаен, почему мы говорим, что шанс 50/50? Здесь появляется важнейшая идея — масштаб."
+>
   <div class="analogy">
     <div class="icon">🌧️</div>
     <div class="content">
@@ -209,108 +228,100 @@
   </div>
 
   <div class="interactive">
-    <h3>Гонка Орла и Решки</h3>
-    <p class="instruction">
-      Бросайте монету и наблюдайте: при малом числе бросков полоски скачут
-      неравномерно, но чем больше бросков — тем ближе они к равенству.
-    </p>
+    <div class="race-header">
+      <h3>Гонка Орла и Решки</h3>
+      <p>
+        Бросайте монету! Кто вырвется вперёд? На короткой дистанции лидер меняется
+        хаотично, но на длинной они должны идти ноздря в ноздрю.
+      </p>
+    </div>
 
-    <div class="race">
-      <div class="bars">
-        <div class="row">
-          <span class="label">🦅 Орёл</span>
-          <div class="track">
-            <div
-              class="fill heads"
-              style="width: {Math.min(headsPercent, 100)}%"
-            ></div>
+    <div class="race-track">
+      <!-- Heads Lane -->
+      <div class="lane">
+        <div class="runner" style:left="{Math.min(headsPercent, 95)}%">
+          <div class="avatar">🦅</div>
+          <div class="label">
+            {headsScore} <span class="percent">({headsPercent.toFixed(0)}%)</span>
           </div>
-          <span class="score">{headsScore}</span>
         </div>
-        <div class="row">
-          <span class="label">🌸 Решка</span>
-          <div class="track">
-            <div
-              class="fill tails"
-              style="width: {Math.min(tailsPercent, 100)}%"
-            ></div>
-          </div>
-          <span class="score">{tailsScore}</span>
-        </div>
+        <div class="track-line"></div>
       </div>
 
-      {#if raceHistory.length > 0}
-        <div class="history">
-          {#each raceHistory as flip}
-            <span class="icon">{flip === "heads" ? "🦅" : "🌸"}</span>
-          {/each}
+      <!-- Tails Lane -->
+      <div class="lane">
+        <div class="runner" style:left="{Math.min(tailsPercent, 95)}%">
+          <div class="avatar">🌸</div>
+          <div class="label">
+            {tailsScore} <span class="percent">({tailsPercent.toFixed(0)}%)</span>
+          </div>
         </div>
-      {/if}
-
-      <div class="stats">
-        <span>Всего бросков: <strong>{totalFlips}</strong></span>
-        {#if totalFlips > 0}
-          <span>Орёл: <strong>{headsPercent.toFixed(1)}%</strong></span>
-          <span>Решка: <strong>{tailsPercent.toFixed(1)}%</strong></span>
-        {/if}
+        <div class="track-line"></div>
       </div>
 
-      <div class="controls">
+      <div class="finish-line">
+        <span>50%</span>
+      </div>
+    </div>
+
+    <div class="race-controls">
+      <div class="main-btn">
         <button
-          class="btn"
+          class="btn-primary"
           onclick={flipOnce}
           disabled={isRacing}
           aria-label="Бросить 1 раз"
         >
-          <span>&#x1F3B2;</span> Бросок ×1
-        </button>
-        <button
-          class="btn secondary"
-          onclick={() => flipMultiple(10)}
-          disabled={isRacing}
-          aria-label="10 бросков"
-        >
-          ×10
-        </button>
-        <button
-          class="btn secondary"
-          onclick={() => flipMultiple(100)}
-          disabled={isRacing}
-          aria-label="100 бросков"
-        >
-          ×100
-        </button>
-        <button
-          class="btn secondary"
-          onclick={() => flipMultiple(1000)}
-          disabled={isRacing}
-          aria-label="1000 бросков"
-        >
-          ×1000
-        </button>
-        <button class="btn ghost" onclick={resetRace} aria-label="Сбросить">
-          ↺ Сбросить
+          🎲 Бросок
         </button>
       </div>
+      <div class="quick-btns">
+        <button
+          class="btn-secondary"
+          onclick={() => flipMultiple(10)}
+          disabled={isRacing}
+        >
+          +10
+        </button>
+        <button
+          class="btn-secondary"
+          onclick={() => flipMultiple(100)}
+          disabled={isRacing}
+        >
+          +100
+        </button>
+        <button
+          class="btn-secondary"
+          onclick={() => flipMultiple(1000)}
+          disabled={isRacing}
+        >
+          +1000
+        </button>
+      </div>
+      <button
+        class="btn-ghost"
+        onclick={resetRace}
+        aria-label="Сбросить"
+      >
+        ↺ Сбросить
+      </button>
     </div>
 
     {#if totalFlips >= 100}
       <div class="result success">
-        ✓ «Справедливость» (равенство результатов) наступает только на
-        <strong>длинной дистанции</strong>. Это и есть закон больших чисел.
+        ✓ Посмотрите, как близко они друг к другу! «Справедливость» наступает
+        только на <strong>длинной дистанции</strong>.
       </div>
     {/if}
   </div>
-</section>
+</Section>
 
 <!-- Step 3: Frequency as prediction tool -->
-<section id="frequency">
-  <h2>Частота как инструмент предсказания</h2>
-  <p>
-    Мы не можем предсказать <em>следующий</em> бросок, но мы можем предсказать
-    <em>сумму</em> тысячи бросков. Это наша суперсила.
-  </p>
-
+<Section
+  id="frequency"
+  title="Частота как инструмент предсказания"
+  description="Мы не можем предсказать следующий бросок, но мы можем предсказать сумму тысячи бросков. Это наша суперсила."
+>
   <div class="interactive">
     <h3>График сходимости частоты</h3>
     <p class="instruction">
@@ -378,11 +389,10 @@
       но предсказуема издалека.
     </p>
   </DefinitionCard>
-</section>
+</Section>
 
 <!-- Formalization -->
-<section id="formalization">
-  <h2>Формализация</h2>
+<Section id="formalization" title="Формализация">
   <p>Переводим интуицию на язык символов.</p>
 
   <div class="grid">
@@ -414,14 +424,12 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Quiz -->
-<section id="quiz">
-  <h2>Проверь себя</h2>
-
+<Section id="practice" title="Проверь себя">
   <div class="cards">
-    <QuizCard icon="⚫">
+    <QuizCard icon="⚫" title="Ловушка">
       <div class="question">
         В лотерее 10 раз подряд выпал чёрный шар. Какова вероятность, что в 11-й
         раз выпадет белый шар, если шаров поровну?
@@ -434,7 +442,7 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="💰">
+    <QuizCard icon="💰" title="Масштаб">
       <div class="question">
         Вы подбросили монетку 10 раз и получили 7 орлов и 3 решки. Это нормально
         или монетка сломана?
@@ -447,7 +455,7 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="📊">
+    <QuizCard icon="📊" title="Прогноз">
       <div class="question">
         Если мы подбросим монету 1 000 000 раз, примерно сколько будет орлов?
       </div>
@@ -459,17 +467,14 @@
       {/snippet}
     </QuizCard>
   </div>
-</section>
+</Section>
 
 <!-- Detective Mini-Project -->
-<section id="detective">
-  <h2>Мини-проект: детектив казино</h2>
-  <p>
-    Вам дали подозрительную монетку. Хозяин казино утверждает, что она честная.
-    Вы сделали 5 бросков: О, О, О, О, О.
-    <strong>Можно ли обвинить хозяина в мошенничестве?</strong>
-  </p>
-
+<Section
+  id="detective"
+  title="Мини-проект: детектив казино"
+  description="Вам дали подозрительную монетку. Хозяин казино утверждает, что она честная. Вы сделали 5 бросков: О, О, О, О, О. Можно ли обвинить хозяина в мошенничестве?"
+>
   <div class="interactive">
     <div class="scenario">
       <div class="suspect">
@@ -530,11 +535,11 @@
           disabled={isDetectiveRunning}
           aria-label="Бросить 100 раз"
         >
-          <span>&#x1F3B2;</span> Бросить 100 раз
+          <span>🎲</span> Бросить 100 раз
         </button>
         {#if detectiveFlips >= 100 && !detectiveRevealed}
           <button class="btn verdict" onclick={revealVerdict}>
-            <span>&#x1F4CB;</span> Вынести вердикт
+            <span>📋</span> Вынести вердикт
           </button>
         {/if}
       </div>
@@ -562,25 +567,22 @@
       {/if}
     </div>
   </div>
-</section>
+</Section>
 
-<section id="summary">
+<Section id="summary">
   <Summary title="Резюме">
-    <blockquote>
+    <p>
       Случайность хаотична, если смотреть на неё в упор, но предсказуема, если
       смотреть издалека. У отдельного события <strong>нет памяти</strong>, но у
       большой серии событий есть <strong>железные правила</strong>. Монетка не
       знает, что выпадало раньше — но мы знаем, что будет в сумме.
-    </blockquote>
+    </p>
   </Summary>
-</section>
+</Section>
 
 <style>
-  /* Global Layout overrides for sections are handled by +layout.svelte,
-     we only scope styles inside components/visuals here. */
-
   /* Gambler's Fallacy Section */
-  #gamblers-fallacy {
+  :global(#crisis) {
     .history {
       padding: 1.5rem 2rem;
       background: var(--color-surface-50);
@@ -601,6 +603,7 @@
       .coins {
         display: flex;
         gap: 0.5rem;
+        flex-wrap: wrap;
 
         .coin {
           font-size: 2rem;
@@ -613,80 +616,171 @@
   }
 
   /* Coin Memory Section */
-  #coin-memory {
-    .metaphor {
-      margin: 2.5rem 0;
+  :global(#coin-memory) {
+    .memory-metaphor {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .character-card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
       padding: 2rem;
-      background: var(--color-surface-50);
+      background: white;
       border-radius: calc(var(--radius-container) * 2);
-      box-shadow: 0 12px 32px
-        color-mix(in oklab, var(--color-surface-900) 0.12, transparent);
+      box-shadow: 0 8px 24px
+        color-mix(in oklab, var(--color-surface-900) 0.08, transparent);
+      border: 1px solid var(--color-surface-200);
+      text-align: center;
+      transition: transform 0.2s;
 
-      .visual {
-        display: flex;
-        justify-content: center;
-        gap: 3rem;
-        padding: 2rem;
-        margin-bottom: 1.5rem;
+      &:hover {
+        transform: translateY(-4px);
+      }
 
-        .character {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 0.75rem;
+      .avatar {
+        position: relative;
+        
+        .emoji {
+          font-size: 4rem;
+          display: block;
+          margin-bottom: 0.5rem;
+        }
 
-          .emoji {
-            font-size: 4rem;
-          }
+        .status-badge {
+          background: var(--color-surface-800);
+          color: white;
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          padding: 0.25rem 0.75rem;
+          border-radius: 1rem;
+          box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+      }
 
-          &.coin .bubble {
-            background: var(--color-primary-100);
-            padding: 0.75rem 1.25rem;
-            border-radius: calc(var(--radius-container) * 2);
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--color-primary-900);
-            max-width: 200px;
-            text-align: center;
-            position: relative;
+      &.coin {
+        background: linear-gradient(to bottom, white, var(--color-primary-50));
+        border-color: var(--color-primary-200);
 
-            &::after {
-              content: "";
-              position: absolute;
-              bottom: -8px;
-              left: 50%;
-              transform: translateX(-50%);
-              border: 8px solid transparent;
-              border-top-color: var(--color-primary-100);
-              border-bottom: none;
-            }
-          }
+        .dialogue {
+          font-family: "Georgia", serif;
+          font-style: italic;
+          font-size: 1.15rem;
+          line-height: 1.5;
+          color: var(--color-primary-800);
+          background: white;
+          padding: 1.25rem;
+          border-radius: var(--radius-container);
+          border: 1px solid var(--color-primary-100);
+          position: relative;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 
-          &.player .notebook {
-            background: var(--color-warning-100);
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius-container);
-            font-family: monospace;
-            font-size: 0.9rem;
-            color: var(--color-surface-700);
+          &::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid white;
           }
         }
       }
 
-      .text {
-        h3 {
-          margin-top: 0;
-          color: var(--color-primary-800);
+      &.player {
+        background: linear-gradient(to bottom, white, var(--color-warning-50));
+        border-color: var(--color-warning-200);
+
+        .notebook {
+          width: 100%;
+          background: white;
+          border: 1px solid var(--color-warning-200);
+          border-radius: var(--radius-container);
+          overflow: hidden;
+          font-family: "Consolas", "Monaco", monospace;
+          font-size: 0.9rem;
+          text-align: left;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+          .entry {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid var(--color-surface-100);
+            color: var(--color-surface-600);
+
+            &:last-child {
+              border-bottom: none;
+            }
+
+            &.highlight {
+              background: var(--color-warning-100);
+              color: var(--color-warning-900);
+              font-weight: 700;
+            }
+          }
         }
-        p {
-          margin-bottom: 0;
-        }
+      }
+    }
+
+    .divider {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      color: var(--color-surface-400);
+
+      .icon {
+        font-size: 2rem;
+        color: var(--color-surface-300);
+      }
+      
+      .label {
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 1.25rem;
+        color: var(--color-surface-300);
+      }
+    }
+
+    .concept-explanation {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      text-align: center;
+      
+      p {
+        font-size: 1.25rem;
+        color: var(--color-surface-700);
+        line-height: 1.6;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .memory-metaphor {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .divider {
+        flex-direction: row;
+        margin: -0.5rem 0;
+        align-self: center; /* Center strictly in the flex column */
+        
+        .icon { font-size: 1.5rem; }
+        .label { font-size: 1rem; }
       }
     }
   }
 
   /* Chaos Order Section */
-  #chaos-order {
+  :global(#chaos-order) {
     .analogy {
       display: flex;
       gap: 2rem;
@@ -700,6 +794,7 @@
       border-radius: calc(var(--radius-container) * 2);
       box-shadow: 0 4px 12px
         color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
+      flex-wrap: wrap;
 
       .icon {
         font-size: 3.5rem;
@@ -725,164 +820,209 @@
       box-shadow: 0 12px 32px
         color-mix(in oklab, var(--color-surface-900) 0.12, transparent);
 
-      h3 {
-        margin-top: 0;
-        color: var(--color-primary-900);
+      .race-header {
+        margin-bottom: 2rem;
+        text-align: center;
+
+        h3 {
+          margin-top: 0;
+          color: var(--color-primary-900);
+        }
+
+        p {
+          font-size: 1.125rem;
+          color: var(--color-surface-600);
+        }
       }
 
-      .instruction {
-        font-size: 1.125rem;
-        color: var(--color-surface-600);
-        margin-bottom: 1.5rem;
+      .race-track {
+        position: relative;
+        padding: 3rem 0;
+        background: var(--color-surface-100);
+        border-radius: var(--radius-container);
+        margin-bottom: 2rem;
+        border: 2px solid var(--color-surface-200);
+        overflow: hidden;
+
+        .finish-line {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 50%;
+          width: 2px;
+          background: repeating-linear-gradient(
+            to bottom,
+            var(--color-surface-400),
+            var(--color-surface-400) 10px,
+            transparent 10px,
+            transparent 20px
+          );
+          z-index: 0;
+
+          span {
+            position: absolute;
+            top: 0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-surface-200);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--color-surface-500);
+          }
+        }
+
+        .lane {
+          position: relative;
+          height: 60px;
+          margin-bottom: 1rem;
+          z-index: 1;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+
+          .track-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--color-surface-300);
+            z-index: -1;
+          }
+
+          .runner {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transition: left 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            .avatar {
+              font-size: 2.5rem;
+              line-height: 1;
+              background: var(--color-surface-50);
+              border-radius: 50%;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .label {
+              margin-top: 0.25rem;
+              font-size: 0.875rem;
+              font-weight: 700;
+              white-space: nowrap;
+              background: rgba(255, 255, 255, 0.8);
+              padding: 0.1rem 0.4rem;
+              border-radius: 4px;
+
+              .percent {
+                font-weight: 400;
+                color: var(--color-surface-500);
+                font-size: 0.75rem;
+              }
+            }
+          }
+        }
+      }
+
+      .race-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+        align-items: center;
+
+        .btn-primary {
+          background: var(--color-primary-500);
+          color: white;
+          padding: 0.75rem 2rem;
+          border-radius: 99px;
+          border: none;
+          font-weight: 700;
+          font-size: 1.125rem;
+          cursor: pointer;
+          transition: transform 0.1s;
+          box-shadow: 0 4px 12px
+            color-mix(in oklab, var(--color-primary-500) 0.3, transparent);
+
+          &:active {
+            transform: scale(0.95);
+          }
+
+          &:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+          }
+        }
+
+        .quick-btns {
+          display: flex;
+          gap: 0.5rem;
+          background: var(--color-surface-200);
+          padding: 0.25rem;
+          border-radius: 99px;
+
+          .btn-secondary {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 99px;
+            font-weight: 600;
+            color: var(--color-surface-700);
+            cursor: pointer;
+            transition: background 0.2s;
+
+            &:hover:not(:disabled) {
+              background: var(--color-surface-50);
+              color: var(--color-primary-700);
+            }
+
+            &:disabled {
+              opacity: 0.5;
+              cursor: not-allowed;
+            }
+          }
+        }
+
+        .btn-ghost {
+          background: transparent;
+          border: 2px solid var(--color-surface-200);
+          padding: 0.5rem 1rem;
+          border-radius: 99px;
+          font-weight: 600;
+          color: var(--color-surface-600);
+          cursor: pointer;
+          transition: all 0.2s;
+
+          &:hover {
+            border-color: var(--color-surface-400);
+            color: var(--color-surface-800);
+          }
+        }
       }
 
       .result {
+        margin-top: 2rem;
         padding: 1rem 1.5rem;
         border-radius: var(--radius-container);
         font-size: 1.125rem;
         font-weight: 600;
-        margin-top: 1.5rem;
+        text-align: center;
 
         &.success {
           background: var(--color-success-100);
           color: var(--color-success-900);
         }
       }
-
-      .race {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-
-        .bars {
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-
-          .row {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-
-            .label {
-              font-size: 1rem;
-              font-weight: 600;
-              min-width: 100px;
-              color: var(--color-surface-700);
-            }
-
-            .track {
-              flex: 1;
-              height: 28px;
-              background: var(--color-surface-200);
-              border-radius: 999px;
-              overflow: hidden;
-
-              .fill {
-                height: 100%;
-                transition: width 0.3s ease;
-                border-radius: 999px;
-
-                &.heads {
-                  background: linear-gradient(
-                    to right,
-                    var(--color-primary-400),
-                    var(--color-primary-600)
-                  );
-                }
-
-                &.tails {
-                  background: linear-gradient(
-                    to right,
-                    var(--color-warning-400),
-                    var(--color-warning-500)
-                  );
-                }
-              }
-            }
-
-            .score {
-              font-size: 1.25rem;
-              font-weight: 700;
-              min-width: 60px;
-              text-align: right;
-              color: var(--color-surface-900);
-            }
-          }
-        }
-
-        .history {
-          display: flex;
-          gap: 0.25rem;
-          justify-content: center;
-          flex-wrap: wrap;
-
-          .icon {
-            font-size: 1.5rem;
-          }
-        }
-
-        .stats {
-          display: flex;
-          justify-content: center;
-          gap: 2rem;
-          font-size: 1rem;
-          color: var(--color-surface-600);
-        }
-
-        .controls {
-          display: flex;
-          gap: 0.75rem;
-          flex-wrap: wrap;
-          justify-content: center;
-
-          .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: var(--radius-container);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            background: var(--color-primary-500);
-            color: var(--color-surface-50);
-
-            &:hover:not(:disabled) {
-              background: var(--color-primary-600);
-              transform: translateY(-2px);
-            }
-
-            &:disabled {
-              opacity: 0.6;
-              cursor: not-allowed;
-            }
-
-            &.secondary {
-              background: var(--color-surface-200);
-              color: var(--color-surface-800);
-
-              &:hover:not(:disabled) {
-                background: var(--color-surface-300);
-              }
-            }
-
-            &.ghost {
-              background: transparent;
-              color: var(--color-surface-600);
-              border: 1px solid var(--color-surface-300);
-
-              &:hover {
-                background: var(--color-surface-200);
-              }
-            }
-          }
-        }
-      }
     }
   }
 
   /* Frequency Section */
-  #frequency {
+  :global(#frequency) {
     .interactive {
       margin: 2.5rem 0;
       padding: 2rem;
@@ -974,6 +1114,7 @@
           display: flex;
           gap: 0.75rem;
           justify-content: center;
+          flex-wrap: wrap;
 
           .btn {
             padding: 0.75rem 1.5rem;
@@ -1012,9 +1153,10 @@
   }
 
   /* Formalization Section */
-  #formalization {
+  :global(#formalization) {
     .grid {
       display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.5rem;
       margin: 2rem 0;
 
@@ -1063,7 +1205,7 @@
   }
 
   /* Quiz Section */
-  #quiz {
+  :global(#practice) {
     .cards {
       display: grid;
       gap: 1.5rem;
@@ -1077,7 +1219,7 @@
   }
 
   /* Detective Section */
-  #detective {
+  :global(#detective) {
     .interactive {
       margin: 2.5rem 0;
       padding: 2rem;
@@ -1142,6 +1284,7 @@
           gap: 1rem;
           justify-content: center;
           margin-bottom: 1.5rem;
+          flex-wrap: wrap;
 
           .type-btn {
             padding: 0.75rem 1.5rem;
@@ -1200,6 +1343,7 @@
           gap: 1rem;
           justify-content: center;
           margin-top: 1.5rem;
+          flex-wrap: wrap;
 
           .btn {
             padding: 0.75rem 1.5rem;
@@ -1273,26 +1417,20 @@
     }
   }
 
+  /* Summary Section */
+  :global(#summary) {
+    p {
+      font-size: 1.25rem;
+      margin: 0;
+      color: var(--color-surface-700);
+      line-height: 1.6;
+    }
+  }
+
   /* Responsive Design */
   @media (max-width: 1100px) {
-    #chaos-order .analogy {
-      flex-direction: column;
-    }
-
-    #coin-memory .metaphor .visual {
-      flex-direction: column;
-      align-items: center;
-      gap: 2rem;
-    }
-
-    #formalization .grid .card {
-      flex-direction: column;
-      text-align: center;
-    }
-
-    #detective .test .selector {
-      flex-direction: column;
-      align-items: center;
+    :global(#formalization) .grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>

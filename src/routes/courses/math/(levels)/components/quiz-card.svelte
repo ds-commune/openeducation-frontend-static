@@ -3,12 +3,14 @@
   import { PUBLIC_SHOW_COMPONENT_NAMES } from "$env/static/public";
 
   type Props = {
-    icon?: string;
+    icon?: string | Snippet;
+    title?: string;
+    answerIcon?: string;
     children: Snippet;
     answer?: Snippet;
   };
 
-  const { icon = "🤔", children, answer }: Props = $props();
+  const { icon, title, answerIcon, children, answer }: Props = $props();
 
   let isOpen = $state(false);
 
@@ -22,7 +24,23 @@
     <p style:position="absolute">quiz-card</p>
   {/if}
 
-  <div class="icon">{icon}</div>
+  {#if icon || title}
+    <header>
+      {#if icon}
+        <span class="icon">
+          {#if typeof icon === "string"}
+            {icon}
+          {:else}
+            {@render icon()}
+          {/if}
+        </span>
+      {/if}
+      {#if title}
+        <h3>{title}</h3>
+      {/if}
+    </header>
+  {/if}
+
   <div class="content">
     {@render children()}
     {#if answer}
@@ -36,8 +54,10 @@
       </button>
 
       {#if isOpen}
-        <div class="answer">
-          <span class="icon">💡</span>
+        <div class="answer" class:has-icon={answerIcon}>
+          {#if answerIcon}
+            <span class="icon">{answerIcon}</span>
+          {/if}
           <div class="text">
             {@render answer()}
           </div>
@@ -50,7 +70,8 @@
 <style>
   .quiz-card {
     display: flex;
-    gap: 1.5rem;
+    flex-direction: column;
+    gap: 1rem;
     background: var(--color-surface-50, #f8f9fa);
     border-radius: calc(var(--radius-container, 0.25rem) * 4);
     padding: 2rem;
@@ -59,9 +80,23 @@
       color-mix(in oklab, var(--color-surface-900) 0.12, transparent);
   }
 
-  .icon {
-    font-size: 2.5rem;
-    flex-shrink: 0;
+  header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .icon {
+      font-size: 2.5rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--color-surface-900);
+    }
   }
 
   .content {
@@ -71,12 +106,6 @@
   .content :global {
     p {
       margin: 0 0 1rem;
-      font-size: 1.25rem;
-    }
-
-    h3 {
-      margin-top: 0;
-      margin-bottom: 0.75rem;
       font-size: 1.25rem;
     }
   }
@@ -106,11 +135,11 @@
     border-radius: calc(var(--radius-container, 0.25rem) * 2);
     font-size: 1.125rem;
     margin-top: 0.75rem;
-  }
 
-  .content .icon {
-    font-size: 1.25rem;
-    flex-shrink: 0;
+    .icon {
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
   }
 
   .text {
@@ -125,12 +154,6 @@
       + p {
         margin-top: 0.5rem;
       }
-    }
-  }
-
-  @media (max-width: 1100px) {
-    .quiz-card {
-      flex-direction: column;
     }
   }
 </style>

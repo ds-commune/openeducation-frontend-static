@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { Crisis, DefinitionCard, QuizCard, Summary } from "../../components";
+  import {
+    Crisis,
+    DefinitionCard,
+    QuizCard,
+    Section,
+    Summary,
+  } from "../../components";
 
   // Ray casting demo state
   let rayDemoPoint = $state<{ x: number; y: number } | null>(null);
@@ -14,7 +20,7 @@
     C 60,140 30,160 50,120 
     C 70,80 100,70 150,50 Z`;
 
-  // Simplified polygon for intersection calculation
+  // Simplified polygon for interSection calculation
   const curvePolygon = [
     { x: 150, y: 50 },
     { x: 220, y: 120 },
@@ -23,7 +29,7 @@
     { x: 50, y: 120 },
   ];
 
-  function countIntersections(
+  function countInterSections(
     px: number,
     py: number,
     ex: number,
@@ -97,7 +103,7 @@
       const extendedY = rayDemoPoint.y + dy * scale;
 
       rayEndPoint = { x: extendedX, y: extendedY };
-      const count = countIntersections(
+      const count = countInterSections(
         rayDemoPoint.x,
         rayDemoPoint.y,
         rayEndPoint.x,
@@ -135,7 +141,7 @@
 </svelte:head>
 
 <!-- Крючок: Лабиринт без стен -->
-<section id="intro">
+<Section id="crisis">
   <Crisis icon="🌀" title="Лабиринт без стен">
     <p>
       Представьте невероятно запутанную линию — как спутанные наушники, только
@@ -162,11 +168,10 @@
       Как, не прослеживая линию пальцем, мгновенно это доказать?
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
 <!-- Шаг 1: Простота круга -->
-<section id="island-concept">
-  <h2>Остров и океан</h2>
+<Section id="island-concept" title="Остров и океан">
   <p>
     Начнём с простого. Представьте остров посреди океана. Линия берега — это <strong
       >граница</strong
@@ -187,17 +192,16 @@
     </svg>
   </div>
 
-  <DefinitionCard title="Ключевое наблюдение">
+  <DefinitionCard label="Ключевое наблюдение">
     <p>
       Один шаг через границу <strong>меняет ваш статус</strong>: были «внутри» —
       стали «снаружи». И наоборот.
     </p>
   </DefinitionCard>
-</section>
+</Section>
 
 <!-- Шаг 2: Метод лазерного луча -->
-<section id="ray-method">
-  <h2>Метод лазерного луча</h2>
+<Section id="ray-method" title="Метод лазерного луча">
   <p>
     Теперь вернёмся к нашей сложной фигуре. Представьте, что герой стреляет <strong
       >лучом света</strong
@@ -210,7 +214,7 @@
         <circle cx="75" cy="75" r="50" class="boundary" fill="none" />
         <circle cx="75" cy="75" r="6" class="point inside" />
         <line x1="75" y1="75" x2="150" y2="75" class="ray" />
-        <circle cx="125" cy="75" r="4" class="intersection" />
+        <circle cx="125" cy="75" r="4" class="interSection" />
       </svg>
       <div class="caption">изнутри: <strong>1</strong> пересечение</div>
     </div>
@@ -224,8 +228,8 @@
         <circle cx="75" cy="75" r="50" class="boundary" fill="none" />
         <circle cx="10" cy="75" r="6" class="point outside" />
         <line x1="10" y1="75" x2="150" y2="75" class="ray" />
-        <circle cx="25" cy="75" r="4" class="intersection" />
-        <circle cx="125" cy="75" r="4" class="intersection" />
+        <circle cx="25" cy="75" r="4" class="interSection" />
+        <circle cx="125" cy="75" r="4" class="interSection" />
       </svg>
       <div class="caption">сквозь: <strong>2</strong> пересечения</div>
     </div>
@@ -239,11 +243,10 @@
       <div class="caption">мимо: <strong>0</strong> пересечений</div>
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Шаг 3: Чётность и нечётность -->
-<section id="toggle-rule">
-  <h2>Правило переключателя</h2>
+<Section id="toggle-rule" title="Правило переключателя">
   <p>
     Каждое пересечение границы — это <strong>щелчок выключателя</strong>.
     Представьте: вы начинаете внутри комнаты. Каждый раз, проходя через дверь,
@@ -301,16 +304,14 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Интерактив: Побег из путаницы -->
-<section id="interactive-ray">
-  <h2>Побег из путаницы</h2>
-  <p>
-    Кликните внутри фигуры, чтобы поставить точку, затем кликните ещё раз, чтобы
-    выпустить луч. Система посчитает пересечения.
-  </p>
-
+<Section
+  id="interactive-ray"
+  title="Побег из путаницы"
+  description="Кликните внутри фигуры, чтобы поставить точку, затем кликните ещё раз, чтобы выпустить луч. Система посчитает пересечения."
+>
   <div class="demo">
     <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
     <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -354,11 +355,10 @@
       ↺ Начать заново
     </button>
   </div>
-</section>
+</Section>
 
 <!-- Шаг 4: Топологическая непрерывность -->
-<section id="topology">
-  <h2>Резиновая граница</h2>
+<Section id="topology" title="Резиновая граница">
   <p>
     Форма линии <strong>не важна</strong>. Круг, квадрат или клякса — если линия
     замкнута и не пересекает сама себя, она всегда делит мир ровно на
@@ -378,11 +378,9 @@
       внутри при любой деформации без разрыва.
     </p>
   </div>
-</section>
+</Section>
 
-<section id="math-lang">
-  <h2>Математический язык</h2>
-
+<Section id="math-lang" title="Математический язык">
   <div class="grid">
     <div class="card">
       <div class="header">Жорданова кривая</div>
@@ -402,14 +400,12 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Практика -->
-<section id="quiz">
-  <h2>Проверь понимание</h2>
-
-  <div class="list">
-    <QuizCard icon="🧶">
+<Section id="practice" title="Проверь понимание">
+  <div class="quiz-list">
+    <QuizCard icon="🧶" title="Верёвка">
       <div class="question">
         Вокруг тебя лежит верёвка, замкнутая в кольцо. Ты изначально был внутри
         и перешагнул через неё <strong>5 раз</strong>. Где ты сейчас?
@@ -422,7 +418,7 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="🕳️">
+    <QuizCard icon="🕳️" title="Дырка в заборе">
       <div class="question">
         А если в заборе есть <strong>дырка</strong> (разрыв линии)? Работает ли правило
         чётности?
@@ -435,7 +431,7 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="🐜">
+    <QuizCard icon="🐜" title="Муравей и птица">
       <div class="question">
         Круг нарисован на песке. Муравей внутри заперт. А если прилетит
         <strong>птица</strong>?
@@ -448,162 +444,162 @@
       {/snippet}
     </QuizCard>
   </div>
-</section>
+</Section>
 
-<section id="summary">
+<Section id="summary">
   <Summary title="Резюме">
-    <blockquote>
+    <p>
       Граница — это то, что разделяет реальность на «здесь» и «там». Чтобы
       попасть из одного мира в другой, нужно совершить
       <strong>пересечение</strong>. В математике мы определяем своё
       местоположение не по виду стен, а по количеству шагов сквозь них:
       <strong>нечётное число шагов всегда ведёт в другой мир</strong>.
-    </blockquote>
+    </p>
   </Summary>
-</section>
+</Section>
 
 <style>
-  /* Intro Section */
-  #intro {
+  /* Crisis Section */
+  :global(#crisis) {
     .visual {
       margin: 2rem 0;
       display: flex;
       justify-content: center;
-    }
 
-    .tangled-svg {
-      width: 100%;
-      max-width: 300px;
-      height: auto;
-      background: var(--color-surface-50);
-      border-radius: var(--radius-container);
-      box-shadow: 0 4px 20px
-        color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
-    }
+      .tangled-svg {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        background: var(--color-surface-50);
+        border-radius: var(--radius-container);
+        box-shadow: 0 4px 20px
+          color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
 
-    .tangled-path {
-      stroke: var(--color-surface-500);
-      stroke-width: 3;
-    }
+        .tangled-path {
+          stroke: var(--color-surface-500);
+          stroke-width: 3;
+        }
 
-    .point-a {
-      fill: var(--color-primary-500);
-    }
+        .point-a {
+          fill: var(--color-primary-500);
+        }
 
-    .point-b {
-      fill: var(--color-error-500);
-    }
+        .point-b {
+          fill: var(--color-error-500);
+        }
 
-    .point-label {
-      font-size: 0.875rem;
-      font-weight: 700;
-      fill: var(--color-surface-900);
+        .point-label {
+          font-size: 0.875rem;
+          font-weight: 700;
+          fill: var(--color-surface-900);
+        }
+      }
     }
   }
 
   /* Island Concept Section */
-  #island-concept {
+  :global(#island-concept) {
     .visual {
       margin: 2rem 0;
       display: flex;
       justify-content: center;
-    }
 
-    .island-svg {
-      width: 100%;
-      max-width: 400px;
-      height: auto;
-      border-radius: calc(var(--radius-container) * 2);
-      box-shadow: 0 4px 20px
-        color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
-    }
+      .island-svg {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        border-radius: calc(var(--radius-container) * 2);
+        box-shadow: 0 4px 20px
+          color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
 
-    .ocean {
-      fill: var(--color-primary-200);
-    }
+        .ocean {
+          fill: var(--color-primary-200);
+        }
 
-    .island {
-      fill: var(--color-warning-200);
-      stroke: var(--color-warning-400);
-      stroke-width: 3;
-    }
+        .island {
+          fill: var(--color-warning-200);
+          stroke: var(--color-warning-400);
+          stroke-width: 3;
+        }
 
-    .label {
-      font-size: 1rem;
-      font-weight: 600;
+        .label {
+          font-size: 1rem;
+          font-weight: 600;
 
-      &.island-text {
-        fill: var(--color-surface-700);
-      }
+          &.island-text {
+            fill: var(--color-surface-700);
+          }
 
-      &.ocean-text {
-        font-size: 0.875rem;
-        fill: var(--color-primary-800);
+          &.ocean-text {
+            font-size: 0.875rem;
+            fill: var(--color-primary-800);
+          }
+        }
       }
     }
   }
 
   /* Ray Method Section */
-  #ray-method {
+  :global(#ray-method) {
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 1.5rem;
       margin: 2rem 0;
-    }
 
-    .item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.75rem;
-    }
+      .item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
 
-    .ray-svg {
-      width: 100%;
-      max-width: 150px;
-      height: auto;
-      background: var(--color-surface-50);
-      border-radius: var(--radius-container);
-      border: 2px solid var(--color-surface-200);
-    }
+        .ray-svg {
+          width: 100%;
+          max-width: 150px;
+          height: auto;
+          background: var(--color-surface-50);
+          border-radius: var(--radius-container);
+          border: 2px solid var(--color-surface-200);
 
-    .boundary {
-      stroke: var(--color-surface-400);
-      stroke-width: 3;
-    }
+          .boundary {
+            stroke: var(--color-surface-400);
+            stroke-width: 3;
+          }
 
-    .point {
-      transition: fill 0.3s;
+          .point {
+            transition: fill 0.3s;
 
-      &.inside {
-        fill: var(--color-primary-500);
+            &.inside {
+              fill: var(--color-primary-500);
+            }
+
+            &.outside {
+              fill: var(--color-error-500);
+            }
+          }
+
+          .ray {
+            stroke: var(--color-warning-500);
+            stroke-width: 2;
+            stroke-dasharray: 5 3;
+          }
+
+          .interSection {
+            fill: var(--color-error-500);
+          }
+        }
+
+        .caption {
+          font-size: 0.875rem;
+          color: var(--color-surface-600);
+          text-align: center;
+        }
       }
-
-      &.outside {
-        fill: var(--color-error-500);
-      }
-    }
-
-    .ray {
-      stroke: var(--color-warning-500);
-      stroke-width: 2;
-      stroke-dasharray: 5 3;
-    }
-
-    .intersection {
-      fill: var(--color-error-500);
-    }
-
-    .caption {
-      font-size: 0.875rem;
-      color: var(--color-surface-600);
-      text-align: center;
     }
   }
 
   /* Toggle Rule Section */
-  #toggle-rule {
+  :global(#toggle-rule) {
     .container {
       margin: 2rem 0;
       padding: 2rem;
@@ -611,98 +607,98 @@
       border-radius: calc(var(--radius-container) * 2);
       box-shadow: 0 4px 20px
         color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
-    }
 
-    .visual {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 2rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
+      .visual {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
 
-    .track {
-      display: flex;
-      gap: 0.5rem;
-    }
+        .track {
+          display: flex;
+          gap: 0.5rem;
 
-    .step {
-      width: 40px;
-      height: 40px;
-      border-radius: 9999px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 1rem;
-      background: var(--color-error-100);
-      color: var(--color-error-700);
+          .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            background: var(--color-error-100);
+            color: var(--color-error-700);
 
-      &.inside {
-        background: var(--color-success-100);
-        color: var(--color-success-700);
+            &.inside {
+              background: var(--color-success-100);
+              color: var(--color-success-700);
+            }
+          }
+        }
+
+        .status {
+          padding: 1rem 2rem;
+          border-radius: var(--radius-container);
+          font-size: 1.5rem;
+          font-weight: 700;
+          background: var(--color-error-100);
+          color: var(--color-error-700);
+          transition: all 0.3s;
+
+          &.inside {
+            background: var(--color-success-100);
+            color: var(--color-success-700);
+          }
+        }
       }
-    }
 
-    .status {
-      padding: 1rem 2rem;
-      border-radius: var(--radius-container);
-      font-size: 1.5rem;
-      font-weight: 700;
-      background: var(--color-error-100);
-      color: var(--color-error-700);
-      transition: all 0.3s;
+      .info {
+        text-align: center;
+        margin-bottom: 1.5rem;
 
-      &.inside {
-        background: var(--color-success-100);
-        color: var(--color-success-700);
+        .counter {
+          font-size: 1.25rem;
+          color: var(--color-surface-700);
+        }
       }
-    }
 
-    .info {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
+      .controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
 
-    .counter {
-      font-size: 1.25rem;
-      color: var(--color-surface-700);
-    }
+        button {
+          padding: 0.75rem 1.5rem;
+          border: none;
+          border-radius: var(--radius-container);
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
 
-    .controls {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
+          &.btn-cross {
+            background: var(--color-primary-500);
+            color: var(--color-primary-contrast-500);
 
-    button {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: var(--radius-container);
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
+            &:hover {
+              background: var(--color-primary-600);
+              transform: translateY(-2px);
+            }
+          }
 
-    .btn-cross {
-      background: var(--color-primary-500);
-      color: var(--color-primary-contrast-500);
+          &.btn-reset {
+            background: var(--color-surface-200);
+            color: var(--color-surface-800);
 
-      &:hover {
-        background: var(--color-primary-600);
-        transform: translateY(-2px);
-      }
-    }
-
-    .btn-reset {
-      background: var(--color-surface-200);
-      color: var(--color-surface-800);
-
-      &:hover {
-        background: var(--color-surface-300);
+            &:hover {
+              background: var(--color-surface-300);
+            }
+          }
+        }
       }
     }
 
@@ -711,205 +707,218 @@
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 1.5rem;
       margin-top: 2rem;
-    }
 
-    .card {
-      padding: 1.5rem;
-      border-radius: calc(var(--radius-container) * 2);
-      text-align: center;
+      .card {
+        padding: 1.5rem;
+        border-radius: calc(var(--radius-container) * 2);
+        text-align: center;
 
-      &.odd {
-        background: var(--color-warning-50);
-        border: 2px solid var(--color-warning-300);
+        &.odd {
+          background: var(--color-warning-50);
+          border: 2px solid var(--color-warning-300);
+        }
+
+        &.even {
+          background: var(--color-surface-100);
+          border: 2px solid var(--color-surface-300);
+        }
+
+        .icon {
+          font-size: 1.5rem;
+          font-weight: 700;
+          margin-bottom: 0.5rem;
+          color: var(--color-surface-600);
+        }
+
+        .text {
+          font-size: 1.125rem;
+          color: var(--color-surface-700);
+        }
       }
-
-      &.even {
-        background: var(--color-surface-100);
-        border: 2px solid var(--color-surface-300);
-      }
-    }
-
-    .icon {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: var(--color-surface-600);
-    }
-
-    .text {
-      font-size: 1.125rem;
-      color: var(--color-surface-700);
     }
   }
 
   /* Interactive Ray Section */
-  #interactive-ray {
+  :global(#interactive-ray) {
     .demo {
       margin: 2rem 0;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 1.5rem;
-    }
 
-    .svg-canvas {
-      width: 100%;
-      max-width: 400px;
-      height: auto;
-      background: var(--color-surface-50);
-      border-radius: calc(var(--radius-container) * 2);
-      box-shadow: 0 4px 20px
-        color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
-      cursor: crosshair;
-    }
+      .svg-canvas {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        background: var(--color-surface-50);
+        border-radius: calc(var(--radius-container) * 2);
+        box-shadow: 0 4px 20px
+          color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
+        cursor: crosshair;
 
-    .path {
-      stroke: var(--color-surface-500);
-      stroke-width: 3;
-    }
+        .path {
+          stroke: var(--color-surface-500);
+          stroke-width: 3;
+        }
 
-    .point {
-      fill: var(--color-primary-500);
-      cursor: pointer;
-    }
+        .point {
+          fill: var(--color-primary-500);
+          cursor: pointer;
+        }
 
-    .ray {
-      stroke: var(--color-warning-500);
-      stroke-width: 3;
-      stroke-dasharray: 8 4;
-    }
-
-    .result {
-      padding: 1rem 2rem;
-      border-radius: var(--radius-container);
-      font-size: 1.25rem;
-      background: var(--color-error-100);
-      color: var(--color-error-700);
-      text-align: center;
-
-      &.inside {
-        background: var(--color-success-100);
-        color: var(--color-success-700);
+        .ray {
+          stroke: var(--color-warning-500);
+          stroke-width: 3;
+          stroke-dasharray: 8 4;
+        }
       }
-    }
 
-    .hint {
-      font-size: 1.125rem;
-      color: var(--color-surface-500);
-      font-style: italic;
-    }
+      .result {
+        padding: 1rem 2rem;
+        border-radius: var(--radius-container);
+        font-size: 1.25rem;
+        background: var(--color-error-100);
+        color: var(--color-error-700);
+        text-align: center;
 
-    .btn-reset {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: var(--radius-container);
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      background: var(--color-surface-200);
-      color: var(--color-surface-800);
+        &.inside {
+          background: var(--color-success-100);
+          color: var(--color-success-700);
+        }
+      }
 
-      &:hover {
-        background: var(--color-surface-300);
+      .hint {
+        font-size: 1.125rem;
+        color: var(--color-surface-500);
+        font-style: italic;
+      }
+
+      .btn-reset {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: var(--radius-container);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: var(--color-surface-200);
+        color: var(--color-surface-800);
+
+        &:hover {
+          background: var(--color-surface-300);
+        }
       }
     }
   }
 
   /* Topology Section */
-  #topology {
+  :global(#topology) {
     .visual {
       margin: 2rem 0;
       text-align: center;
-    }
 
-    .card {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-      padding: 2rem;
-      background: var(--color-surface-50);
-      border-radius: calc(var(--radius-container) * 2);
-      box-shadow: 0 4px 20px
-        color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
-      margin-bottom: 1rem;
-    }
+      .card {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        padding: 2rem;
+        background: var(--color-surface-50);
+        border-radius: calc(var(--radius-container) * 2);
+        box-shadow: 0 4px 20px
+          color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
 
-    .icon {
-      font-size: 4rem;
-      color: var(--color-surface-500);
+        .icon {
+          font-size: 4rem;
+          color: var(--color-surface-500);
 
-      &.blob {
-        color: var(--color-primary-400);
+          &.blob {
+            color: var(--color-primary-400);
+          }
+        }
+
+        .arrow {
+          font-size: 2rem;
+          color: var(--color-surface-400);
+        }
       }
-    }
 
-    .arrow {
-      font-size: 2rem;
-      color: var(--color-surface-400);
-    }
-
-    .note {
-      font-size: 1.125rem;
-      color: var(--color-surface-600);
-      margin: 0;
+      .note {
+        font-size: 1.125rem;
+        color: var(--color-surface-600);
+        margin: 0;
+      }
     }
   }
 
   /* Math Lang Section */
-  #math-lang {
+  :global(#math-lang) {
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
       margin: 2rem 0;
-    }
 
-    .card {
-      background: var(--color-surface-50);
-      border-radius: calc(var(--radius-container) * 2);
-      box-shadow: 0 4px 20px
-        color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
-      overflow: hidden;
-    }
+      .card {
+        background: var(--color-surface-50);
+        border-radius: calc(var(--radius-container) * 2);
+        box-shadow: 0 4px 20px
+          color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
+        overflow: hidden;
 
-    .header {
-      background: var(--color-primary-100);
-      padding: 1rem 1.5rem;
-      font-weight: 700;
-      font-size: 1.125rem;
-      color: var(--color-primary-800);
-    }
+        .header {
+          background: var(--color-primary-100);
+          padding: 1rem 1.5rem;
+          font-weight: 700;
+          font-size: 1.125rem;
+          color: var(--color-primary-800);
+        }
 
-    .body {
-      padding: 1.5rem;
-      font-size: 1.125rem;
-      line-height: 1.7;
-      color: var(--color-surface-700);
+        .body {
+          padding: 1.5rem;
+          font-size: 1.125rem;
+          line-height: 1.7;
+          color: var(--color-surface-700);
+        }
+      }
     }
   }
 
-  /* Quiz Section */
-  #quiz {
-    .list {
+  /* Practice Section */
+  :global(#practice) {
+    .quiz-list {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
-    }
 
-    .question {
-      font-size: 1.25rem;
-      line-height: 1.6;
-      color: var(--color-surface-800);
-      margin-bottom: 1rem;
+      .question {
+        font-size: 1.25rem;
+        line-height: 1.6;
+        color: var(--color-surface-800);
+        margin-bottom: 1rem;
+      }
     }
   }
 
-  /* Responsive */
+  /* Summary Section */
+  :global(#summary) {
+    p {
+      font-size: 1.25rem;
+      margin: 0;
+      color: var(--color-surface-700);
+      line-height: 1.6;
+    }
+  }
+
+  /* Responsive Adjustments (incorporated into structure, but keeping explicit overrides if needed) */
   @media (max-width: 1100px) {
-    #toggle-rule .visual {
-      flex-direction: column;
+    :global(#toggle-rule) {
+      .visual {
+        flex-direction: column;
+      }
     }
   }
 </style>

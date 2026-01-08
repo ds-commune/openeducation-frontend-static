@@ -1,5 +1,11 @@
 <script lang="ts">
-  import { Crisis, DefinitionCard, QuizCard, Summary } from "../../components";
+  import {
+    Crisis,
+    DefinitionCard,
+    QuizCard,
+    Section,
+    Summary,
+  } from "../../components";
 
   // Morphing slider state
   let morphValue = $state(0);
@@ -93,6 +99,23 @@
   const unsortedLetters = $derived(
     alphabet.filter((l) => sortedLetters[l] === undefined)
   );
+
+  // Donut geometry and sprinkles
+  const handleParams = $derived({
+    cx: 155 - morphValue * 0.55,
+    cy: 75,
+    rx: 20 + morphValue * 0.25,
+    ry: 25 + morphValue * 0.2,
+    strokeWidth: 12 + morphValue * 0.08,
+  });
+
+  const sprinkles = Array.from({ length: 16 }, (_, i) => ({
+    angle: (i / 16) * 2 * Math.PI,
+    color: ["#FF6B6B", "#4ECDC4", "#FFE66D", "#FF9F43"][i % 4],
+    jitterX: (Math.random() - 0.5) * 6,
+    jitterY: (Math.random() - 0.5) * 6,
+    rotation: Math.random() * 360,
+  }));
 </script>
 
 <svelte:head>
@@ -102,7 +125,7 @@
   />
 </svelte:head>
 
-<section id="introduction">
+<Section id="crisis">
   <Crisis icon="🚀" title="Аварийная сортировка">
     <p>
       Мы в лаборатории по производству универсальных деталей для космических
@@ -149,15 +172,13 @@
       при этом бак и кольцо — совершенно <strong>разные</strong> объекты?
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
-<section id="rules">
-  <h2>Правила пластилинового мира</h2>
-  <p>
-    Представим, что все объекты сделаны из бесконечно тягучего пластилина. В
-    этом мире действует особая «физика»:
-  </p>
-
+<Section
+  id="rules"
+  title="Правила пластилинового мира"
+  description="Представим, что все объекты сделаны из бесконечно тягучего пластилина. В этом мире действует особая «физика»:"
+>
   <div class="grid">
     <div class="card allowed">
       <div class="header">✓ Разрешено</div>
@@ -178,7 +199,7 @@
     </div>
   </div>
 
-  <DefinitionCard title="Ключевая идея">
+  <DefinitionCard label="Ключевая идея">
     <p>
       Если один объект можно превратить в другой, используя только разрешённые
       действия, то для математика-тополога это <strong
@@ -186,19 +207,16 @@
       >.
     </p>
   </DefinitionCard>
-</section>
+</Section>
 
-<section id="morph">
-  <h2>Кружка превращается в бублик</h2>
-  <p>
-    Это не магия, а математика! Попробуйте сами: двигайте слайдер и наблюдайте,
-    как кружка непрерывно превращается в бублик — <strong
-      >без единого разрыва</strong
-    >.
-  </p>
-
+<Section
+  id="morph"
+  title="Кружка превращается в бублик"
+  description="Это не магия, а математика! Попробуйте сами: двигайте слайдер и наблюдайте, как кружка непрерывно превращается в бублик — без единого разрыва."
+>
   <div class="demo">
-    <div class="visual">
+    <div class="stage">
+      <div class="stage-background"></div>
       <svg
         viewBox="0 0 200 150"
         class="svg"
@@ -211,75 +229,110 @@
             cy="75"
             rx={Math.max(0, 50 - morphValue * 0.53)}
             ry={Math.max(0, 45 - morphValue * 0.48)}
-            fill="var(--color-primary-400)"
-            stroke="var(--color-primary-800)"
+            fill="white"
+            stroke="#e5e7eb"
             stroke-width="3"
             opacity={Math.max(0, 1 - morphValue / 90)}
           />
         {/if}
-        <!-- Cup opening (inner ellipse) - fades out -->
+        <!-- Cup liquid (coffee) - fades out -->
         {#if morphValue < 80}
           <ellipse
             cx={100 - morphValue * 0.3}
             cy={40 + morphValue * 0.2}
             rx={35 - morphValue * 0.3}
             ry={12 - morphValue * 0.1}
-            fill="var(--color-primary-200)"
+            fill="#3C2A21"
             opacity={1 - morphValue / 100}
           />
         {/if}
         <!-- Handle - grows to become the main torus ring -->
+        <!-- Starts white (handle), becomes brown (donut) -->
         <ellipse
-          cx={155 - morphValue * 0.55}
-          cy="75"
-          rx={20 + morphValue * 0.25}
-          ry={25 + morphValue * 0.2}
+          cx={handleParams.cx}
+          cy={handleParams.cy}
+          rx={handleParams.rx}
+          ry={handleParams.ry}
           fill="none"
-          stroke="var(--color-primary-800)"
-          stroke-width={12 + morphValue * 0.08}
+          stroke={morphValue > 50 ? "#9B6231" : "white"}
+          style:stroke="color-mix(in srgb, #9B6231 {morphValue}%, white)"
+          stroke-width={handleParams.strokeWidth}
         />
+
+        <!-- Sprinkles on the donut -->
+        {#if morphValue > 50}
+          <g opacity={(morphValue - 50) / 50} style="pointer-events: none;">
+            {#each sprinkles as sprinkle}
+              <!-- Calculate position on the ring -->
+              {@const x =
+                handleParams.cx +
+                handleParams.rx * Math.cos(sprinkle.angle) +
+                sprinkle.jitterX}
+              {@const y =
+                handleParams.cy +
+                handleParams.ry * Math.sin(sprinkle.angle) +
+                sprinkle.jitterY}
+              <rect
+                x={x - 2}
+                y={y - 1}
+                width="4"
+                height="2"
+                fill={sprinkle.color}
+                transform="rotate({sprinkle.rotation}, {x}, {y})"
+              />
+            {/each}
+          </g>
+        {/if}
       </svg>
     </div>
 
-    <div class="controls">
-      <span class="label">☕ Кружка</span>
-      <input
-        type="range"
-        min="0"
-        max="100"
-        bind:value={morphValue}
-        class="slider"
-        aria-label="Деформация кружки в бублик"
-      />
-      <span class="label">🍩 Бублик</span>
-    </div>
+    <div class="control-panel">
+      <div class="status-box">
+        <div class="status-content">
+          {#if morphValue < 30}
+            <strong>Кружка</strong>
+            <p>Ёмкость для напитка с одной ручкой.</p>
+          {:else if morphValue < 70}
+            <strong>Превращение...</strong>
+            <p>
+              Дно выпучивается, ёмкость «втягивается» в ручку. Топология не
+              меняется!
+            </p>
+          {:else}
+            <strong>Бублик (Тор)</strong>
+            <p>Ручка стала единственным телом объекта. Разрывов не было.</p>
+          {/if}
+        </div>
+      </div>
 
-    <div class="explanation">
-      {#if morphValue < 30}
-        <p>Кружка: ёмкость для напитка с одной ручкой.</p>
-      {:else if morphValue < 70}
-        <p>Дно кружки выпучивается вверх, ёмкость «втягивается» в ручку...</p>
-      {:else}
-        <p>Бублик! Ручка стала единственным телом объекта. Разрывов не было.</p>
-      {/if}
+      <div class="slider-group">
+        <span class="icon" aria-hidden="true">☕</span>
+        <input
+          type="range"
+          min="0"
+          max="100"
+          bind:value={morphValue}
+          class="slider"
+          aria-label="Деформация кружки в бублик"
+        />
+        <span class="icon" aria-hidden="true">🍩</span>
+      </div>
     </div>
   </div>
 
-  <DefinitionCard title="Вывод">
+  <DefinitionCard label="Вывод">
     <p>
       <strong>Кружка = Бублик</strong>. Оба имеют ровно одну сквозную дырку
       (ручка кружки).
     </p>
   </DefinitionCard>
-</section>
+</Section>
 
-<section id="holes">
-  <h2>Охота на дырки</h2>
-  <p>
-    Как быстро отличить сферу от бублика, не пытаясь их мять?
-    <strong>Посчитать сквозные отверстия!</strong>
-  </p>
-
+<Section
+  id="holes"
+  title="Охота на дырки"
+  description="Как быстро отличить сферу от бублика, не пытаясь их мять? Посчитать сквозные отверстия!"
+>
   <div class="cards">
     <div class="card">
       <div class="number">g = 0</div>
@@ -300,17 +353,15 @@
       <div class="list">ножницы, очки, крендель</div>
     </div>
   </div>
-</section>
+</Section>
 
-<section id="zoo">
-  <h2>Топологический зоопарк</h2>
-  <p>
-    В этом необычном зоопарке сущности сгруппированы не по биологическим видам,
-    а по количеству отверстий:
-  </p>
-
+<Section
+  id="zoo"
+  title="Топологический зоопарк"
+  description="В этом необычном зоопарке сущности сгруппированы не по биологическим видам, а по количеству отверстий:"
+>
   <div class="visual">
-    <div class="section">
+    <div class="Section">
       <div class="header g0">Группа 0: без дырок</div>
       <div class="items">
         <span title="Апельсин">🍊</span>
@@ -319,7 +370,7 @@
         <span title="Мяч">⚽</span>
       </div>
     </div>
-    <div class="section">
+    <div class="Section">
       <div class="header g1">Группа 1: одна дырка</div>
       <div class="items">
         <span title="Иголка (ушко)">🪡</span>
@@ -328,7 +379,7 @@
         <span title="Кольцо">💍</span>
       </div>
     </div>
-    <div class="section">
+    <div class="Section">
       <div class="header g2">Группа 2: две дырки</div>
       <div class="items">
         <span title="Ножницы">✂️</span>
@@ -337,11 +388,9 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
-<section id="math-language">
-  <h2>Математический язык</h2>
-
+<Section id="math-language" title="Математический язык">
   <div class="cards">
     <div class="card">
       <div class="header">Гомеоморфизм (≅)</div>
@@ -385,15 +434,13 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
-<section id="practice-alphabet">
-  <h2>Проверь понимание: алфавит</h2>
-  <p>
-    Распредели буквы по группам в зависимости от количества дырок. Используй
-    рубленый шрифт без засечек (как на экране).
-  </p>
-
+<Section
+  id="practice-alphabet"
+  title="Проверь понимание: алфавит"
+  description="Распредели буквы по группам в зависимости от количества дырок. Используй рубленый шрифт без засечек (как на экране)."
+>
   <div class="game">
     <div class="unsorted">
       <div class="label">Нераспределённые буквы:</div>
@@ -493,16 +540,14 @@
       </div>
     {/if}
   </div>
-</section>
+</Section>
 
-<section id="practice-quiz">
-  <h2>Вопросы на понимание</h2>
-
+<Section id="practice-quiz" title="Вопросы на понимание">
   <div class="cards">
-    <QuizCard icon="🥤">
+    <QuizCard icon="🥤" title="Проблема соломинки">
       <div class="question">
-        <strong>Проблема соломинки.</strong> Является ли питьевая соломинка топологически
-        эквивалентной (гомеоморфной) листу бумаги?
+        Является ли питьевая соломинка топологически эквивалентной
+        (гомеоморфной) листу бумаги?
       </div>
       {#snippet answer()}
         <p>
@@ -513,10 +558,9 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="👖">
+    <QuizCard icon="👖" title="Джинсы">
       <div class="question">
-        <strong>Джинсы.</strong> Топологически, чему эквивалентны джинсы? Сколько
-        у них «дырок»?
+        Топологически, чему эквивалентны джинсы? Сколько у них «дырок»?
       </div>
       {#snippet answer()}
         <p>
@@ -527,10 +571,10 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard icon="🪢">
+    <QuizCard icon="🪢" title="Лассо на бублике">
       <div class="question">
-        <strong>Лассо на бублике.</strong> Жук на поверхности сферы рисует замкнутую
-        петлю. Может ли он стянуть её в точку? А на бублике?
+        Жук на поверхности сферы рисует замкнутую петлю. Может ли он стянуть её
+        в точку? А на бублике?
       </div>
       {#snippet answer()}
         <p>
@@ -542,23 +586,21 @@
       {/snippet}
     </QuizCard>
   </div>
-</section>
+</Section>
 
-<section id="summary">
+<Section id="summary">
   <Summary title="Резюме">
-    <blockquote>
+    <p>
       В геометрии важны размеры и углы. В топологии важны связи и целостность.
-    </blockquote>
-    <p class="main">
       <strong>Бублик и кружка — это одно и то же</strong>, потому что суть
       объекта не в его форме, а в количестве сквозных отверстий, которые
       невозможно уничтожить, не сломав сам предмет.
     </p>
   </Summary>
-</section>
+</Section>
 
 <style>
-  #introduction {
+  :global(#crisis) {
     .damaged-parts {
       display: flex;
       flex-direction: column;
@@ -613,7 +655,7 @@
     }
   }
 
-  #rules {
+  :global(#rules) {
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -665,67 +707,155 @@
     }
   }
 
-  #morph {
+  :global(#morph) {
     .demo {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
       margin: 2rem 0;
       padding: 2rem;
       background: var(--color-surface-50);
-      border: 1px solid var(--color-surface-200);
       border-radius: calc(var(--radius-container) * 4);
       box-shadow: 0 12px 32px
-        color-mix(in oklab, var(--color-surface-900) 0.12, transparent);
+        color-mix(in oklab, var(--color-surface-900) 0.08, transparent);
 
-      .visual {
+      @media (min-width: 768px) {
+        flex-direction: row;
+        align-items: stretch;
+
+        .stage,
+        .control-panel {
+          flex: 1;
+        }
+      }
+
+      .stage {
+        position: relative;
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 200px;
-        margin-bottom: 2rem;
+        min-height: 240px;
+        background: var(--color-surface-100);
+        border-radius: calc(var(--radius-container) * 2);
+        overflow: hidden;
+
+        .stage-background {
+          position: absolute;
+          inset: 0;
+          opacity: 0.1;
+          background-image: radial-gradient(
+            var(--color-primary-500) 1px,
+            transparent 1px
+          );
+          background-size: 20px 20px;
+        }
 
         .svg {
-          width: 100%;
+          position: relative;
+          z-index: 1;
+          width: 80%;
           max-width: 300px;
           height: auto;
+          filter: drop-shadow(
+            0 8px 16px
+              color-mix(in oklab, var(--color-primary-900) 0.2, transparent)
+          );
         }
       }
 
-      .controls {
+      .control-panel {
         display: flex;
-        align-items: center;
-        gap: 1rem;
+        flex-direction: column;
         justify-content: center;
-        margin-bottom: 1.5rem;
+        gap: 2rem;
+        padding: 1rem 0;
 
-        .label {
-          font-size: 1.25rem;
-          font-weight: 600;
-          color: var(--color-surface-700);
+        .slider-group {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+
+          .icon {
+            font-size: 2rem;
+            line-height: 1;
+          }
+
+          .slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 12px;
+            background: var(--color-surface-200);
+            border-radius: 99px;
+            outline: none;
+            cursor: pointer;
+
+            &::-webkit-slider-thumb {
+              -webkit-appearance: none;
+              appearance: none;
+              width: 28px;
+              height: 28px;
+              border-radius: 50%;
+              background: var(--color-primary-500);
+              cursor: pointer;
+              box-shadow: 0 2px 6px
+                color-mix(in oklab, var(--color-primary-900) 0.2, transparent);
+              border: 4px solid white;
+              transition: transform 0.1s;
+
+              &:active {
+                transform: scale(1.1);
+              }
+            }
+
+            &::-moz-range-thumb {
+              width: 28px;
+              height: 28px;
+              border-radius: 50%;
+              background: var(--color-primary-500);
+              cursor: pointer;
+              box-shadow: 0 2px 6px
+                color-mix(in oklab, var(--color-primary-900) 0.2, transparent);
+              border: 4px solid white;
+              transition: transform 0.1s;
+
+              &:active {
+                transform: scale(1.1);
+              }
+            }
+          }
         }
 
-        .slider {
-          width: 200px;
-          height: 8px;
-          accent-color: var(--color-primary-500);
-          cursor: pointer;
-        }
-      }
+        .status-box {
+          background: white;
+          padding: 1.5rem;
+          border-radius: var(--radius-container);
+          box-shadow: 0 4px 12px
+            color-mix(in oklab, var(--color-surface-900) 0.05, transparent);
 
-      .explanation {
-        text-align: center;
-        padding: 1rem;
-        background: var(--color-surface-100);
-        border-radius: var(--radius-container);
+          .status-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
 
-        p {
-          margin: 0;
-          font-size: 1.125rem;
-          color: var(--color-surface-600);
+            strong {
+              font-size: 1.125rem;
+              color: var(--color-primary-700);
+            }
+
+            p {
+              margin: 0;
+              font-size: 1rem;
+              color: var(--color-surface-600);
+              line-height: 1.5;
+            }
+          }
         }
       }
     }
   }
 
-  #holes {
+  :global(#holes) {
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -768,14 +898,14 @@
     }
   }
 
-  #zoo {
+  :global(#zoo) {
     .visual {
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
       margin: 2rem 0;
 
-      .section {
+      .Section {
         background: var(--color-surface-50);
         border: 1px solid var(--color-surface-200);
         border-radius: var(--radius-container);
@@ -821,7 +951,7 @@
     }
   }
 
-  #math-language {
+  :global(#math-language) {
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -896,7 +1026,7 @@
     }
   }
 
-  #practice-alphabet {
+  :global(#practice-alphabet) {
     .game {
       background: var(--color-surface-50);
       border: 1px solid var(--color-surface-200);
@@ -1059,24 +1189,24 @@
           font-weight: 600;
           cursor: pointer;
           transition: all 0.2s;
-        }
 
-        .check {
-          background: var(--color-primary-500);
-          color: white;
+          &.check {
+            background: var(--color-primary-500);
+            color: white;
 
-          &:hover {
-            background: var(--color-primary-600);
-            transform: translateY(-2px);
+            &:hover {
+              background: var(--color-primary-600);
+              transform: translateY(-2px);
+            }
           }
-        }
 
-        .reset {
-          background: var(--color-surface-200);
-          color: var(--color-surface-700);
+          &.reset {
+            background: var(--color-surface-200);
+            color: var(--color-surface-700);
 
-          &:hover {
-            background: var(--color-surface-300);
+            &:hover {
+              background: var(--color-surface-300);
+            }
           }
         }
       }
@@ -1099,7 +1229,7 @@
     }
   }
 
-  #practice-quiz {
+  :global(#practice-quiz) {
     .cards {
       display: flex;
       flex-direction: column;
@@ -1114,36 +1244,22 @@
     }
   }
 
-  #summary {
-    .main {
-      font-size: 1.375rem;
-      line-height: 1.7;
-      color: var(--color-primary-900);
+  :global(#summary) {
+    p {
+      font-size: 1.25rem;
       margin: 0;
+      color: var(--color-surface-700);
+      line-height: 1.6;
     }
   }
 
   @media (max-width: 1100px) {
-    #rules .grid,
-    #holes .cards,
-    #math-language .cards,
-    #practice-alphabet .game .baskets {
-      grid-template-columns: 1fr;
-    }
-
-    #morph .demo {
-      .controls {
-        flex-direction: column;
-
-        .slider {
-          width: 100%;
-          max-width: 300px;
+    :global(#practice-alphabet) {
+      .game {
+        .pool {
+          justify-content: center;
         }
       }
-    }
-
-    #practice-alphabet .game .pool {
-      justify-content: center;
     }
   }
 </style>

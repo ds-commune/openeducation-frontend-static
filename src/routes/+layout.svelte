@@ -104,10 +104,6 @@
       font-size: 1.25rem;
     }
 
-    section {
-      margin-bottom: 4rem;
-    }
-
     p {
       font-size: 1.375rem;
       line-height: 1.7;
@@ -116,12 +112,47 @@
     }
 
     blockquote {
+      display: inline-block;
       font-size: 1.375rem;
       line-height: 1.6;
       color: var(--color-surface-700, #495057);
       margin: 1.5rem 0;
-      padding-left: 1.5rem;
-      border-left: 5px solid var(--color-warning-400, #ffc107);
+      padding: 1.5rem;
+      border: 3px solid var(--color-warning-400, #ffc107);
+      border-radius: calc(var(--radius-container, 0.25rem) * 2);
+    }
+
+    /* Mobile: compact scale (~50% more content fits) */
+    @media (max-width: 1100px) {
+      html {
+        font-size: 12px;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+        margin: 0 0 1rem;
+      }
+
+      h3 {
+        font-size: 1.25rem;
+      }
+
+      h4 {
+        font-size: 1.125rem;
+      }
+
+      p {
+        font-size: 1.125rem;
+        line-height: 1.6;
+        margin: 0 0 1.25rem;
+      }
+
+      blockquote {
+        font-size: 1.125rem;
+        margin: 1rem 0;
+        padding-left: 1rem;
+        border-width: 2px;
+      }
     }
   }
 </style>

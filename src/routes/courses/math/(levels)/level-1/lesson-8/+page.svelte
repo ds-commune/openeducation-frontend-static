@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { Crisis, DefinitionCard, Summary } from "../../components";
+  import { Section, Crisis, DefinitionCard, Summary } from "../../components";
 
   // Threshold slider state (0-100%)
   let thresholdPercent = $state(50);
 
   // Generate noisy sine wave path for SVG
-  // Pre-computed noise values for consistent "jitter"
   const noiseValues = [
     0, 3, -2, 5, -4, 2, -3, 6, -1, 4, -5, 3, -2, 1, -4, 5, -3, 2, -1, 4,
   ];
@@ -18,11 +17,8 @@
 
     for (let i = 0; i <= steps; i++) {
       const x = (i / steps) * width;
-      // Base sine wave (2.5 periods)
       const sineY = Math.sin((i / steps) * Math.PI * 5) * 0.35;
-      // Add noise
       const noise = (noiseValues[i % noiseValues.length] / 100) * 0.8;
-      // Convert to SVG coordinates (0 = top, height = bottom)
       const y = height / 2 - (sineY + noise) * height;
       points.push(i === 0 ? `M ${x} ${y}` : `L ${x} ${y}`);
     }
@@ -30,12 +26,12 @@
   });
 
   // Interactive state for lamp calculator simulation
-  let lampCount = $state(1);
-  const combinations = $derived(Math.pow(2, lampCount));
+  // We use a dynamic array to easily add/remove from the left (MSB)
+  let lampStates = $state<boolean[]>([false]);
   const maxLamps = 5;
 
-  // State for each lamp (on/off)
-  let lampStates = $state<boolean[]>([false, false, false, false, false]);
+  const lampCount = $derived(lampStates.length);
+  const combinations = $derived(Math.pow(2, lampCount));
 
   function toggleLamp(index: number) {
     lampStates[index] = !lampStates[index];
@@ -43,30 +39,24 @@
 
   function addLamp() {
     if (lampCount < maxLamps) {
-      lampCount++;
+      // Add new lamp to the beginning (Left/MSB)
+      lampStates = [false, ...lampStates];
     }
   }
 
   function removeLamp() {
     if (lampCount > 1) {
-      lampCount--;
-      lampStates[lampCount] = false;
+      // Remove lamp from the beginning (Left/MSB)
+      lampStates = lampStates.slice(1);
     }
   }
 
   // Convert current lamp states to binary string
   const currentBinary = $derived(
-    lampStates
-      .slice(0, lampCount)
-      .map((s) => (s ? "1" : "0"))
-      .join("")
+    lampStates.map((s) => (s ? "1" : "0")).join("")
   );
 
-  const currentDecimal = $derived(
-    lampStates
-      .slice(0, lampCount)
-      .reduce((acc, s, i) => acc + (s ? Math.pow(2, lampCount - 1 - i) : 0), 0)
-  );
+  const currentDecimal = $derived(parseInt(currentBinary, 2));
 
   // Pixel grid state (5x5)
   let pixels = $state<boolean[]>(
@@ -79,13 +69,13 @@
     pixels[index] = !pixels[index];
   }
 
-  const pixelCode = $derived(
+  const pixelRows = $derived(
     Array.from({ length: 5 }, (_, row) =>
       pixels
         .slice(row * 5, row * 5 + 5)
         .map((p) => (p ? "1" : "0"))
         .join(" ")
-    ).join(" / ")
+    )
   );
 </script>
 
@@ -96,7 +86,7 @@
   />
 </svelte:head>
 
-<section class="crisis">
+<Section id="crisis">
   <Crisis icon="📡" title="Сломанный передатчик">
     <p>
       Ты — участник космической миссии. Связь сломалась. Единственное, что
@@ -110,27 +100,28 @@
     </p>
 
     {#snippet question()}
-      <strong>Проблема:</strong> у нас есть всего два состояния — свет есть и света
-      нет. Но слов в языке тысячи! Если просто мигать один раз для «а», два раза для
-      «б» и так далее — передача одного длинного слова займёт вечность.
+      <p>
+        <strong>Проблема:</strong> у нас есть всего два состояния — свет есть и света
+        нет. Но слов в языке тысячи! Если просто мигать один раз для «а», два раза
+        для «б» и так далее — передача одного длинного слова займёт вечность.
+      </p>
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
-<p class="key-question">
-  <strong>Ключевой вопрос:</strong> может ли мир, состоящий из миллиардов оттенков
-  и смыслов, быть построен всего из двух кирпичиков?
-</p>
+<Section id="key-question">
+  <p class="key-question-text">
+    <strong>Ключевой вопрос:</strong> может ли мир, состоящий из миллиардов оттенков
+    и смыслов, быть построен всего из двух кирпичиков?
+  </p>
+</Section>
 
 <!-- Section 1: Reliability -->
-<section id="reliability" aria-labelledby="reliability-title">
-  <h2 id="reliability-title">Надёжность против богатства</h2>
-
-  <p>
-    Почему не использовать 10 уровней яркости лампы — ведь это соответствовало
-    бы привычным цифрам от 0 до 9?
-  </p>
-
+<Section
+  id="reliability"
+  title="Надёжность против богатства"
+  description="Почему не использовать 10 уровней яркости лампы — ведь это соответствовало бы привычным цифрам от 0 до 9?"
+>
   <div class="metaphor">
     <div class="icon">🌊</div>
     <div class="content">
@@ -150,72 +141,74 @@
 
   <div class="signal" aria-label="Демонстрация цифрового сигнала">
     <div class="visual">
-      <svg class="wave-svg" viewBox="0 0 400 120" preserveAspectRatio="none">
-        <defs>
-          <clipPath id="above-threshold">
-            <rect
-              x="0"
-              y="0"
-              width="400"
-              height={120 * (1 - thresholdPercent / 100)}
-            />
-          </clipPath>
-          <clipPath id="below-threshold">
-            <rect
-              x="0"
-              y={120 * (1 - thresholdPercent / 100)}
-              width="400"
-              height={(120 * thresholdPercent) / 100}
-            />
-          </clipPath>
-        </defs>
-        <!-- Background zones -->
-        <rect
-          x="0"
-          y="0"
-          width="400"
-          height={120 * (1 - thresholdPercent / 100)}
-          fill="var(--color-success-100)"
-        />
-        <rect
-          x="0"
-          y={120 * (1 - thresholdPercent / 100)}
-          width="400"
-          height={(120 * thresholdPercent) / 100}
-          fill="var(--color-error-100)"
-        />
-        <!-- Threshold line -->
-        <line
-          x1="0"
-          y1={120 * (1 - thresholdPercent / 100)}
-          x2="400"
-          y2={120 * (1 - thresholdPercent / 100)}
-          stroke="var(--color-surface-600)"
-          stroke-width="2"
-          stroke-dasharray="6,4"
-        />
-        <!-- Signal wave - green part (above threshold) -->
-        <path
-          d={signalPath}
-          fill="none"
-          stroke="var(--color-success-700)"
-          stroke-width="3"
-          clip-path="url(#above-threshold)"
-        />
-        <!-- Signal wave - red part (below threshold) -->
-        <path
-          d={signalPath}
-          fill="none"
-          stroke="var(--color-error-600)"
-          stroke-width="3"
-          clip-path="url(#below-threshold)"
-        />
-      </svg>
-      <div
-        class="threshold-badge"
-        style="top: calc({100 - thresholdPercent}% - 12px)"
-      >
-        Порог
+      <div class="monitor">
+        <svg class="wave-svg" viewBox="0 0 400 120" preserveAspectRatio="none">
+          <defs>
+            <clipPath id="above-threshold">
+              <rect
+                x="0"
+                y="0"
+                width="400"
+                height={120 * (1 - thresholdPercent / 100)}
+              />
+            </clipPath>
+            <clipPath id="below-threshold">
+              <rect
+                x="0"
+                y={120 * (1 - thresholdPercent / 100)}
+                width="400"
+                height={(120 * thresholdPercent) / 100}
+              />
+            </clipPath>
+          </defs>
+          <!-- Background zones -->
+          <rect
+            x="0"
+            y="0"
+            width="400"
+            height={120 * (1 - thresholdPercent / 100)}
+            fill="var(--color-success-100)"
+          />
+          <rect
+            x="0"
+            y={120 * (1 - thresholdPercent / 100)}
+            width="400"
+            height={(120 * thresholdPercent) / 100}
+            fill="var(--color-error-100)"
+          />
+          <!-- Threshold line -->
+          <line
+            x1="0"
+            y1={120 * (1 - thresholdPercent / 100)}
+            x2="400"
+            y2={120 * (1 - thresholdPercent / 100)}
+            stroke="var(--color-surface-600)"
+            stroke-width="2"
+            stroke-dasharray="6,4"
+          />
+          <!-- Signal wave - green part (above threshold) -->
+          <path
+            d={signalPath}
+            fill="none"
+            stroke="var(--color-success-700)"
+            stroke-width="3"
+            clip-path="url(#above-threshold)"
+          />
+          <!-- Signal wave - red part (below threshold) -->
+          <path
+            d={signalPath}
+            fill="none"
+            stroke="var(--color-error-600)"
+            stroke-width="3"
+            clip-path="url(#below-threshold)"
+          />
+        </svg>
+        <div
+          class="threshold-badge"
+          style="top: calc({100 - thresholdPercent}% - 12px)"
+        >
+          Порог
+        </div>
       </div>
       <div class="slider-row">
         <span class="slider-label">Двигай порог:</span>
@@ -237,17 +230,14 @@
       Сигнал «дрожит» от помех, но пока он выше порога — это «1», ниже — «0».
     </p>
   </div>
-</section>
+</Section>
 
 <!-- Section 2: Power of Combinations -->
-<section id="combinations" aria-labelledby="combinations-title">
-  <h2 id="combinations-title">Сила комбинации</h2>
-
-  <p>
-    Как из двух состояний получить больше? Мы используем <strong>место</strong>
-    (позицию) и <strong>последовательность</strong>.
-  </p>
-
+<Section
+  id="combinations"
+  title="Сила комбинации"
+  description="Как из двух состояний получить больше? Мы используем место (позицию) и последовательность."
+>
   <ul class="list">
     <li>1 лампочка = <strong>2</strong> состояния (да/нет)</li>
     <li>2 лампочки = <strong>4</strong> состояния (00, 01, 10, 11)</li>
@@ -285,16 +275,16 @@
     </div>
 
     <div class="lamps" role="group" aria-label="Ряд лампочек">
-      {#each { length: lampCount } as _, i (i)}
+      {#each lampStates as state, i}
         <button
           class="lamp"
-          class:on={lampStates[i]}
+          class:on={state}
           onclick={() => toggleLamp(i)}
-          aria-label="Лампа {i + 1}: {lampStates[i] ? 'включена' : 'выключена'}"
-          aria-pressed={lampStates[i]}
+          aria-label="Лампа {i + 1}: {state ? 'включена' : 'выключена'}"
+          aria-pressed={state}
         >
-          <span class="bulb">{lampStates[i] ? "💡" : "⚫"}</span>
-          <span class="value">{lampStates[i] ? "1" : "0"}</span>
+          <span class="bulb">{state ? "💡" : "⚫"}</span>
+          <span class="value">{state ? "1" : "0"}</span>
         </button>
       {/each}
     </div>
@@ -316,17 +306,14 @@
       <span class="formula">(2<sup>{lampCount}</sup>)</span>
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Section 3: Encoding Reality -->
-<section id="encoding" aria-labelledby="encoding-title">
-  <h2 id="encoding-title">Кодирование реальности</h2>
-
-  <p>
-    Мы договариваемся, что определённая комбинация света означает определённый
-    символ. Это не магия — это просто словарь.
-  </p>
-
+<Section
+  id="encoding"
+  title="Кодирование реальности"
+  description="Мы договариваемся, что определённая комбинация света означает определённый символ. Это не магия — это просто словарь."
+>
   <div class="examples">
     <div class="card">
       <div class="icon">📻</div>
@@ -360,23 +347,23 @@
       {/each}
     </div>
     <div class="code">
-      <code>{pixelCode}</code>
+      {#each pixelRows as row, i}
+        <span class="row-code">{row}</span>
+        {#if i < 4}<span class="divider"> / </span>{/if}
+      {/each}
     </div>
     <p class="caption">
       Любая картинка — это просто очень длинная цепь переключателей.
     </p>
   </div>
-</section>
+</Section>
 
 <!-- Section 4: Formalization -->
-<section id="formalization" aria-labelledby="formalization-title">
-  <h2 id="formalization-title">Формализация</h2>
-
-  <p>
-    Переходим от физики к математической записи. Убираем лампочки — оставляем
-    символы.
-  </p>
-
+<Section
+  id="formalization"
+  title="Формализация"
+  description="Переходим от физики к математической записи. Убираем лампочки — оставляем символы."
+>
   <DefinitionCard title="Бит (Binary Digit)">
     <p>
       <strong>Бит</strong> — минимальная частица информации, отвечающая на
@@ -411,33 +398,43 @@
       <span>любой символ клавиатуры</span>
     </div>
   </div>
-</section>
+</Section>
 
-<section class="summary">
+<Section id="summary">
   <Summary title="Резюме">
-    <blockquote>
+    <p class="summary-text">
       Сложность — это иллюзия. Любая цифровая картинка, игра или видео — это
       просто огромная гора ответов на простые вопросы «да» (1) или «нет» (0).
-    </blockquote>
+    </p>
     <p>
       Мы используем 0 и 1 не потому, что компьютеры умные, а потому, что они
       понимают только простые и чёткие команды.
     </p>
   </Summary>
-</section>
+</Section>
 
 <style>
-  .key-question {
-    font-size: 1.5rem;
-    text-align: center;
-    padding: 2rem;
-    background: var(--color-primary-50);
-    border-radius: calc(var(--radius-container) * 4);
-    margin-bottom: 2.5rem;
+  /* Common typography */
+  p {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Section: Key Question */
+  :global(#key-question) {
+    .key-question-text {
+      font-size: 1.5rem;
+      text-align: center;
+      padding: 2rem;
+      background: var(--color-primary-50);
+      border-radius: calc(var(--radius-container) * 4);
+      margin: 0; /* Margin handled by Section spacing */
+    }
   }
 
   /* Section: Reliability */
-  #reliability {
+  :global(#reliability) {
     .metaphor {
       display: flex;
       gap: 1.5rem;
@@ -454,6 +451,7 @@
 
       .content {
         h3 {
+          margin-top: 0;
           color: var(--color-surface-700);
         }
 
@@ -476,13 +474,17 @@
       border: 2px solid var(--color-surface-300);
 
       .visual {
-        position: relative;
         display: flex;
         flex-direction: column;
         gap: 1rem;
       }
 
+      .monitor {
+        position: relative;
+      }
+
       .wave-svg {
+        display: block;
         width: 100%;
         height: 120px;
         border-radius: 0.5rem;
@@ -525,6 +527,7 @@
         justify-content: center;
         gap: 2rem;
         font-size: 1rem;
+        flex-wrap: wrap;
 
         .one {
           color: var(--color-success-700);
@@ -545,10 +548,10 @@
   }
 
   /* Section: Combinations */
-  #combinations {
+  :global(#combinations) {
     .list {
-      font-size: 1.375rem;
-      line-height: 2;
+      font-size: 1.25rem;
+      line-height: 1.8;
       padding-left: 2rem;
       margin: 1.5rem 0 2rem;
 
@@ -569,6 +572,7 @@
         font-size: 1.5rem;
         text-align: center;
         margin-bottom: 2rem;
+        margin-top: 0;
       }
 
       .controls {
@@ -705,7 +709,7 @@
   }
 
   /* Section: Encoding Reality */
-  #encoding {
+  :global(#encoding) {
     .examples {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -722,6 +726,11 @@
         .icon {
           font-size: 3rem;
           margin-bottom: 1rem;
+        }
+
+        h4 {
+          font-size: 1.25rem;
+          margin: 0 0 0.5rem;
         }
 
         p {
@@ -741,6 +750,7 @@
       border: 2px solid var(--color-surface-300);
 
       h3 {
+        margin-top: 0;
         margin-bottom: 0.5rem;
       }
 
@@ -798,8 +808,20 @@
         color: var(--color-success-400);
         padding: 1rem 1.5rem;
         border-radius: 0.5rem;
-        display: inline-block;
         margin-bottom: 1rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem 0.75rem;
+      }
+
+      .row-code {
+        white-space: nowrap;
+      }
+
+      .divider {
+        color: var(--color-surface-500);
+        white-space: pre;
       }
 
       .caption {
@@ -811,7 +833,7 @@
   }
 
   /* Section: Formalization */
-  #formalization {
+  :global(#formalization) {
     .table-container {
       margin: 2rem 0;
       border-radius: calc(var(--radius-container) * 4);
@@ -842,29 +864,36 @@
     }
   }
 
-  .summary :global(p) {
-    font-size: 1.25rem;
-    margin: 0;
-    color: var(--color-surface-700);
-  }
-
-  /* Mobile responsiveness */
+  /* Responsive */
   @media (max-width: 1100px) {
-    #reliability .metaphor {
-      flex-direction: column;
+    :global(#reliability) {
+      .metaphor {
+        flex-direction: column;
+      }
+      .signal {
+        padding: 1.5rem;
+      }
     }
 
-    #combinations {
+    :global(#combinations) {
       .simulation {
+        padding: 1.5rem;
+
         .lamps {
-          gap: 0.75rem;
+          flex-wrap: nowrap;
+          width: auto;
+          gap: 0.25rem;
 
           .lamp {
-            min-width: 60px;
-            padding: 0.75rem;
+            min-width: 45px;
+            padding: 0.5rem;
 
             .bulb {
-              font-size: 2rem;
+              font-size: 1.5rem;
+            }
+
+            .value {
+              font-size: 1rem;
             }
           }
         }
@@ -877,7 +906,11 @@
       }
     }
 
-    #formalization .table-container .row {
+    :global(#encoding) .pixel-demo {
+      padding: 1.5rem;
+    }
+
+    :global(#formalization) .table-container .row {
       grid-template-columns: 1fr 1fr;
       gap: 0.5rem;
 

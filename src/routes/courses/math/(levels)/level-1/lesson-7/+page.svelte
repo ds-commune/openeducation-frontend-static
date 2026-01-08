@@ -1,7 +1,9 @@
-<script>
+<script lang="ts">
   import {
+    Section,
     Crisis,
     DefinitionCard,
+    QuizCard,
     Summary,
     TakeawayCard,
   } from "../../components";
@@ -15,7 +17,7 @@
 </svelte:head>
 
 <!-- Крючок: сценарий на складе -->
-<section id="robot-factory-crisis">
+<Section id="crisis">
   <Crisis icon="🏭" title="Сбой на складе робототехники">
     <p>
       Представьте: вы попали на завод по производству роботов. Произошёл сбой
@@ -59,17 +61,14 @@
       </p>
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
 <!-- Основной концептуальный блок -->
-<section id="matching-method">
-  <h2>Решение: составляем пары</h2>
-  <p>
-    Мы отказываемся от идеи «узнать количество». Нам не нужно знать, сколько
-    объектов в каждой куче. Нам важно только соотношение между ними. А для этого
-    достаточно попробовать составить пары.
-  </p>
-
+<Section
+  id="matching-method"
+  title="Решение: составляем пары"
+  description="Мы отказываемся от идеи «узнать количество». Нам не нужно знать, сколько объектов в каждой куче. Нам важно только соотношение между ними. А для этого достаточно попробовать составить пары."
+>
   <p>
     Представьте, что вместо подсчёта мы запускаем конвейер: каждый робот едет по
     ленте и автоматически «хватает» ближайшую свободную батарею. Когда конвейер
@@ -110,16 +109,14 @@
       к одному».
     </p>
   </div>
-</section>
+</Section>
 
 <!-- Три исхода -->
-<section id="outcomes">
-  <h2>Три возможных исхода</h2>
-  <p>
-    В конце процесса соединения возможны только три исхода. Анализируем, что
-    осталось:
-  </p>
-
+<Section
+  id="outcomes"
+  title="Три возможных исхода"
+  description="В конце процесса соединения возможны только три исхода. Анализируем, что осталось:"
+>
   <div class="cards">
     <div class="card robots">
       <div class="visual">
@@ -155,16 +152,14 @@
       <div class="symbol">=</div>
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Иллюзия размера -->
-<section id="size-illusion">
-  <h2>Независимость от формы</h2>
-  <p>
-    Важнейший вывод: количество не зависит от размера объектов. Большие объекты
-    занимают больше места, но это ничего не говорит о том, сколько их.
-  </p>
-
+<Section
+  id="size-illusion"
+  title="Независимость от формы"
+  description="Важнейший вывод: количество не зависит от размера объектов. Большие объекты занимают больше места, но это ничего не говорит о том, сколько их."
+>
   <div class="demo">
     <div class="side">
       <div class="objects big">🐘 🐘 🐘 🐘 🐘</div>
@@ -172,7 +167,11 @@
     </div>
     <div class="connector">
       <div class="lines">
-        <span>―</span><span>―</span><span>―</span><span>―</span><span>―</span>
+        <span>|</span>
+        <span>|</span>
+        <span>|</span>
+        <span>|</span>
+        <span>|</span>
       </div>
     </div>
     <div class="side">
@@ -191,12 +190,13 @@
       >
     </p>
   </TakeawayCard>
-</section>
+</Section>
 
-<section id="formalization">
-  <h2>Формализация</h2>
-  <p>Переходим от конвейера к языку математики.</p>
-
+<Section
+  id="formalization"
+  title="Формализация"
+  description="Переходим от конвейера к языку математики."
+>
   <DefinitionCard>
     <p>
       <strong>Два множества равны</strong>, если каждому элементу одного
@@ -225,65 +225,60 @@
       <p>Если ничего не осталось: <strong>A = B</strong></p>
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Практика -->
-<section id="practice">
-  <h2>Проверь понимание</h2>
-
+<Section id="practice" title="Проверь понимание">
   <div class="quizzes">
-    <div class="quiz">
-      <div class="icon">🪙</div>
-      <div class="content">
+    <QuizCard icon="🪙">
+      <p>
+        На столе в ряд лежат 10 монет плотно друг к другу и 8 монет с большими
+        промежутками. Ряд из 8 монет длиннее. Ребёнок скажет, что их больше. Как
+        доказать обратное, не называя чисел?
+      </p>
+      {#snippet answer()}
         <p>
-          На столе в ряд лежат 10 монет плотно друг к другу и 8 монет с большими
-          промежутками. Ряд из 8 монет длиннее. Ребёнок скажет, что их больше.
-          Как доказать обратное, не называя чисел?
+          Положить монеты из короткого ряда поверх монет из длинного ряда — одна
+          на одну. Те, что остались без пары сверху, покажут, где больше.
         </p>
-        <details>
-          <summary>Показать ответ</summary>
-          <div class="answer">
-            Положить монеты из короткого ряда поверх монет из длинного ряда —
-            одна на одну. Те, что остались без пары сверху, покажут, где больше.
-          </div>
-        </details>
-      </div>
-    </div>
+      {/snippet}
+    </QuizCard>
 
-    <div class="quiz">
-      <div class="icon">🪑</div>
-      <div class="content">
+    <QuizCard icon="🪑">
+      <p>
+        Можно ли сравнить количество стульев в комнате и количество людей, если
+        вы не видите ни тех, ни других, но знаете, что все сидят и есть пустые
+        места?
+      </p>
+      {#snippet answer()}
         <p>
-          Можно ли сравнить количество стульев в комнате и количество людей,
-          если вы не видите ни тех, ни других, но знаете, что все сидят и есть
-          пустые места?
+          Да! Раз все сидят (каждый человек нашёл стул) и есть пустые места
+          (стулья без пары) — значит, стульев больше, чем людей.
         </p>
-        <details>
-          <summary>Показать ответ</summary>
-          <div class="answer">
-            Да! Раз все сидят (каждый человек нашёл стул) и есть пустые места
-            (стулья без пары) — значит, стульев больше, чем людей.
-          </div>
-        </details>
-      </div>
-    </div>
+      {/snippet}
+    </QuizCard>
   </div>
-</section>
+</Section>
 
-<section id="lesson-summary">
-  <Summary title="Главная мысль">
-    <blockquote>Считать не обязательно, чтобы сравнивать.</blockquote>
+<Section id="summary">
+  <Summary title="Считать не обязательно, чтобы сравнивать">
     <p>
       Чтобы понять, где больше, нужно просто попытаться составить пары. Тот, кто
       остался без пары — «победил» (его больше).
       <strong>Равенство — это идеальное партнёрство без одиночек.</strong>
     </p>
   </Summary>
-</section>
+</Section>
 
 <style>
+  p {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
   /* Section 1: Crisis */
-  #robot-factory-crisis {
+  :global(#crisis) {
     .problems {
       display: grid;
       gap: 1rem;
@@ -311,7 +306,7 @@
   }
 
   /* Section 2: Method */
-  #matching-method {
+  :global(#matching-method) {
     .visual {
       display: flex;
       align-items: center;
@@ -385,7 +380,7 @@
   }
 
   /* Section 3: Outcomes */
-  #outcomes {
+  :global(#outcomes) {
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -451,23 +446,23 @@
   }
 
   /* Section 4: Illusion */
-  #size-illusion {
+  :global(#size-illusion) {
     .demo {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2rem;
+      gap: 1.5rem;
       margin: 3rem 0;
       padding: 2.5rem;
       background: var(--color-surface-50);
       border-radius: calc(var(--radius-container) * 2);
-      flex-wrap: wrap;
 
       .side {
         text-align: center;
 
         .objects {
-          margin-bottom: 1rem;
+          margin-bottom: 0.5rem;
           letter-spacing: 0.25em;
 
           &.big {
@@ -475,7 +470,9 @@
           }
 
           &.small {
-            font-size: 1rem;
+            font-size: 1.25rem;
+            letter-spacing: 1.6em;
+            margin-left: 0.8em;
           }
         }
 
@@ -493,17 +490,22 @@
 
         .lines {
           display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
+          flex-direction: row;
+          gap: 2.75rem;
           color: var(--color-primary-400);
-          font-size: 1.25rem;
+          font-size: 1.5rem;
+          font-weight: bold;
+
+          span {
+            transform: rotate(90deg);
+          }
         }
       }
     }
   }
 
   /* Section 5: Formalization */
-  #formalization {
+  :global(#formalization) {
     .rules {
       display: grid;
       gap: 1rem;
@@ -536,68 +538,21 @@
   }
 
   /* Section 6: Practice */
-  #practice {
+  :global(#practice) {
     .quizzes {
       display: grid;
       gap: 1.5rem;
       margin: 2rem 0;
-
-      .quiz {
-        display: flex;
-        gap: 1.5rem;
-        background: white;
-        border-radius: calc(var(--radius-container) * 2);
-        padding: 2rem;
-        box-shadow: 0 1px 3px
-          color-mix(in oklab, var(--color-surface-900) 0.1, transparent);
-
-        .icon {
-          font-size: 3rem;
-          flex-shrink: 0;
-        }
-
-        .content {
-          flex: 1;
-
-          p {
-            font-size: 1.25rem;
-            margin: 0 0 1rem;
-          }
-
-          details {
-            margin-top: 1rem;
-
-            summary {
-              cursor: pointer;
-              color: var(--color-primary-600);
-              font-weight: 600;
-              font-size: 1rem;
-
-              &:hover {
-                color: var(--color-primary-700);
-              }
-            }
-
-            .answer {
-              margin-top: 1rem;
-              padding: 1.25rem;
-              background: var(--color-success-50);
-              border-radius: var(--radius-container);
-              font-size: 1.125rem;
-            }
-          }
-        }
-      }
     }
   }
 
   /* Responsive */
   @media (max-width: 1100px) {
-    #outcomes .cards {
+    :global(#outcomes) .cards {
       grid-template-columns: 1fr;
     }
 
-    #matching-method {
+    :global(#matching-method) {
       .visual {
         flex-direction: column;
 
@@ -607,18 +562,25 @@
       }
     }
 
-    #size-illusion {
+    :global(#size-illusion) {
       .demo {
-        flex-direction: column;
+        padding: 1.5rem 1rem;
+
+        .side .objects.big {
+          font-size: clamp(1.5rem, 8vw, 2.5rem);
+          letter-spacing: 0.15em;
+        }
 
         .connector .lines {
-          flex-direction: row;
+          gap: clamp(1.2rem, 7vw, 2.2rem);
+          font-size: 1.25rem;
+        }
+
+        .side .objects.small {
+          font-size: 1rem;
+          letter-spacing: 1.4em;
         }
       }
-    }
-
-    #practice .quiz {
-      flex-direction: column;
     }
   }
 </style>

@@ -20,6 +20,7 @@
   {#if title}
     <h3>{title}</h3>
   {/if}
+
   {@render children()}
 </div>
 
@@ -60,9 +61,7 @@
     ul,
     ol {
       font-size: 1.25rem;
-      line-height: 1.8;
       margin: 0;
-      padding-left: 1.5rem;
     }
 
     li {

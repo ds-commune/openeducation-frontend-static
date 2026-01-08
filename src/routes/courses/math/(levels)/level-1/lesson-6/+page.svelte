@@ -1,5 +1,6 @@
-<script>
+<script lang="ts">
   import {
+    Section,
     Crisis,
     DefinitionCard,
     QuizCard,
@@ -16,7 +17,7 @@
 </svelte:head>
 
 <!-- Крючок: космический зоопарк -->
-<section class="crisis" id="space-zoo">
+<Section id="space-zoo">
   <Crisis icon="🛸" title="Проблема космического зоопарка">
     <p>
       Вы — архитектор зоопарка на новой планете. У вас есть два типа силовых
@@ -61,17 +62,14 @@
       </p>
     {/snippet}
   </Crisis>
-</section>
+</Section>
 
 <!-- Шаг 1: Сдвиг границ -->
-<section id="shifting-borders">
-  <h2>Сдвиг границ</h2>
-  <p>
-    Решение приходит через движение. Мы не строим новый забор — мы <em
-      >сдвигаем существующие</em
-    >.
-  </p>
-
+<Section
+  id="shifting-borders"
+  title="Сдвиг границ"
+  description="Решение приходит через движение. Мы не строим новый забор — мы сдвигаем существующие."
+>
   <div class="venn">
     <div class="description">
       Представьте, что вы накладываете два круга друг на друга. В месте
@@ -127,16 +125,14 @@
       >
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Шаг 2: Анатомия диаграммы -->
-<section id="anatomy">
-  <h2>Анатомия диаграммы</h2>
-  <p>
-    Теперь, когда зверь спасён, разберём, что мы построили. Это называется
-    <strong>диаграммой Эйлера</strong> (или Венна).
-  </p>
-
+<Section
+  id="anatomy"
+  title="Анатомия диаграммы"
+  description="Теперь, когда зверь спасён, разберём, что мы построили. Это называется диаграммой Эйлера (или Венна)."
+>
   <div class="grid">
     <div class="card">
       <div class="icon blue">☾</div>
@@ -174,12 +170,10 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
 <!-- Шаг 3: Логика И против ИЛИ -->
-<section id="logic-and-or">
-  <h2>Логика «И» против «ИЛИ»</h2>
-
+<Section id="logic-and-or" title="Логика «И» против «ИЛИ»">
   <div class="grid">
     <div class="card and">
       <div class="header">
@@ -217,12 +211,13 @@
       </div>
     </div>
   </div>
-</section>
+</Section>
 
-<section id="formalization">
-  <h2>Формализация</h2>
-  <p>Переводим интуицию на язык математики.</p>
-
+<Section
+  id="formalization"
+  title="Формализация"
+  description="Переводим интуицию на язык математики."
+>
   <div class="grid">
     <DefinitionCard title="Пересечение (Intersection)">
       <div class="definition-content">
@@ -269,24 +264,15 @@
       <span class="math">∪</span> похож на букву «U» — Union (объединение по-английски).
     </p>
   </TakeawayCard>
-</section>
+</Section>
 
 <!-- Практика -->
-<section id="practice">
-  <h2>Проверь понимание</h2>
-
+<Section id="practice" title="Проверь понимание">
   <div class="grid">
-    <QuizCard>
-      <div class="question-header">
-        <span class="icon">🌶️</span>
-        <div>
-          <h3>Красный перец</h3>
-          <p>
-            У нас есть круг «Сладкое» и круг «Красное». Куда положим красный
-            перец?
-          </p>
-        </div>
-      </div>
+    <QuizCard icon="🌶️" title="Красный перец">
+      <p>
+        У нас есть круг «Сладкое» и круг «Красное». Куда положим красный перец?
+      </p>
       {#snippet answer()}
         <p>
           <strong>Только в «Красное»</strong>, но не в пересечение! Красный
@@ -295,14 +281,8 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard>
-      <div class="question-header">
-        <span class="icon">🍓</span>
-        <div>
-          <h3>Клубника</h3>
-          <p>А куда положим клубнику?</p>
-        </div>
-      </div>
+    <QuizCard icon="🍓" title="Клубника">
+      <p>А куда положим клубнику?</p>
       {#snippet answer()}
         <p>
           <strong>В пересечение</strong> <span class="math">∩</span>, так как
@@ -311,18 +291,12 @@
       {/snippet}
     </QuizCard>
 
-    <QuizCard>
-      <div class="question-header">
-        <span class="icon">🛒</span>
-        <div>
-          <h3>Какой символ?</h3>
-          <p>
-            Если я попрошу принести мне <strong>всё</strong>, что лежит на столе
-            (и сладкое, и красное, и то и другое) — какой символ я использую:
-            <span class="math">∩</span> или <span class="math">∪</span>?
-          </p>
-        </div>
-      </div>
+    <QuizCard icon="🛒" title="Какой символ?">
+      <p>
+        Если я попрошу принести мне <strong>всё</strong>, что лежит на столе (и
+        сладкое, и красное, и то и другое) — какой символ я использую:
+        <span class="math">∩</span> или <span class="math">∪</span>?
+      </p>
       {#snippet answer()}
         <p>
           <span class="math">∪</span> (объединение), так как мы собираем всё вместе!
@@ -330,12 +304,10 @@
       {/snippet}
     </QuizCard>
   </div>
-</section>
+</Section>
 
 <!-- Мини-проект -->
-<section id="mini-project">
-  <h2>Мини-проект: поисковик пиццы</h2>
-
+<Section id="mini-project" title="Мини-проект: поисковик пиццы">
   <div class="project-card">
     <div class="scenario">
       <p>Друзья заказывают пиццу:</p>
@@ -364,9 +336,8 @@
         <p>Попробуй сам найти пересечение, а потом нажми «Показать ответ».</p>
         {#snippet answer()}
           <p>
-            <strong>Грибы и сыр</strong> — они и вегетарианские, и удовлетворяют требованию
-            Пети (грибы есть!). Пепперони и курица — мясо, Маша их не ест. Ананас
-            вегетарианский, но грибами не является.
+            <strong>Грибы, сыр и ананасы</strong> — они и вегетарианские, и удовлетворяют
+            требованию Пети (грибы есть!). Пепперони и курица — мясо, Маша их не ест.
           </p>
           <p>
             <strong>Вывод:</strong> пересечение — это поиск компромисса, места, где
@@ -376,11 +347,13 @@
       </QuizCard>
     </div>
   </div>
-</section>
+</Section>
 
-<section id="summary">
+<Section id="summary">
   <Summary title="Главная мысль">
-    <blockquote>Математика помогает нам наводить порядок в хаосе.</blockquote>
+    <p class="summary-text">
+      Математика помогает нам наводить порядок в хаосе.
+    </p>
     <ul class="points">
       <li>
         <span class="math">∩</span> <strong>Пересечение</strong> — поиск общего, компромисса,
@@ -395,7 +368,7 @@
       Объект может быть в двух местах одновременно, если эти места пересекаются.
     </p>
   </Summary>
-</section>
+</Section>
 
 <style>
   /* Common math span style */
@@ -408,8 +381,14 @@
     border-radius: var(--radius-container);
   }
 
+  p {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
   /* Crisis Section */
-  #space-zoo {
+  :global(#space-zoo) {
     .types {
       display: flex;
       flex-direction: column;
@@ -426,9 +405,7 @@
       font-size: 1.125rem;
 
       &.blue {
-        background: var(
-          --color-surface-200
-        ); /* Fallback for Water/Blue context */
+        background: var(--color-surface-200);
       }
 
       &.yellow {
@@ -458,7 +435,7 @@
   }
 
   /* Shifting Borders Section */
-  #shifting-borders {
+  :global(#shifting-borders) {
     .venn {
       background: var(--color-surface-100);
       border-radius: calc(var(--radius-container) * 4);
@@ -571,7 +548,7 @@
   }
 
   /* Anatomy Section */
-  #anatomy {
+  :global(#anatomy) {
     .grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -624,6 +601,7 @@
       h3 {
         font-size: 1.125rem;
         margin-bottom: 0.5rem;
+        margin-top: 0;
       }
 
       p {
@@ -640,7 +618,7 @@
   }
 
   /* Logic Section */
-  #logic-and-or {
+  :global(#logic-and-or) {
     .grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -714,7 +692,7 @@
   }
 
   /* Formalization Section */
-  #formalization {
+  :global(#formalization) {
     .grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -755,37 +733,16 @@
   }
 
   /* Practice Section */
-  #practice {
+  :global(#practice) {
     .grid {
       display: grid;
       gap: 1.5rem;
       margin: 2rem 0;
     }
-
-    .question-header {
-      display: flex;
-      gap: 1.5rem;
-      align-items: flex-start;
-
-      .icon {
-        font-size: 3rem;
-        flex-shrink: 0;
-      }
-
-      h3 {
-        font-size: 1.25rem;
-        margin-bottom: 0.5rem;
-      }
-
-      p {
-        font-size: 1.25rem;
-        margin: 0;
-      }
-    }
   }
 
   /* Mini Project Section */
-  #mini-project {
+  :global(#mini-project) {
     .project-card {
       background: var(--color-surface-100);
       border-radius: calc(var(--radius-container) * 4);
@@ -815,6 +772,7 @@
     .tasks {
       h3 {
         margin-bottom: 1rem;
+        margin-top: 0;
       }
 
       p {
@@ -825,10 +783,9 @@
   }
 
   /* Summary Section */
-  #summary {
+  :global(#summary) {
     .points {
       font-size: 1.25rem;
-      line-height: 1.8;
       margin: 0 0 1.5rem;
       padding-left: 1.5rem;
 
@@ -836,37 +793,24 @@
         margin-bottom: 0.75rem;
       }
     }
-
-    .final {
-      font-size: 1.375rem;
-      font-weight: 600;
-      margin: 0;
-      color: var(--color-primary-800);
-    }
   }
 
   /* Responsive */
   @media (max-width: 1100px) {
-    #anatomy .grid,
-    #logic-and-or .grid,
-    #formalization .grid {
+    :global(#shifting-borders) {
+      .venn {
+        padding: 1.5rem;
+      }
+    }
+
+    :global(#anatomy) .grid,
+    :global(#logic-and-or) .grid,
+    :global(#formalization) .grid {
       grid-template-columns: 1fr;
     }
 
-    #shifting-borders {
-      .labels {
-        flex-direction: column;
-        gap: 0.75rem;
-      }
-
-      .label {
-        &.left,
-        &.center,
-        &.right {
-          align-items: center;
-          text-align: center;
-        }
-      }
+    :global(#mini-project) .project-card {
+      padding: 1.5rem;
     }
   }
 </style>
