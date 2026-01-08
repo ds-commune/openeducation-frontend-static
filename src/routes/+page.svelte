@@ -1,5 +1,6 @@
 <script lang="ts">
   import { math } from "$lib/data/courses/math";
+  import logo from "$lib/assets/icon_1280.webp";
 
   const courses = [
     {
@@ -66,6 +67,7 @@
 <main>
   <header class="hero">
     <p class="platform-badge">Образовательная платформа</p>
+    <img src={logo} alt="Логотип OpenEducation — книга-портал в мир знаний" />
     <h1>OpenEducation</h1>
     <p class="tagline">
       Образование, которое работает. <br />
@@ -219,6 +221,12 @@
   .hero {
     text-align: center;
     padding: 6rem 0 5rem;
+
+    img {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+    }
   }
 
   .platform-badge {
