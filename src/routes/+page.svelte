@@ -1,6 +1,7 @@
 <script lang="ts">
   import { math } from "$lib/data/courses/math";
   import logo from "$lib/assets/icon_1280.webp";
+  import communeLogo from "$lib/assets/commune-full-v3-transparent.svg";
 
   const courses = [
     {
@@ -66,6 +67,15 @@
 
 <main>
   <header class="hero">
+    <a
+      href="https://commune.my"
+      class="initiative-badge"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img src={communeLogo} alt="Commune" class="commune-logo" />
+      <span>Initiative of Commune</span>
+    </a>
     <p class="platform-badge">Образовательная платформа</p>
     <img src={logo} alt="Логотип OpenEducation — книга-портал в мир знаний" />
     <h1>OpenEducation</h1>
@@ -220,13 +230,56 @@
 
   .hero {
     text-align: center;
-    padding: 6rem 0 5rem;
+    padding: 2rem 0 5rem;
 
     img {
       width: 100%;
       max-width: 400px;
       margin: 0 auto;
     }
+  }
+
+  .initiative-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    margin-inline: auto;
+    gap: 0.6rem;
+    background: linear-gradient(
+      135deg,
+      var(--color-surface-100),
+      var(--color-surface-50)
+    );
+    border: 1px solid var(--color-surface-200);
+    padding: 0.5rem 1.25rem 0.5rem 0.75rem;
+    border-radius: calc(var(--radius-container, 0.25rem) * 6);
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s,
+      border-color 0.2s;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px
+        color-mix(in oklab, var(--color-surface-900) 0.08, transparent);
+      border-color: var(--color-surface-300);
+    }
+
+    span {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--color-surface-600);
+      letter-spacing: 0.02em;
+    }
+  }
+
+  .commune-logo {
+    width: auto !important;
+    height: 1.5rem;
+    max-width: none !important;
   }
 
   .platform-badge {
