@@ -73,8 +73,8 @@
       target="_blank"
       rel="noopener noreferrer"
     >
-      <img src={communeLogo} alt="Commune" class="commune-logo" />
-      <span>Initiative of Commune</span>
+      <img src={communeLogo} alt="Символ Коммуны" class="commune-logo" />
+      <span>Инициатива Коммуны</span>
     </a>
     <p class="platform-badge">Образовательная платформа</p>
     <img src={logo} alt="Логотип OpenEducation — книга-портал в мир знаний" />
